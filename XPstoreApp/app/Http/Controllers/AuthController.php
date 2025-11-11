@@ -13,9 +13,7 @@ class AuthController extends Controller
     /**
      * Inyecta AuthService para delegar la lógica de autenticación.
      */
-    public function __construct(private readonly AuthService $auth)
-    {
-    }
+    public function __construct(private readonly AuthService $auth) {}
 
     /**
      * Mostrar formulario de login.
