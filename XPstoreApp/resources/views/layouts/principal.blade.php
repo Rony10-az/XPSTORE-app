@@ -40,14 +40,14 @@
 
                 <!-- Auth Buttons -->
                 <div class="auth-buttons">
-                    <button class="btn-login">
+                    <a href="{{ route('login') }}" class="btn-login"> <!-- ← route('login') -->
                         <i class="fas fa-sign-in-alt"></i>
                         Iniciar Sesión
-                    </button>
-                    <button class="btn-register">
+                    </a>
+                    <a href="{{ route('register') }}" class="btn-register">
                         <i class="fas fa-user-plus"></i>
                         Registrarse
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -56,7 +56,7 @@
     <!-- Navigation -->
     <nav class="nav-bar">
         <div class="container">
-            <a href="#" class="nav-link active">Catálogo</a>
+            <a href="{{ route('home') }}" class="nav-link active">Catálogo</a>
             <a href="#" class="nav-link">Marketplace</a>
             <a href="#" class="nav-link">Códigos</a>
         </div>
