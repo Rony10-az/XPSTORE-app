@@ -6,19 +6,20 @@ use App\DTOs\UserDTO;
 use App\Repositories\UserRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 
 // Servicio de autenticación.
 class AuthService
 {
     // Inyecta repositorio de usuarios
-    public function __construct(private readonly UserRepositoryInterface $users)
-    {
-    }
+    public function __construct(private readonly UserRepositoryInterface $users) {}
 
     // Autentica y retorna UserDTO o null
     public function attempt(string $email, string $password): ?UserDTO
     {
+        Log::info('Intento de login catch in auth service', ['email' => $email]);
         $user = $this->users->findByEmail($email);
+        Log::info('Intento de login catch in auth service', ['email' => $user]);
 
         if (!$user) {
             return null;

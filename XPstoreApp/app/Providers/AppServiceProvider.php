@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\UserRepositoryInterface;
-use App\Repositories\InMemoryUserRepository;
+use App\Repositories\UserRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Bind repository interface to in-memory implementation for demo
         // Esto permite cambiar a Eloquent más adelante sin tocar la lógica.
-        $this->app->bind(UserRepositoryInterface::class, InMemoryUserRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 
     /**

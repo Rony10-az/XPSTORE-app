@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -36,13 +37,16 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse
     {
+        Log::info('Intento de login', ['email' => $request->email]);
+        Log::info('Intento de login', ['password' => $request->password]);
+
         $user = $this->auth->attempt($request->get('email'), $request->get('password'));
 
         if (!$user) {
             return back()->withErrors(['email' => 'Credenciales inválidas'])->withInput();
         }
 
-        return redirect()->route('dashboard')->with('success', 'Bienvenido');
+        return redirect()->route('home')->with('success', 'Bienvenido');
     }
 
     /**
@@ -52,7 +56,7 @@ class AuthController extends Controller
     {
         try {
             $this->auth->register($request->get('name'), $request->get('email'), $request->get('password'));
-            return redirect()->route('dashboard')->with('success', 'Cuenta creada');
+            return redirect()->route('layouts.principal')->with('success', 'Cuenta creada');
         } catch (\RuntimeException $e) {
             return back()->withErrors(['email' => $e->getMessage()])->withInput();
         }
