@@ -8,13 +8,17 @@ use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
+
 class AuthController extends Controller
 {
+    private AuthService $auth;
+
     /**
      * Inyecta AuthService para delegar la lógica de autenticación.
      */
-    public function __construct(private readonly AuthService $auth)
+    public function __construct()
     {
+        $this->auth = new AuthService();
     }
 
     /**
@@ -38,13 +42,28 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse
     {
-        $user = $this->auth->attempt($request->get('email'), $request->get('password'));
+        $user = $this->auth->attempt(
+            $request->input('email'),
+            $request->input('password')
+        );
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Credenciales inválidas'])->withInput();
+            return back()
+                ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
+                ->withInput($request->only('email'));
         }
 
-        return redirect()->route('dashboard')->with('success', 'Bienvenido');
+        // Mensaje personalizado según rol
+        $message = $user->role === 'admin'
+            ? '¡Bienvenido Admin!'
+            : '¡Bienvenido a XP Store, ' . $user->name . '!';
+
+        // 🚀 Redirigir según rol
+        if ($user->role === 'admin') {
+            return redirect()->route('dashboard.admin')->with('success', $message);
+        }
+
+        return redirect()->route('dashboard.user')->with('success', $message);
     }
 
     /**
@@ -53,10 +72,20 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): RedirectResponse
     {
         try {
-            $this->auth->register($request->get('name'), $request->get('email'), $request->get('password'));
-            return redirect()->route('dashboard')->with('success', 'Cuenta creada');
+            $user = $this->auth->register(
+                $request->input('name'),
+                $request->input('email'),
+                $request->input('password')
+            );
+
+            // Un nuevo usuario siempre será "user"
+            return redirect()
+                ->route('dashboard.user')
+                ->with('success', '¡Cuenta creada exitosamente! Bienvenido ' . $user->name);
         } catch (\RuntimeException $e) {
-            return back()->withErrors(['email' => $e->getMessage()])->withInput();
+            return back()
+                ->withErrors(['email' => $e->getMessage()])
+                ->withInput($request->only('name', 'email'));
         }
     }
 
@@ -66,6 +95,9 @@ class AuthController extends Controller
     public function logout(): RedirectResponse
     {
         $this->auth->logout();
-        return redirect()->route('login')->with('success', 'Sesión cerrada');
+
+        return redirect()
+            ->route('login')
+            ->with('success', 'Sesión cerrada correctamente');
     }
 }
