@@ -1,0 +1,456 @@
+/* resources/css/admin.css */
+.admin-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+    color: white;
+    padding: 2rem;
+    border-radius: 16px;
+}
+
+.admin-title h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.admin-subtitle {
+    opacity: 0.9;
+    margin: 0.5rem 0 0 0;
+}
+
+.btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: var(--dark-secondary);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid var(--dark-tertiary);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-purple);
+}
+
+.stat-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.stat-label {
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0 0;
+}
+
+/* Table Styles */
+.crud-table-container {
+    background: var(--dark-secondary);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--dark-tertiary);
+}
+
+.crud-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.crud-table th {
+    background: var(--dark-tertiary);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--dark-tertiary);
+}
+
+.crud-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--dark-tertiary);
+    vertical-align: middle;
+}
+
+.crud-table tr:last-child td {
+    border-bottom: none;
+}
+
+.crud-table tr:hover {
+    background: rgba(139, 92, 246, 0.05);
+}
+
+/* Game Info */
+.game-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.game-thumb {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.game-thumb.placeholder {
+    background: var(--primary-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.game-details strong {
+    display: block;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.game-developer {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Badges */
+.badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.badge-primary {
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-danger {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-info {
+    background: rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-view {
+    background: var(--primary-purple);
+}
+
+.btn-edit {
+    background: var(--primary-blue);
+}
+
+.btn-delete {
+    background: var(--accent-red);
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+/* Search and Filters */
+.crud-toolbar {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-tertiary);
+    border-radius: 8px;
+    color: var(--text-primary);
+}
+
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+
+.filter-select {
+    padding: 0.75rem;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-tertiary);
+    border-radius: 8px;
+    color: var(--text-primary);
+    min-width: 150px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h4 {
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.page-item {
+    list-style: none;
+}
+
+.page-link {
+    padding: 0.5rem 1rem;
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-tertiary);
+    border-radius: 6px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background: var(--dark-tertiary);
+}
+
+.page-item.active .page-link {
+    background: var(--primary-purple);
+    border-color: var(--primary-purple);
+    color: white;
+}
+
+/* Alert */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+/* Progress Bar */
+.progress {
+    height: 6px;
+    background: var(--dark-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+    width: 80px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent-green);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 1rem;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .crud-toolbar {
+        flex-direction: column;
+    }
+
+    .game-info {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .action-buttons {
+        justify-content: center;
+    }
+}
+
+.pagination-wrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: inline-flex;
+    list-style: none;
+    padding: 0;
+    gap: 5px;
+    user-select: none;
+    /* Evita que el texto se seleccione */
+}
+
+.pagination li {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 6px 12px;
+    background-color: #333;
+    /* Fondo oscuro */
+}
+
+.pagination li a,
+.pagination li span {
+    color: white;
+    /* Letras blancas */
+    text-decoration: none;
+    display: block;
+    user-select: none;
+    /* Evita que el texto se seleccione al click */
+}
+
+/* Página activa */
+.pagination li.active span {
+    background-color: #555;
+    /* Fondo un poco más claro para la página activa */
+    color: white;
+    font-weight: bold;
+}
+
+/* Deshabilitado */
+.pagination li.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+/* Evitar cambios al hacer hover, focus o active */
+.pagination li a:hover,
+.pagination li a:focus,
+.pagination li a:active {
+    background-color: #333;
+    /* Fondo fijo */
+    color: white;
+    /* Color fijo */
+    outline: none;
+    /* Quita borde de enfoque */
+    box-shadow: none;
+    /* Quita cualquier sombra que algunos navegadores agregan */
+}
