@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - XP Store</title>
 
-    <title>XP Store - Marketplace de Videojuegos</title>
-
-    @vite(['resources/css/home.css', 'resources/js/home.js'])
+    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -38,29 +37,86 @@
                     <input type="text" placeholder="Busca juegos, recargas y más">
                 </div>
 
-                <!-- Auth Buttons -->
-                @guest
-                <div class="auth-buttons">
-                    <a href="{{ route('login') }}" class="btn-login">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Iniciar Sesión
-                    </a>
-                    <a href="{{ route('register') }}" class="btn-register">
-                        <i class="fas fa-user-plus"></i>
-                        Registrarse
-                    </a>
+                <!-- User Menu -->
+                <div class="user-menu">
+                    <!-- Carrito de Compras -->
+                    <div class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">3</span>
+                    </div>
+
+                    <!-- Mensajes/Notificaciones -->
+                    <div class="messages-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">5</span>
+                    </div>
+
+                    <!-- Perfil de Usuario -->
+                    <div class="user-profile">
+                        <div class="user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <span class="user-name">
+                            {{ auth()->check() ? auth()->user()->name : 'Usuario' }}
+                        </span>
+                        <i class="fas fa-chevron-down"></i>
+
+                        <!-- Dropdown Menu -->
+                        <div class="user-dropdown">
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user"></i>
+                                Mi Perfil
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-shopping-bag"></i>
+                                Mis Compras
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-heart"></i>
+                                Wishlist
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Configuración
+                            </a>
+
+                            <!-- Opción de Administrador (solo para admins) -->
+                            @if(auth()->check() && auth()->user()->role === 'admin')
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item admin-item">
+                                <i class="fas fa-crown"></i>
+                                Panel Admin
+                            </a>
+                            @endif
+
+                            <div class="dropdown-divider"></div>
+                            <form method="POST" action="{{ route('logout') }}" class="dropdown-form">
+                                @csrf
+                                <button type="submit" class="dropdown-item logout-item">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                @endguest
             </div>
         </div>
     </header>
 
-    <!-- Navigation -->
     <nav class="nav-bar">
         <div class="container">
-            <a href="{{ route('home') }}" class="nav-link active">Catálogo</a>
+            <a href="#" class="nav-link {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">Catálogo</a>
             <a href="#" class="nav-link">Marketplace</a>
             <a href="#" class="nav-link">Códigos</a>
+
+            <!-- Opción de Administrador simplificada -->
+            @if(auth()->check() && auth()->user()->role === 'admin')
+            <a href="{{ route('admin.videojuegos.index') }}" class="nav-link admin-nav {{ request()->routeIs('admin.*') ? 'active' : '' }}">
+                <i class="fas fa-crown"></i>
+                Administrador
+            </a>
+            @endif
         </div>
     </nav>
 
@@ -136,85 +192,23 @@
                 </div>
 
                 <div class="games-grid">
-                    <!-- Game Card 1 -->
+                    @forelse($videojuegos as $juego)
                     <div class="game-card">
                         <div class="game-image">
-                            <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=250&fit=crop" alt="Game 1">
-                            <div class="discount-badge">-10%</div>
-                            <button class="wishlist-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="game-overlay">
-                                <button class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <h3 class="game-title">Cyber Warriors 2077</h3>
-                            <p class="game-description">Adéntrate en una ciudad cyberpunk llena de acción</p>
-                            <div class="game-tags">
-                                <span class="tag-small">Acción</span>
-                                <span class="tag-small">RPG</span>
-                            </div>
-                            <div class="game-footer">
-                                <div class="price-group">
-                                    <span class="price-old">$59.99</span>
-                                    <span class="price-new">$53.99</span>
-                                </div>
-                                <button class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                            <img src="{{ $juego->imagen ? asset('img/videojuegos/' . $juego->imagen) : 'https://via.placeholder.com/400x250' }}" alt="{{ $juego->titulo }}">
 
-                    <!-- Game Card 2 -->
-                    <div class="game-card">
-                        <div class="game-image">
-                            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop" alt="Game 2">
-                            <div class="discount-badge featured">-20%</div>
+                            @if($juego->descuento > 0)
+                            <div class="discount-badge">-{{ $juego->descuento }}%</div>
+                            @endif
+
+                            @if($juego->featured)
                             <div class="featured-badge">Destacado</div>
-                            <button class="wishlist-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="game-overlay">
-                                <button class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <h3 class="game-title">Fantasy Legends Online</h3>
-                            <p class="game-description">MMORPG épico con mundos fantásticos por descubrir</p>
-                            <div class="game-tags">
-                                <span class="tag-small">MMORPG</span>
-                                <span class="tag-small">Fantasía</span>
-                            </div>
-                            <div class="game-footer">
-                                <div class="price-group">
-                                    <span class="price-old">$49.99</span>
-                                    <span class="price-new">$39.99</span>
-                                </div>
-                                <button class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                            @endif
 
-                    <!-- Game Card 3 -->
-                    <div class="game-card">
-                        <div class="game-image">
-                            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=250&fit=crop" alt="Game 3">
-                            <div class="discount-badge">-15%</div>
                             <button class="wishlist-btn">
                                 <i class="far fa-heart"></i>
                             </button>
+
                             <div class="game-overlay">
                                 <button class="btn-view-details">
                                     <i class="fas fa-eye"></i>
@@ -222,18 +216,27 @@
                                 </button>
                             </div>
                         </div>
+
                         <div class="game-info">
-                            <h3 class="game-title">Racing Xtreme</h3>
-                            <p class="game-description">Carreras de alta velocidad con gráficos realistas</p>
+                            <h3 class="game-title">{{ $juego->titulo }}</h3>
+                            <p class="game-description">{{ $juego->descripcion ?? 'Descripción no disponible' }}</p>
+
                             <div class="game-tags">
-                                <span class="tag-small">Carreras</span>
-                                <span class="tag-small">Deportes</span>
+                                @foreach($juego->generos_array ?? [] as $g)
+                                <span class="tag-small">{{ $g }}</span>
+                                @endforeach
                             </div>
+
                             <div class="game-footer">
                                 <div class="price-group">
-                                    <span class="price-old">$44.99</span>
-                                    <span class="price-new">$38.24</span>
+                                    @if($juego->descuento > 0)
+                                    <span class="price-old">${{ number_format($juego->precio, 2) }}</span>
+                                    <span class="price-new">${{ number_format($juego->precio_con_descuento, 2) }}</span>
+                                    @else
+                                    <span class="price-new">${{ number_format($juego->precio, 2) }}</span>
+                                    @endif
                                 </div>
+
                                 <button class="btn-add-cart">
                                     <i class="fas fa-shopping-cart"></i>
                                     Agregar
@@ -241,11 +244,24 @@
                             </div>
                         </div>
                     </div>
+                    @empty
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <h3>No hay videojuegos registrados</h3>
+                        <p>Comienza agregando tu primer videojuego al catálogo</p>
+                        <a href="{{ route('admin.videojuegos.create') }}" class="btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Crear Primer Juego
+                        </a>
+                    </div>
+                    @endforelse
                 </div>
             </section>
+
         </div>
     </main>
-
 
 </body>
 
