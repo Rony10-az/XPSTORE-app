@@ -2,14 +2,18 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Admin\VideoGameController;
-use App\Http\Controllers\Admin\GameCodeController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Store\GameStoreController;
+use App\Http\Controllers\User\ProfileController;
+
+use App\Models\User;
 
 
-// =========================
+
+
 // PÁGINA PRINCIPAL (HOME)
 // =========================
 Route::get('/', function () {
@@ -20,6 +24,17 @@ Route::get('/', function () {
 
     return app(HomeController::class)->index();
 })->name('home');
+
+// =========================
+// TIENDA (pública)
+// =========================
+
+Route::get('/juegos', [GameStoreController::class, 'index'])
+
+    ->name('store.index');
+
+Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])
+    ->name('game.show');
 
 
 // =========================
@@ -39,33 +54,31 @@ Route::middleware('guest')->group(function () {
 // =========================
 Route::middleware('auth')->group(function () {
 
-    // Redirección automática según rol
     Route::get('/dashboard', function () {
         $user = Auth::user();
-
         return $user->role === 'admin'
             ? redirect()->route('dashboard.admin')
             : redirect()->route('dashboard.user');
     })->name('dashboard');
 
-    // Dashboard ADMIN
-    Route::get('/dashboard/admin', [DashboardController::class, 'admin'])
-        ->name('dashboard.admin');
+    // ADMIN
+    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
-    // Dashboard USER
-    Route::get('/dashboard/user', [DashboardController::class, 'user'])
-        ->name('dashboard.user');
+    // USER
+    Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
 
-    // =========================
-    // CRUD ADMIN - VIDEOJUEGOS 
-    // =========================
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::resource('videojuegos', VideoGameController::class);
-        Route::resource('gamecodes', GameCodeController::class);
-    });
+    // PERFIL
+    Route::get('/perfil', [ProfileController::class, 'index'])
+        ->name('profile.index');
 
+    Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
+
+
+    // STORE ACTIONS
+    Route::post('/carrito/{videojuego}', [GameStoreController::class, 'addToCart'])->name('store.cart.add');
+    Route::post('/favorito/{videojuego}', [GameStoreController::class, 'toggleWishlist'])->name('store.wishlist.toggle');
+    Route::post('/juego/{videojuego}/reseña', [GameStoreController::class, 'storeReview'])->name('store.review.add');
 
     // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])
-        ->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

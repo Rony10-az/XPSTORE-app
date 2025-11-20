@@ -207,7 +207,7 @@
                         <div class="image-grid">
                             @foreach($videojuego->images as $image)
                             <div class="current-image">
-                                <img src="{{ asset('storage/' . $image) }}" alt="Imagen actual">
+                                <img src="{{ $image }}" alt="Imagen actual">
                                 <span>{{ basename($image) }}</span>
                             </div>
                             @endforeach

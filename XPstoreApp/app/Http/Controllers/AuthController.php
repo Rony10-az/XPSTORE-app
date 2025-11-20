@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 
@@ -49,22 +50,27 @@ class AuthController extends Controller
 
         if (!$user) {
             return back()
-                ->withErrors(['email' => 'Las credenciales no coinciden con nuestros registros.'])
+                ->withErrors(['email' => 'Las credenciales no coinciden.'])
                 ->withInput($request->only('email'));
         }
 
-        // Mensaje personalizado según rol
+        // ⭐ INICIAR SESIÓN EN LARAVEL ⭐
+        Auth::login($user);
+
+        // Regenerar sesión (seguro)
+        $request->session()->regenerate();
+
+        // Mensaje según rol
         $message = $user->role === 'admin'
             ? '¡Bienvenido Admin!'
             : '¡Bienvenido a XP Store, ' . $user->name . '!';
 
-        // 🚀 Redirigir según rol
-        if ($user->role === 'admin') {
-            return redirect()->route('dashboard.admin')->with('success', $message);
-        }
-
-        return redirect()->route('dashboard.user')->with('success', $message);
+        // Redirigir por rol
+        return $user->role === 'admin'
+            ? redirect()->route('dashboard.admin')->with('success', $message)
+            : redirect()->route('dashboard.user')->with('success', $message);
     }
+
 
     /**
      * Procesar registro de nuevo usuario.

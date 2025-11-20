@@ -147,10 +147,10 @@ class DatabaseSeeder extends Seeder
             'price' => 29.99,
             'discount' => 0,
             'images' => [
-                'https://images.unsplash.com/photo-1578922746376-9e554a2ccb90?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=800&h=450&fit=crop'
+                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=450&fit=crop',
+                'https://images.unsplash.com/photo-1526779259212-5f6b3f4f4e8f?w=800&h=450&fit=crop'
             ],
-            'genre' => ['Terror', 'Supervivencia', 'Aventura'],
+            'genre' => ['Terror', 'Aventura', 'Suspenso'],
             'platform' => ['PC', 'PlayStation 5', 'Xbox Series X'],
             'release_date' => '2024-04-01',
             'developer' => 'Nightmare Studios',
@@ -281,7 +281,7 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
-        videogame::create([
+        VideoGame::create([
             'title' => 'Puzzle Master Collection',
             'description' => 'Desafía tu mente con cientos de puzzles únicos. Desde rompecabezas clásicos hasta acertijos imposibles.',
             'price' => 19.99,

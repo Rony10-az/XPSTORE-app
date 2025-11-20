@@ -27,6 +27,7 @@ class VideoGame extends Model
         'requirements',
     ];
 
+
     protected $casts = [
         'images' => 'array',
         'genre' => 'array',
@@ -41,5 +42,16 @@ class VideoGame extends Model
     public function gameCodes()
     {
         return $this->hasMany(GameCode::class);
+    }
+    // App\Models\VideoGame.php
+
+    public function getPriceAfterDiscountAttribute()
+    {
+        if (!$this->discount || $this->discount <= 0) {
+            return $this->price;
+        }
+
+        $price = $this->price - ($this->price * $this->discount / 100);
+        return round($price, 2);
     }
 }
