@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - XP Store</title>
 
-    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
+    @vite(['resources/css/user/dashboard.css', 'resources/js/dashboard.js'])
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -20,6 +20,7 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
+
                 <!-- Logo -->
                 <div class="logo">
                     <div class="logo-icon">
@@ -39,29 +40,32 @@
 
                 <!-- User Menu -->
                 <div class="user-menu">
+
                     <!-- Carrito de Compras -->
                     <div class="cart-icon">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count">3</span>
                     </div>
 
-                    <!-- Mensajes/Notificaciones -->
+                    <!-- Notificaciones -->
                     <div class="messages-icon">
                         <i class="fas fa-bell"></i>
                         <span class="notification-count">5</span>
                     </div>
 
-                    <!-- Perfil de Usuario -->
+                    <!-- Perfil -->
                     <div class="user-profile">
                         <div class="user-avatar">
                             <i class="fas fa-user"></i>
                         </div>
+
                         <span class="user-name">
                             {{ auth()->check() ? auth()->user()->name : 'Usuario' }}
                         </span>
+
                         <i class="fas fa-chevron-down"></i>
 
-                        <!-- Dropdown Menu -->
+                        <!-- Dropdown -->
                         <div class="user-dropdown">
                             <a href="#" class="dropdown-item">
                                 <i class="fas fa-user"></i>
@@ -80,7 +84,7 @@
                                 Configuración
                             </a>
 
-                            <!-- Opción de Administrador (solo para admins) -->
+                            <!-- Solo para admins -->
                             @if(auth()->check() && auth()->user()->role === 'admin')
                             <div class="dropdown-divider"></div>
                             <a href="#" class="dropdown-item admin-item">
@@ -90,6 +94,7 @@
                             @endif
 
                             <div class="dropdown-divider"></div>
+
                             <form method="POST" action="{{ route('logout') }}" class="dropdown-form">
                                 @csrf
                                 <button type="submit" class="dropdown-item logout-item">
@@ -97,8 +102,10 @@
                                     Cerrar Sesión
                                 </button>
                             </form>
+
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -106,17 +113,23 @@
 
     <nav class="nav-bar">
         <div class="container">
-            <a href="#" class="nav-link {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">Catálogo</a>
+
+            <a href="#" class="nav-link {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
+                Catálogo
+            </a>
+
             <a href="#" class="nav-link">Marketplace</a>
             <a href="#" class="nav-link">Códigos</a>
 
-            <!-- Opción de Administrador simplificada -->
+            <!-- Admin -->
             @if(auth()->check() && auth()->user()->role === 'admin')
-            <a href="{{ route('admin.videojuegos.index') }}" class="nav-link admin-nav {{ request()->routeIs('admin.*') ? 'active' : '' }}">
+            <a href="{{ route('videojuegos.index') }}"
+                class="nav-link admin-nav {{ request()->routeIs('videojuegos.*') ? 'active' : '' }}">
                 <i class="fas fa-crown"></i>
                 Administrador
             </a>
             @endif
+
         </div>
     </nav>
 
@@ -181,10 +194,9 @@
 
             <!-- Mejores Ofertas Section -->
             <section class="offers-section">
+
                 <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-percent"></i>
-                    </div>
+                    <div class="section-icon"><i class="fas fa-percent"></i></div>
                     <div class="section-title-group">
                         <h2 class="section-title">Mejores Ofertas 🔥</h2>
                         <p class="section-subtitle">Aprovecha estos descuentos increíbles</p>
@@ -194,8 +206,10 @@
                 <div class="games-grid">
                     @forelse($videojuegos as $juego)
                     <div class="game-card">
+
                         <div class="game-image">
-                            <img src="{{ $juego->imagen ? asset('img/videojuegos/' . $juego->imagen) : 'https://via.placeholder.com/400x250' }}" alt="{{ $juego->titulo }}">
+                            <img src="{{ $juego->imagen ? asset('img/videojuegos/' . $juego->imagen) : 'https://via.placeholder.com/400x250' }}"
+                                alt="{{ $juego->titulo }}">
 
                             @if($juego->descuento > 0)
                             <div class="discount-badge">-{{ $juego->descuento }}%</div>
@@ -218,8 +232,12 @@
                         </div>
 
                         <div class="game-info">
+
                             <h3 class="game-title">{{ $juego->titulo }}</h3>
-                            <p class="game-description">{{ $juego->descripcion ?? 'Descripción no disponible' }}</p>
+
+                            <p class="game-description">
+                                {{ $juego->descripcion ?? 'Descripción no disponible' }}
+                            </p>
 
                             <div class="game-tags">
                                 @foreach($juego->generos_array ?? [] as $g)
@@ -241,21 +259,27 @@
                                     <i class="fas fa-shopping-cart"></i>
                                     Agregar
                                 </button>
+
                             </div>
                         </div>
                     </div>
+
                     @empty
+
                     <div class="empty-state">
                         <div class="empty-icon">
                             <i class="fas fa-gamepad"></i>
                         </div>
                         <h3>No hay videojuegos registrados</h3>
                         <p>Comienza agregando tu primer videojuego al catálogo</p>
-                        <a href="{{ route('admin.videojuegos.create') }}" class="btn-primary">
+
+                        <!-- CORREGIDO -->
+                        <a href="{{ route('videojuegos.create') }}" class="btn-primary">
                             <i class="fas fa-plus"></i>
                             Crear Primer Juego
                         </a>
                     </div>
+
                     @endforelse
                 </div>
             </section>

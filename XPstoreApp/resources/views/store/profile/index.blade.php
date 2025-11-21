@@ -2,70 +2,56 @@
 
 @section('title', 'Mi Perfil')
 
-@section('css')
-@vite('resources/css/profile.css')
-@endsection
-
-@section('js')
-@vite('resources/js/profile.js')
-@endsection
-
+@vite(['resources/css/store/Profile.css', 'resources/js/store/profile.js'])
 
 @section('content')
-{{-- Aquí va todo tu contenido anterior --}}
-@endsection
 
+<div class="profile-wrapper">
 
-<h2 class="profile-title">Mi Perfil</h2>
+    <h2 class="profile-title">Mi Perfil</h2>
 
-{{-- Mensajes --}}
-@if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
-@endif
+    {{-- Mensajes --}}
+    @if(session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
 
-{{-- Mensajes de error --}}
-@if ($errors->any())
-<div class="alert alert-danger">
-    @foreach ($errors->all() as $error)
-    <div>{{ $error }}</div>
-    @endforeach
-</div>
-@endif
-
-{{-- FORMULARIO --}}
-<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
-
-    {{-- AVATAR --}}
-    <div class="avatar-section">
-        <img class="avatar-img"
-            src="{{ $user->avatar ? asset('storage/'.$user->avatar) : 'https://via.placeholder.com/150' }}"
-            alt="Avatar">
-
-        <label class="avatar-label">Cambiar avatar</label>
-        <input type="file" name="avatar" class="file-input">
+    @if($errors->any())
+    <div class="alert alert-danger">
+        @foreach($errors->all() as $error)
+        <div>{{ $error }}</div>
+        @endforeach
     </div>
+    @endif
 
-    {{-- NOMBRE --}}
-    <div class="input-group">
-        <label>Nombre</label>
-        <input
-            type="text"
-            name="name"
-            value="{{ old('name', $user->name) }}"
-            required>
-    </div>
+    {{-- FORMULARIO --}}
+    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
-    {{-- EMAIL (solo lectura) --}}
-    <div class="input-group">
-        <label>Email</label>
-        <input type="text" value="{{ $user->email }}" disabled>
-    </div>
+        {{-- AVATAR --}}
+        <div class="avatar-section">
+            <img class="avatar-img"
+                src="{{ $user->avatar ? asset('storage/'.$user->avatar) : 'https://via.placeholder.com/150' }}"
+                alt="Avatar">
 
-    {{-- BOTÓN --}}
-    <button class="btn-save">Guardar cambios</button>
-</form>
+            <label class="avatar-label">Cambiar avatar</label>
+            <input type="file" name="avatar" class="file-input">
+        </div>
+
+        {{-- NOMBRE --}}
+        <div class="input-group">
+            <label>Nombre</label>
+            <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
+        </div>
+
+        {{-- EMAIL --}}
+        <div class="input-group">
+            <label>Email</label>
+            <input type="text" value="{{ $user->email }}" disabled>
+        </div>
+
+        <button class="btn-save">Guardar cambios</button>
+    </form>
 
 </div>
 

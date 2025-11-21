@@ -85,10 +85,14 @@ $platforms = $platforms ?? [];
         </div>
 
         {{-- Botón agregar --}}
-        <button class="add-cart-btn">
-            <i class="fas fa-shopping-cart"></i>
-            Agregar
-        </button>
+        <form action="{{ route('cart.add', $game->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="add-cart-btn">
+                <i class="fas fa-shopping-cart"></i>
+                Agregar
+            </button>
+        </form>
+
 
     </div>
 

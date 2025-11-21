@@ -8,6 +8,8 @@ use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Store\GameStoreController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Admin\VideoGameController;
+use App\Http\Controllers\User\CartController;
 
 use App\Models\User;
 
@@ -64,6 +66,20 @@ Route::middleware('auth')->group(function () {
     // ADMIN
     Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
+    // CRUD de Videojuegos (solo admins)
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
+    });
+
+
+
+
+
+
+
+
+
+
     // USER
     Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
 
@@ -72,6 +88,15 @@ Route::middleware('auth')->group(function () {
         ->name('profile.index');
 
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Ver carrito
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+
+    // Agregar un juego al carrito
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+
+    // Eliminar un juego del carrito
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 
     // STORE ACTIONS
