@@ -30,24 +30,7 @@
 
     @stack('scripts')
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <script>
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.classList.add('toast');
 
-            toast.innerHTML = `
-            <i class="fas fa-check-circle"></i>
-            ${message}
-        `;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3500);
-        }
-    </script>
     @if(session('success'))
     <script>
         showToast("{{ session('success') }}");

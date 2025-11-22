@@ -74,11 +74,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-
-
-
-
-
     // USER
     Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
 
@@ -88,14 +83,14 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Ver carrito
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    // =========================
+    // CARRITO DE COMPRAS 
+    // =========================
 
-    // Agregar un juego al carrito
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index'); // Ver carrito
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add'); // Agregar al carrito
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove'); // Eliminar del carrito
 
-    // Eliminar un juego del carrito
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
 
     // STORE ACTIONS
