@@ -35,7 +35,7 @@
                     <i class="fas fa-chart-line"></i>
                     Dashboard
                 </a>
-                <a href="{{ route('admin.videojuegos.index') }}" class="nav-item active">
+                <a href="{{ route('videojuegos.index') }}" class="nav-item active">
                     <i class="fas fa-gamepad"></i>
                     Gestión de Juegos
                 </a>
@@ -43,7 +43,7 @@
                     <i class="fas fa-users"></i>
                     Gestión de Usuarios
                 </a>
-                <a href="{{ route('admin.gamecodes.index') }}" class="nav-item">
+                <a href="#" class="nav-item">
                     <i class="fas fa-ticket-alt"></i>
                     Gestión de Códigos
                 </a>

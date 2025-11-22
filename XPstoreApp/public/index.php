@@ -1,4 +1,6 @@
+
 <?php
+
 // Aumentar los límites de memoria y tiempo de ejecución
 ini_set('memory_limit', '2048M');
 ini_set('max_execution_time', 120);

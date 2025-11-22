@@ -20,10 +20,18 @@
 
             <!-- User Menu -->
             <div class="user-menu">
-                <div class="cart-icon" id="cartIcon">
+
+
+                <a href="{{ route('cart.index') }}" class="cart-icon" id="cartIcon">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-count" id="cartCount">0</span>
-                </div>
+
+                    <span class="cart-count" id="cartCount">
+                        {{ session('cart') ? collect(session('cart'))->sum('quantity') : 0 }}
+                    </span>
+
+                </a>
+
+
 
                 <div class="messages-icon" id="notificationsIcon">
                     <i class="fas fa-bell"></i>

@@ -1,5 +1,26 @@
 <?php
 
+/**
+ * Controlador del Carrito de Compras del usuario.
+ *
+ * Este controlador administra toda la lógica del carrito:
+ * - Mostrar el carrito actual desde la sesión.
+ * - Agregar productos al carrito (sumar cantidades si ya existe).
+ * - Calcular subtotal, descuentos y total final.
+ * - Eliminar productos del carrito.
+ *
+ * El carrito se almacena en la sesión como un array asociativo:
+ * cart[id_producto] = [
+ *      'title'        => string,
+ *      'price'        => float,
+ *      'image'        => string (ruta absoluta),
+ *      'quantity'     => int,
+ *      'discount'     => int,
+ *      'final_price'  => float
+ * ]
+ */
+
+
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
@@ -11,9 +32,11 @@ class CartController extends Controller
     // Mostrar carrito
     public function index()
     {
+
+
+
         $cart = session()->get('cart', []);
 
-        // Si el carrito está vacío
         if (empty($cart)) {
             return view('cart.index', [
                 'cart' => [],
@@ -28,16 +51,14 @@ class CartController extends Controller
 
         foreach ($cart as $item) {
 
-            // precio original * cantidad
             $subtotal += $item['price'] * $item['quantity'];
 
-            // si tiene descuento
             if ($item['discount'] > 0) {
-                $discount_total += ($item['price'] - $item['final_price']) * $item['quantity'];
+                $discount_total +=
+                    ($item['price'] - $item['final_price']) * $item['quantity'];
             }
         }
 
-        // total final
         $total = $subtotal - $discount_total;
 
         return view('cart.index', compact('cart', 'subtotal', 'discount_total', 'total'));
@@ -47,31 +68,57 @@ class CartController extends Controller
     // Agregar al carrito
     public function add($id)
     {
-        $game = VideoGame::findOrFail($id);
+        try {
+            $game = VideoGame::findOrFail($id);
 
-        // Obtener carrito actual
-        $cart = session()->get('cart', []);
+            $cart = session()->get('cart', []);
 
-        // Si ya existe, aumentar cantidad
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
-        } else {
-            // Agregar por primera vez
-            $cart[$id] = [
-                'title'     => $game->titulo,
-                'price'     => $game->precio,
-                'image'     => $game->imagen ? asset('img/videojuegos/' . $game->imagen) : 'https://via.placeholder.com/120',
-                'quantity'  => 1,
-                'discount'  => $game->descuento,
-                'final_price' => $game->precio_con_descuento ?? $game->precio
-            ];
+            if (isset($cart[$id])) {
+
+                $cart[$id]['quantity']++;
+            } else {
+
+                // Intento de obtener la imagen real
+                $image = 'https://via.placeholder.com/120';
+
+                if (is_array($game->images) && count($game->images) > 0) {
+                    $possiblePath = 'storage/' . $game->images[0];
+
+                    // Si existe la imagen en storage
+                    if (file_exists(public_path($possiblePath))) {
+                        $image = asset($possiblePath);
+                    }
+                }
+
+                // Precio final (accessor)
+                $final_price = $game->price_after_discount;
+
+                $cart[$id] = [
+                    'title'       => $game->title,
+                    'price'       => $game->price,
+                    'image'       => $image,
+                    'discount'    => $game->discount,
+                    'final_price' => $final_price,
+                    'quantity'    => 1,
+                ];
+            }
+
+            session()->put('cart', $cart);
+
+            return redirect()
+                ->route('cart.index')
+                ->with('success', 'Juego agregado al carrito');
+        } catch (\Exception $e) {
+
+            // registrar error en logs
+            report($e);
+
+            return redirect()
+                ->route('cart.index')
+                ->with('error', 'Ocurrió un problema al agregar el producto al carrito.');
         }
-
-        session()->put('cart', $cart);
-
-        return redirect()->route('cart.index')
-            ->with('success', 'Juego agregado al carrito');
     }
+
 
     // Eliminar
     public function remove($id)

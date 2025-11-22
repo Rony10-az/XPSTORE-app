@@ -17,10 +17,13 @@
             </h1>
             <p class="description">Revisa tus productos antes de finalizar la compra</p>
         </div>
-
         <div class="badge-products">
-            {{ count($cart) }} producto{{ count($cart) > 1 ? 's' : '' }}
+            {{ collect($cart)->sum('quantity') }}
+            producto{{ collect($cart)->sum('quantity') > 1 ? 's' : '' }}
         </div>
+
+
+
     </div>
 
 

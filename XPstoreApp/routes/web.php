@@ -67,9 +67,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
     // CRUD de Videojuegos (solo admins)
-    Route::middleware('role:admin')->group(function () {
-        Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
-    });
+    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
+
 
 
 
