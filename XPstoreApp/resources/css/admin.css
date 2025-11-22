@@ -1,4 +1,165 @@
 /* resources/css/admin.css */
+/* Base theme tokens for the admin area */
+:root {
+    --primary-purple: #8b5cf6;
+    --primary-blue: #3b82f6;
+    --dark-bg: #0f172a;
+    --dark-secondary: #1e293b;
+    --dark-tertiary: #334155;
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --accent-orange: #f97316;
+    --accent-red: #ef4444;
+    --accent-green: #10b981;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(180deg, #0f172a 0%, #0b1020 100%);
+    color: var(--text-primary);
+}
+
+a {
+    color: inherit;
+}
+
+/* Layout shell */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+    background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1), transparent 35%),
+        radial-gradient(circle at 80% 0%, rgba(59, 130, 246, 0.08), transparent 30%),
+        var(--dark-bg);
+}
+
+.admin-sidebar {
+    background: #0b162a;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    font-weight: 700;
+    color: white;
+}
+
+.logo-xp {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.logo-store {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    transform: translateX(4px);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.18));
+    color: white;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.admin-main {
+    padding: 2rem 2.5rem;
+}
+
+.admin-main > .admin-header {
+    background: transparent;
+    padding: 0 0 1.5rem 0;
+    border-radius: 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-main > .admin-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.admin-content {
+    margin-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 0 0 20px 20px;
+    }
+
+    .admin-main {
+        padding: 1.5rem;
+    }
+}
+
 .admin-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -68,7 +229,7 @@
 
 .stat-header {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
@@ -131,6 +292,71 @@
 
 .crud-table tr:hover {
     background: rgba(139, 92, 246, 0.05);
+}
+
+/* Price, stock and rating badges */
+.price-discounted {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.price-old {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    font-size: 0.9rem;
+}
+
+.price-new {
+    color: var(--accent-green);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.price-normal {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stock-display {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: flex-start;
+}
+
+.stock-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 8px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.stock-count.has-stock {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.stock-count.no-stock {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.rating-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+.status-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
 /* Game Info */
@@ -247,7 +473,7 @@
 /* Search and Filters */
 .crud-toolbar {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
     gap: 1rem;
