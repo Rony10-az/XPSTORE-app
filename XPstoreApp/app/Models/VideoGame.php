@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class VideoGame extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'video_games';
 
     protected $fillable = [
         'title',
