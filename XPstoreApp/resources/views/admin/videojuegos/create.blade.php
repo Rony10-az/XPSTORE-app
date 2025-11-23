@@ -82,9 +82,10 @@
                 <div class="form-grid">
                     {{-- Precio --}}
                     <div class="form-group">
-                        <label for="price" class="form-label">Precio ($) *</label>
+                        <label for="price" class="form-label">Precio (S/.) *</label>
                         <input type="number" id="price" name="price" class="form-input"
-                            step="0.01" min="0" value="{{ old('price') }}" required>
+                           min="0.99" max="999.99" step="10" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
+
                         @error('price')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -93,18 +94,21 @@
                     {{-- Descuento --}}
                     <div class="form-group">
                         <label for="discount" class="form-label">Descuento (%)</label>
-                        <input type="number" id="discount" name="discount" class="form-input"
-                            step="1" min="0" max="100" value="{{ old('discount', 0) }}">
+                        <input type="number" id="discount" name="discount" min="5" max="90" step="5"
+                                         placeholder="(Desde 5% hasta 90%)"
+                                          value="{{ old('discount') }}" required>
+
                         @error('discount')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
 
+
                     {{-- Stock --}}
                     <div class="form-group">
                         <label for="stock" class="form-label">Stock *</label>
-                        <input type="number" id="stock" name="stock" class="form-input"
-                            min="0" value="{{ old('stock', 0) }}" required>
+                        <input type="number"id="stock"name="stock"min="0"max="99"step="10" placeholder="Cantidad en stock:" value="{{ old('stock') }}"class="form-input">
+
                         @error('stock')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
@@ -112,13 +116,15 @@
 
                     {{-- Rating --}}
                     <div class="form-group">
-                        <label for="rating" class="form-label">Rating (0-5)</label>
-                        <input type="number" id="rating" name="rating" class="form-input"
-                            step="0.1" min="0" max="5" value="{{ old('rating', 0) }}">
-                        @error('rating')
-                        <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
+                   <label for="popularity" class="form-label">Popularidad (1-5)</label>
+                   <input type="number" id="popularidad" name="popularidad"min="1" max="5"placeholder="Popularidad (1 a 5)"class="form-input"required>
+
+
+                    @error('popularity')
+                     <span class="error-message">{{ $message }}</span>
+                    @enderror
+                   </div>
+
                 </div>
             </div>
 
