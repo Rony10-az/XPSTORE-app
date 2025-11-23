@@ -10,6 +10,7 @@ use App\Http\Controllers\Store\GameStoreController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Admin\VideoGameController;
 use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 
 use App\Models\User;
 
@@ -68,6 +69,12 @@ Route::middleware('auth')->group(function () {
 
     // CRUD de Videojuegos (solo admins)
     Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
+
+    // Rutas de usuarios (solo admin)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        // Monté este recurso para listar, ver, editar y eliminar usuarios.
+        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
+    });
 
 
 

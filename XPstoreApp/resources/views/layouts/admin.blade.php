@@ -31,15 +31,16 @@
             </div>
 
             <nav class="sidebar-nav">
-                <a href="{{ route('dashboard.admin') }}" class="nav-item">
+                {{-- Ajusté los enlaces para que resalten activos según la ruta. --}}
+                <a href="{{ route('dashboard.admin') }}" class="nav-item {{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
                     <i class="fas fa-chart-line"></i>
                     Dashboard
                 </a>
-                <a href="{{ route('videojuegos.index') }}" class="nav-item active">
+                <a href="{{ route('videojuegos.index') }}" class="nav-item {{ request()->routeIs('videojuegos.*') ? 'active' : '' }}">
                     <i class="fas fa-gamepad"></i>
                     Gestión de Juegos
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('admin.users.index') }}" class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                     <i class="fas fa-users"></i>
                     Gestión de Usuarios
                 </a>
@@ -57,7 +58,16 @@
         <!-- Main Content -->
         <main class="admin-main">
             <header class="admin-header">
-                <h1>@yield('title')</h1>
+                <div class="page-hero">
+                    <div class="hero-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="hero-text">
+                        <p class="hero-kicker">Panel XP</p>
+                        <h1>@yield('title')</h1>
+                        <p class="hero-subtitle">@yield('subtitle', 'Administra XP Store desde aquí')</p>
+                    </div>
+                </div>
             </header>
 
             <div class="admin-content">

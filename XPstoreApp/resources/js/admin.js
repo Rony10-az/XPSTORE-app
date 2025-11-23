@@ -2,6 +2,15 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Admin CRUD cargado');
 
+    // Hice que las alertas se desvanezcan solas tras unos segundos.
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach((alert) => {
+        setTimeout(() => {
+            alert.classList.add('fade-out');
+            setTimeout(() => alert.remove(), 400);
+        }, 3500);
+    });
+
     // Búsqueda en tiempo real
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {

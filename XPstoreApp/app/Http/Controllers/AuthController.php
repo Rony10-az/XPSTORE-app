@@ -49,8 +49,9 @@ class AuthController extends Controller
         );
 
         if (!$user) {
+            // Agregué este mensaje para aclarar si la cuenta está bloqueada o pendiente.
             return back()
-                ->withErrors(['email' => 'Las credenciales no coinciden.'])
+                ->withErrors(['email' => 'Cuenta no disponible o credenciales incorrectas.'])
                 ->withInput($request->only('email'));
         }
 
