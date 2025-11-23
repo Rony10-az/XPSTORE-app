@@ -142,19 +142,27 @@
                         </div>
                     </td>
                     <td>
-                        @if(!empty($juego->genre))
-                        @foreach(array_slice($juego->genre, 0, 2) as $genero)
-                        <span class="badge badge-primary">{{ $genero }}</span>
-                        @endforeach
-                        @endif
-                    </td>
-                    <td>
-                        @if(!empty($juego->platform))
-                        @foreach(array_slice($juego->platform, 0, 2) as $plataforma)
-                        <span class="badge badge-info">{{ $plataforma }}</span>
-                        @endforeach
-                        @endif
-                    </td>
+    <div class="tags-wrapper">
+        @if(!empty($juego->genre))
+            @foreach($juego->genre as $genero)
+                <span class="badge badge-primary">{{ $genero }}</span>
+            @endforeach
+        @else
+            <span class="text-muted">-</span>
+        @endif
+    </div>
+</td>
+<td>
+    <div class="tags-wrapper">
+        @if(!empty($juego->platform))
+            @foreach($juego->platform as $plataforma)
+                <span class="badge badge-info">{{ $plataforma }}</span>
+            @endforeach
+        @else
+            <span class="text-muted">-</span>
+        @endif
+    </div>
+</td>
                     <td>
                         <div class="rating-display">
                             <i class="fas fa-star"></i>

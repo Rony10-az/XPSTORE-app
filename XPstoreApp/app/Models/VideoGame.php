@@ -35,7 +35,7 @@ class VideoGame extends Model
         'platform' => 'array',
         'requirements' => 'array',
         'price' => 'decimal:2',
-        'rating' => 'decimal:2',
+        'rating' => 'float',
         'featured' => 'boolean',
         'release_date' => 'date',
     ];

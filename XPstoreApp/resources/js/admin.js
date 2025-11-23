@@ -86,41 +86,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    updateStockBars();
-        // Límite automático para el precio
     const priceInput = document.getElementById('price');
 
 if (priceInput) {
     priceInput.addEventListener('blur', function () {
         let value = this.value.trim();
 
-        // Validar que tenga máximo dos decimales
-        // Solo números enteros o con dos decimales máximo
-        const decimalPattern = /^\d{1,4}(\.\d{1,2})?$/;
+        // Validar formato: hasta 3 dígitos antes del punto y máximo 2 decimales
+        const decimalPattern = /^\d{1,3}(\.\d{1,2})?$/;
 
-        if (!decimalPattern.test(value)) {
-            // Si falla, forzamos a dos decimales válidos
-            let num = parseFloat(value);
+        let num = parseFloat(value);
 
-            if (isNaN(num)) {
-                this.value = "";
-                return;
-            }
-
-            num = Math.floor(num * 100) / 100; // truncar a dos decimales
-            value = num.toFixed(2);
+        if (isNaN(num) || !decimalPattern.test(value)) {
+            // Si no es número válido, limpiar
+            this.value = "";
+            return;
         }
 
-        // Convertir a número para validar rango
-        let numValue = parseFloat(value);
+        // Limitar rango de precio
+        if (num < 0.99) num = 0.99;
+        if (num > 999.99) num = 999.99;
 
-        // Rango permitido: 0.99 a 9999.99
-        if (numValue < 0.99) numValue = 0.99;
-        if (numValue > 9999.99) numValue = 9999.99;
-
-        this.value = numValue.toFixed(2);
+        // Forzar dos decimales
+        this.value = num.toFixed(2);
     });
 }
+
+
     
 
         // Límite automático para el descuento (0 a 99)

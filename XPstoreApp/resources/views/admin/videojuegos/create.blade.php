@@ -84,7 +84,7 @@
                     <div class="form-group">
                         <label for="price" class="form-label">Precio (S/.) *</label>
                         <input type="number" id="price" name="price" class="form-input"
-                           min="0.99" max="999.99" step="10" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
+                           min="0.99" max="999.99" step="any" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
 
                         @error('price')
                         <span class="error-message">{{ $message }}</span>
@@ -106,27 +106,37 @@
 
                     {{-- Stock --}}
                     <div class="form-group">
-                        <label for="stock" class="form-label">Stock *</label>
-                        <input type="number"id="stock"name="stock"min="0"max="99"step="10" placeholder="Cantidad en stock:" value="{{ old('stock') }}"class="form-input">
-
-                        @error('stock')
-                        <span class="error-message">{{ $message }}</span>
-                        @enderror
-                    </div>
+            <label for="stock" class="form-label">Stock *</label>
+            <input type="number" 
+                   id="stock" 
+                   name="stock" 
+                   class="form-input"
+                   step="1" 
+                   min="0" 
+                   value="{{ old('stock') }}" 
+                   required>
+            @error('stock')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
+        </div>
 
                     {{-- Rating --}}
                     <div class="form-group">
-                   <label for="popularity" class="form-label">Popularidad (1-5)</label>
-                   <input type="number" id="popularidad" name="popularidad"min="1" max="5"placeholder="Popularidad (1 a 5)"class="form-input"required>
-
-
-                    @error('popularity')
-                     <span class="error-message">{{ $message }}</span>
-                    @enderror
-                   </div>
-
-                </div>
-            </div>
+    <label for="rating" class="form-label">Popularidad (1-5) *</label>
+    <input type="number" 
+           id="rating" 
+           name="rating" 
+           class="form-input"
+           min="1" 
+           max="5" 
+           step="1"
+           placeholder="Popularidad (1 a 5)" 
+           value="{{ old('rating', 3) }}" 
+           required>
+    @error('rating')
+    <span class="error-message">{{ $message }}</span>
+    @enderror
+</div>
 
             {{-- Categorías --}}
             <div class="form-section">

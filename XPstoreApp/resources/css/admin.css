@@ -946,3 +946,49 @@ a {
     box-shadow: none;
     /* Quita cualquier sombra que algunos navegadores agregan */
 }
+/* Tags wrapper para géneros y plataformas */
+.tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    max-width: 220px;
+    max-height: 85px;
+    overflow-y: auto;
+    padding: 0.25rem 0;
+    align-items: flex-start;
+}
+
+.tags-wrapper .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.55rem;
+    white-space: nowrap;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* Scrollbar personalizado para los tags */
+.tags-wrapper::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.tags-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 2px;
+}
+
+.tags-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.4);
+    border-radius: 2px;
+}
+
+.tags-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.6);
+}
+
+/* Texto para campos vacíos */
+.text-muted {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 0.85rem;
+}

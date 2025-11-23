@@ -26,7 +26,7 @@ class VideoGameController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0','price' => 'required|numeric|min:0.99|max:9999',
+            'price' => 'required|numeric|min:0|max:999.99',
             'discount' => 'nullable|numeric|min:0|max:100',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
