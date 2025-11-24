@@ -33,9 +33,9 @@
                     {{-- Título --}}
                     <div class="form-group">
                         <label for="title" class="form-label">Título del Juego *</label>
-                        <input type="text" id="title" name="title" class="form-input"
-                            value="{{ old('title') }}" required>
-                        @error('title')
+                                <input type="text" id="title" name="title" class="form-input"
+                                 value="{{ old('title') }}" required>
+                            @error('title')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>

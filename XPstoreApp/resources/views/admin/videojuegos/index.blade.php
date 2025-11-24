@@ -121,12 +121,12 @@
                     <td>
                         @if($juego->discount > 0)
                         <div class="price-discounted">
-                            <span class="price-old">${{ number_format($juego->price, 2) }}</span>
-                            <span class="price-new">${{ number_format($juego->price * (1 - $juego->discount/100), 2) }}</span>
+                            <span class="price-old">S/.{{ number_format($juego->price, 2) }}</span>
+                            <span class="price-new">S/.{{ number_format($juego->price * (1 - $juego->discount/100), 2) }}</span>
                             <span class="badge badge-danger">-{{ $juego->discount }}%</span>
                         </div>
                         @else
-                        <span class="price-normal">${{ number_format($juego->price, 2) }}</span>
+                        <span class="price-normal">S/.{{ number_format($juego->price, 2) }}</span>
                         @endif
                     </td>
                     <td>
@@ -202,15 +202,13 @@
                 @empty
                 <tr>
                     <td colspan="9">
-                        <div class="empty-state">
-                            <i class="fas fa-gamepad"></i>
-                            <h4>No hay videojuegos registrados</h4>
-                            <p>Comienza agregando tu primer videojuego al catálogo</p>
-                            <a href="{{ route('videojuegos.create') }}" class="btn-primary">
-                                <i class="fas fa-plus"></i> Crear Primer Juego
-                            </a>
-                        </div>
-                    </td>
+    <div class="empty-state" style="text-align: center; padding: 40px 0;">
+        <i class="fas fa-gamepad" style="font-size: 48px; color: #ccc;"></i>
+        <h3>No hay videojuegos agregados</h3>
+        <p></p>
+    </div>
+</td>
+
                 </tr>
                 @endforelse
             </tbody>
