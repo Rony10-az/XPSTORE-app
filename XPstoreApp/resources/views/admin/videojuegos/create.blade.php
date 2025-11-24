@@ -12,14 +12,16 @@
             <h1><i class="fas fa-plus"></i> Crear Nuevo Videojuego</h1>
             <p class="admin-subtitle">Agrega un nuevo juego al catálogo de XP Store</p>
         </div>
-        <a href="{{ route('admin.videojuegos.index') }}" class="btn-secondary">
-            <i class="fas fa-arrow-left"></i> Volver al Listado
-        </a>
+        <a href="{{ route('videojuegos.index') }}" class="btn-secondary">
+    <i class="fas fa-arrow-left"></i> Volver al Listado
+</a>
+
     </div>
 
     {{-- Formulario --}}
     <div class="form-container">
-        <form action="{{ route('admin.videojuegos.store') }}" method="POST" enctype="multipart/form-data" class="crud-form">
+        <form action="{{ route('videojuegos.store') }}" method="POST" enctype="multipart/form-data">
+
             @csrf
 
             {{-- Información Básica --}}
@@ -33,9 +35,9 @@
                     {{-- Título --}}
                     <div class="form-group">
                         <label for="title" class="form-label">Título del Juego *</label>
-                                <input type="text" id="title" name="title" class="form-input"
-                                 value="{{ old('title') }}" required>
-                            @error('title')
+                        <input type="text" id="title" name="title" class="form-input"
+                            value="{{ old('title') }}" required>
+                        @error('title')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
@@ -82,9 +84,9 @@
                 <div class="form-grid">
                     {{-- Precio --}}
                     <div class="form-group">
-                        <label for="price" class="form-label">Precio (S/.) *</label>
+                        <label for="price" class="form-label">Precio ($) *</label>
                         <input type="number" id="price" name="price" class="form-input"
-                           min="0.99" max="999.99" step="any" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
+   min="0.99" max="999.99" step="any" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
 
                         @error('price')
                         <span class="error-message">{{ $message }}</span>
@@ -95,48 +97,43 @@
                     <div class="form-group">
                         <label for="discount" class="form-label">Descuento (%)</label>
                         <input type="number" id="discount" name="discount" min="5" max="90" step="5"
-                                         placeholder="(Desde 5% hasta 90%)"
-                                          value="{{ old('discount') }}" required>
+    placeholder="(Desde 5% hasta 90%)" value="{{ old('discount') }}" required>
 
                         @error('discount')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
 
-
                     {{-- Stock --}}
                     <div class="form-group">
-            <label for="stock" class="form-label">Stock *</label>
-            <input type="number" 
-                   id="stock" 
-                   name="stock" 
-                   class="form-input"
-                   step="1" 
-                   min="0" 
-                   value="{{ old('stock') }}" 
-                   required>
-            @error('stock')
-            <span class="error-message">{{ $message }}</span>
-            @enderror
-        </div>
+                        <label for="stock" class="form-label">Stock *</label>
+                        <input type="number" id="stock" name="stock" class="form-input"
+                            min="0" value="{{ old('stock', 0) }}" required>
+                        @error('stock')
+                        <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
 
                     {{-- Rating --}}
                     <div class="form-group">
-    <label for="rating" class="form-label">Popularidad (1-5) *</label>
-    <input type="number" 
-           id="rating" 
-           name="rating" 
-           class="form-input"
-           min="1" 
-           max="5" 
-           step="1"
-           placeholder="Popularidad (1 a 5)" 
-           value="{{ old('rating', 3) }}" 
-           required>
-    @error('rating')
-    <span class="error-message">{{ $message }}</span>
-    @enderror
-</div>
+                        <label for="rating" class="form-label">Rating (0-5)</label>
+                        <input type="number" 
+       id="rating" 
+       name="rating" 
+       class="form-input"
+       min="1" 
+       max="5" 
+       step="1"
+       placeholder="Popularidad (1 a 5)" 
+       value="{{ old('rating', 3) }}" 
+       required>
+
+                        @error('rating')
+                        <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+            </div>
 
             {{-- Categorías --}}
             <div class="form-section">
