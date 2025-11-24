@@ -24,15 +24,32 @@
 
 
     </div>
+    <div class="cart-content {{ count($cart) == 0 ? 'empty' : '' }}">
 
 
-    <div class="cart-content">
+        {{-- SI EL CARRITO ESTÁ VACÍO --}}
+        @if(count($cart) == 0)
 
-        <!-- LISTA DE PRODUCTOS -->
+        <div class="empty-cart">
+            <div class="empty-message-box">
+                <h2 class="empty-title">
+                    <i class="fas fa-shopping-cart"></i> Tu carrito está vacío
+                </h2>
+
+                <p class="empty-sub">Agrega juegos a tu carrito para ver el resumen del pedido</p>
+
+                <a href="{{ route('dashboard.user') }}" class="pay-btn">
+                    <i class="fas fa-store"></i> Ir a la tienda
+                </a>
+            </div>
+        </div>
+
+        @else
+
+        {{-- LISTA DE PRODUCTOS --}}
         <div class="cart-items">
 
             @foreach($cart as $id => $item)
-
             <div class="cart-card">
 
                 <div class="image-box">
@@ -55,7 +72,6 @@
                     </div>
 
                     <div class="price-box">
-
                         @if($item['discount'] > 0)
                         <span class="old-price">${{ number_format($item['price'], 2) }}</span>
                         @endif
@@ -69,21 +85,18 @@
                             <i class="fas fa-trash"></i> Eliminar
                         </button>
                     </form>
-
                 </div>
 
             </div>
-
             @endforeach
 
         </div>
 
-        <!-- RESUMEN DEL PEDIDO -->
+        {{-- RESUMEN SOLO SI HAY PRODUCTOS --}}
         <div class="summary-box">
 
             <h2 class="summary-title">
-                <i class="fas fa-receipt"></i>
-                Resumen del pedido
+                <i class="fas fa-receipt"></i> Resumen del pedido
             </h2>
 
             <p class="summary-sub">Detalles de tu compra</p>
@@ -99,24 +112,30 @@
             </div>
 
             <div class="summary-total">
-                Total
-                <strong>${{ number_format($total, 2) }}</strong>
+                Total <strong>${{ number_format($total, 2) }}</strong>
             </div>
 
+            @if($discount_total > 0)
             <div class="summary-save">
                 <i class="fas fa-badge-check"></i>
                 ¡Ahorras ${{ number_format($discount_total, 2) }} en esta compra!
             </div>
+            @endif
 
-            <a href="#" class="pay-btn">
-                <i class="fas fa-credit-card"></i>
-                Proceder al pago
+            <a href="{{ route('checkout.index') }}" class="pay-btn">
+                <i class="fas fa-credit-card"></i> Proceder al pago
                 <i class="fas fa-arrow-right"></i>
             </a>
 
         </div>
 
+        @endif
+
     </div>
+
+
+
+</div>
 
 </div>
 
