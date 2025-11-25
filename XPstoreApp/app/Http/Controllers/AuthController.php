@@ -6,15 +6,21 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
+    private AuthService $auth;
+
     /**
      * Inyecta AuthService para delegar la lógica de autenticación.
      */
-    public function __construct(private readonly AuthService $auth) {}
+    public function __construct()
+    {
+        $this->auth = new AuthService();
+    }
 
     /**
      * Mostrar formulario de login.
@@ -43,11 +49,14 @@ class AuthController extends Controller
         $user = $this->auth->attempt($request->get('email'), $request->get('password'));
 
         if (!$user) {
-            return back()->withErrors(['email' => 'Credenciales inválidas'])->withInput();
+            return back()
+                ->withErrors(['email' => 'Las credenciales no coinciden.'])
+                ->withInput($request->only('email'));
         }
 
         return redirect()->route('home')->with('success', 'Bienvenido');
     }
+
 
     /**
      * Procesar registro de nuevo usuario.
@@ -58,7 +67,9 @@ class AuthController extends Controller
             $this->auth->register($request->get('name'), $request->get('email'), $request->get('password'));
             return redirect()->route('layouts.principal')->with('success', 'Cuenta creada');
         } catch (\RuntimeException $e) {
-            return back()->withErrors(['email' => $e->getMessage()])->withInput();
+            return back()
+                ->withErrors(['email' => $e->getMessage()])
+                ->withInput($request->only('name', 'email'));
         }
     }
 
@@ -68,6 +79,9 @@ class AuthController extends Controller
     public function logout(): RedirectResponse
     {
         $this->auth->logout();
-        return redirect()->route('login')->with('success', 'Sesión cerrada');
+
+        return redirect()
+            ->route('login')
+            ->with('success', 'Sesión cerrada correctamente');
     }
 }

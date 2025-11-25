@@ -27,6 +27,7 @@ class VideoGame extends Model
         'requirements',
     ];
 
+
     protected $casts = [
         'images' => 'array',
         'genre' => 'array',
@@ -37,89 +38,20 @@ class VideoGame extends Model
         'featured' => 'boolean',
         'release_date' => 'date',
     ];
-
-    /**
-     * Relación: Un juego tiene muchas reseñas
-     */
-    public function reviews()
+    // Relación con GameCode
+    public function gameCodes()
     {
-        # return $this->hasMany(Review::class);
+        return $this->hasMany(GameCode::class);
     }
+    // App\Models\VideoGame.php
 
-    /**
-     * Relación: Un juego puede estar en muchas bibliotecas
-     */
-    public function libraryItems()
+    public function getPriceAfterDiscountAttribute()
     {
-        #return $this->hasMany(LibraryItem::class);
-    }
-
-    /**
-     * Relación: Un juego puede estar en muchos carritos
-     */
-    public function cartItems()
-    {
-        #return $this->hasMany(CartItem::class);
-    }
-
-    /**
-     * Relación: Usuarios que compraron este juego
-     */
-    public function buyers()
-    {
-        return $this->belongsToMany(User::class, 'library_items')
-            ->withTimestamps()
-            ->withPivot(['purchase_date', 'activation_code', 'status']);
-    }
-
-    /**
-     * Scope: Juegos destacados
-     */
-    public function scopeFeatured($query)
-    {
-        return $query->where('featured', true);
-    }
-
-    /**
-     * Scope: Juegos con descuento
-     */
-    public function scopeOnSale($query)
-    {
-        return $query->where('discount', '>', 0);
-    }
-
-    /**
-     * Scope: Juegos disponibles (con stock)
-     */
-    public function scopeAvailable($query)
-    {
-        return $query->where('stock', '>', 0);
-    }
-
-    /**
-     * Accessor: Precio con descuento aplicado
-     */
-    public function getFinalPriceAttribute()
-    {
-        if ($this->discount > 0) {
-            return $this->price - ($this->price * ($this->discount / 100));
+        if (!$this->discount || $this->discount <= 0) {
+            return $this->price;
         }
-        return $this->price;
-    }
 
-    /**
-     * Accessor: Verificar si está en oferta
-     */
-    public function getIsOnSaleAttribute()
-    {
-        return $this->discount > 0;
-    }
-
-    /**
-     * Accessor: Verificar si está disponible
-     */
-    public function getIsAvailableAttribute()
-    {
-        return $this->stock > 0;
+        $price = $this->price - ($this->price * $this->discount / 100);
+        return round($price, 2);
     }
 }

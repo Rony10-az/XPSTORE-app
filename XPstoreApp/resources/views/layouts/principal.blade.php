@@ -39,8 +39,9 @@
                 </div>
 
                 <!-- Auth Buttons -->
+                @guest
                 <div class="auth-buttons">
-                    <a href="{{ route('login') }}" class="btn-login"> <!-- ← route('login') -->
+                    <a href="{{ route('login') }}" class="btn-login">
                         <i class="fas fa-sign-in-alt"></i>
                         Iniciar Sesión
                     </a>
@@ -49,6 +50,7 @@
                         Registrarse
                     </a>
                 </div>
+                @endguest
             </div>
         </div>
     </header>

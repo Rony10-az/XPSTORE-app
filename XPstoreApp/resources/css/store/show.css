@@ -1,0 +1,802 @@
+/* ============================================================
+   SHOW PAGE – XP STORE
+   ============================================================ */
+
+/* GENERAL */
+.show-wrapper {
+    padding: 40px 2rem;
+    color: #fff;
+    position: relative;
+    z-index: 5;
+    max-width: 1200px;
+    margin: 0 auto 40px;
+}
+
+.back-button {
+    margin-bottom: 20px;
+}
+
+.back-button a {
+    color: #cbd5e1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.back-button a:hover {
+    color: #fff;
+    transform: translateX(-4px);
+}
+
+
+/* INDICADORES */
+.hero-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding-top: 15px;
+}
+
+.indicator {
+    width: 32px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.indicator.active {
+    background: #8b5cf6;
+}
+
+/* MINIATURAS */
+.hero-thumbnails {
+    display: flex;
+    gap: 18px;
+    margin-top: 20px;
+    padding-left: 6px;
+}
+
+.hero-thumb {
+    width: 150px;
+    height: 90px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: .7;
+    border: 2px solid transparent;
+    transition: .25s;
+}
+
+.hero-thumb.active,
+.hero-thumb:hover {
+    opacity: 1;
+    border-color: #8b5cf6;
+}
+
+.hero-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* ============================================================
+   GALERÍA
+   ============================================================ */
+
+.game-gallery {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.gallery-main {
+    width: 100%;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.gallery-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-thumbs {
+    display: flex;
+    gap: 12px;
+}
+
+.gallery-thumbs .thumb {
+    width: 130px;
+    height: 75px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: .7;
+    transition: .2s;
+    border: 2px solid transparent;
+}
+
+.gallery-thumbs .thumb:hover {
+    opacity: 1;
+    border-color: #8b5cf6;
+}
+
+.gallery-thumbs img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ============================================================
+   GRID 2 COLUMNAS
+   ============================================================ */
+
+.game-details-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+}
+
+/* LEFT SIDE */
+.details-left {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ============================================================
+   QUICK STATS
+   ============================================================ */
+
+.quick-stats {
+    display: grid;
+    background: rgba(255, 255, 255, .03);
+    grid-template-columns: repeat(4, 1fr);
+    border-radius: 20px;
+    margin-bottom: 25px;
+    gap: 16px;
+    padding: 20px;
+}
+
+.stat-box {
+    background: rgba(255, 255, 255, .05);
+    border-radius: 14px;
+    padding: 15px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: .2s;
+}
+
+.stat-box i {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    display: block;
+    color: #7dd3fc;
+}
+
+.stat-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(139, 92, 246, .3);
+}
+
+.stat-label {
+    color: #94a3b8;
+    font-size: .85rem;
+}
+
+.stat-value {
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+
+/* ============================================================
+   FEATURES
+   ============================================================ */
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.feature-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 30px;
+}
+
+.feature-box {
+    background: rgba(255, 255, 255, .05);
+    padding: 14px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: .85;
+    transition: .2s;
+}
+
+.feature-box:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, .1);
+}
+
+.feature-box i {
+    color: #c084fc;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+
+.tabs {
+    margin-top: 30px;
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    padding-bottom: 12px;
+}
+
+.tab {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .04);
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.tab:hover {
+    background: rgba(255, 255, 255, .09);
+}
+
+.tab.active {
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, .2);
+}
+
+.tab-content {
+    display: none;
+    margin-top: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* ============================================================
+   TECH GRID
+   ============================================================ */
+
+.tech-grid {
+    margin-top: 25px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.tech-box {
+    background: rgba(255, 255, 255, .04);
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.tech-box i {
+    color: #38bdf8;
+    margin-right: 8px;
+}
+
+
+/* ============================================================
+   REQUIREMENTS
+   ============================================================ */
+
+.requirements {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.req-box {
+    background: rgba(255, 255, 255, .05);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.req-box h3 {
+    color: #c084fc;
+    margin-bottom: 10px;
+}
+
+.req-box ul {
+    padding-left: 18px;
+}
+
+.req-box li {
+    margin-bottom: 8px;
+    font-size: .95rem;
+}
+
+
+/* ============================================================
+   RIGHT SIDE (BUY PANEL)
+   ============================================================ */
+
+.details-right {
+    background: rgba(15, 23, 42, .7);
+    padding: 22px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, .4);
+}
+
+.discount-box {
+    background: #ef4444;
+    padding: 6px 14px;
+    font-weight: bold;
+    color: #fff;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.price-box {
+    margin-bottom: 20px;
+}
+
+.old-price {
+    color: #94a3b8;
+    text-decoration: line-through;
+    margin-right: 10px;
+}
+
+.new-price {
+    font-size: 1.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #10b981, #34d399);
+    -webkit-background-clip: text;
+    /* Chrome / Edge / Safari */
+    background-clip: text;
+    /* estándar */
+    -webkit-text-fill-color: transparent;
+}
+
+
+.btn-buy {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-buy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(139, 92, 246, .5);
+}
+
+.btn-wishlist {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-wishlist:hover {
+    background: rgba(255, 255, 255, .15);
+}
+
+.benefits {
+    margin-top: 25px;
+    list-style: none;
+}
+
+.benefits li {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.benefits i {
+    color: #10b981;
+}
+
+
+
+/* ============================================================
+   REVIEWS
+   ============================================================ */
+
+.reviews {
+    margin-top: 50px;
+}
+
+.reviews h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.no-review-box {
+    background: rgba(255, 255, 255, .05);
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.no-review-box i {
+    font-size: 3rem;
+    color: #8b5cf6;
+    margin-bottom: 15px;
+}
+
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+    .game-details-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .gallery-main {
+        height: 260px;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tech-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .requirements {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .tag {
+        font-size: .75rem;
+        padding: 4px 8px;
+    }
+
+    .gallery-thumbs .thumb {
+        width: 90px;
+        height: 55px;
+    }
+}
+
+/* ============================================================
+   HERO + PANEL ENEBA – VERSION FINAL
+   ============================================================ */
+
+/* CONTENEDOR: HERO IZQUIERDA + PANEL DERECHO */
+.hero-row {
+    display: flex;
+    /* 2 columnas */
+    align-items: flex-start;
+    /* alineados arriba */
+    gap: 24px;
+    margin-bottom: 40px;
+
+}
+
+/* Columna izquierda (imagen grande + thumbnails) */
+.hero-left {
+    flex: 3;
+    /* ocupa más que la derecha */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Tarjeta principal de la imagen */
+.hero-card {
+    position: relative;
+    background: rgba(15, 23, 42, 0.85);
+    border-radius: 20px;
+    padding: 14px;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+    overflow: hidden;
+}
+
+/* Badges sobre la imagen */
+.hero-badges {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.badge-discount {
+    background: #ef4444;
+}
+
+.badge-top {
+    background: #f59e0b;
+}
+
+/* Imagen principal */
+.hero-main {
+    height: 370px;
+    /* 🔹 más bajo que antes */
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.hero-main img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.02);
+    transition: transform .3s ease, filter .3s ease;
+}
+
+.hero-card:hover .hero-main img {
+    transform: scale(1.06);
+    filter: brightness(0.9);
+}
+
+/* Indicadores debajo de la imagen */
+.hero-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    gap: 6px;
+}
+
+.indicator {
+    width: 24px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .25);
+    transition: .3s;
+}
+
+.indicator.active {
+    background: #8b5cf6;
+}
+
+/* Thumbnails debajo de la tarjeta */
+.hero-thumbnails {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hero-thumb {
+    width: 120px;
+    height: 68px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: .6;
+    border: 2px solid transparent;
+    transition: .25s ease;
+}
+
+.hero-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-thumb:hover,
+.hero-thumb.active {
+    opacity: 1;
+    border-color: #8b5cf6;
+}
+
+/* PANEL DERECHO (carrito / precio / botones) */
+.hero-right {
+    flex: 2;
+    /* menos ancho que la izquierda */
+    max-width: 380px;
+    /* 🔹 limita el ancho */
+    background: rgba(15, 23, 42, 0.95);
+    padding: 20px 22px;
+    border-radius: 20px;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
+}
+
+.hero-right .game-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.hero-right .rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #facc15;
+    margin-bottom: 10px;
+}
+
+.hero-right .rating .reviews {
+    color: #9ca3af;
+    font-size: 0.85rem;
+}
+
+.hero-right .platform-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+}
+
+.hero-right .platform-tags .tag {
+    background: rgba(148, 163, 184, 0.25);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.78rem;
+    color: #e5e7eb;
+}
+
+
+
+
+
+/* Botones acción */
+.hero-right .btn-buy {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    transition: .2s;
+}
+
+.hero-right .btn-buy:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.7);
+}
+
+.hero-right .btn-wishlist {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.9);
+    color: #e5e7eb;
+    cursor: pointer;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.9rem;
+    transition: .2s;
+}
+
+.hero-right .btn-wishlist:hover {
+    background: rgba(30, 64, 175, 0.7);
+}
+
+.hero-right .benefits {
+    margin-top: 14px;
+    list-style: none;
+}
+
+.hero-right .benefits li {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+}
+
+.hero-right .benefits i {
+    color: #22c55e;
+}
+
+/* Responsive: apilar hero-left y hero-right */
+@media (max-width: 1024px) {
+    .hero-row {
+        flex-direction: column;
+    }
+
+    .hero-right {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+/* ===============================
+   PRICE SECTION - ENEBA STYLE
+   =============================== */
+
+.price-section {
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+
+/* Línea superior: badge rojo + precio tachado */
+.price-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+/* Badge rojo estilo Eneba */
+.discount-tag {
+    background: #ef4444;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+/* Precio antiguo tachado */
+.old-price {
+    color: #9ca3af;
+    text-decoration: line-through;
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* Precio nuevo grande */
+.new-price {
+    font-size: 2.4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #10b981, #22c55e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+}
