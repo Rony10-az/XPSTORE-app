@@ -86,7 +86,7 @@
         <a href="{{ route('dashboard.user') }}" class="nav-link {{ request()->routeIs('dashboard.user') ? 'active' : '' }}">Catálogo</a>
         <a href="#}" class="nav-link">Marketplace</a>
         <a href="#" class="nav-link">Códigos</a>
-        <a href="# " class="nav-link">Mis Pedidos</a>
+        <a href="{{ route('library.index') }}" class="nav-link">Mis Pedidos</a>
         <a href="#" class="nav-link">Wishlist</a>
     </div>
 </nav>

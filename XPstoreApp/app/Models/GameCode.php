@@ -7,17 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class GameCode extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'video_game_id',
+        'user_id',
         'code',
         'used'
     ];
 
-    // RELACIÓN INVERSA: Un código pertenece a un videojuego
     public function videoGame()
     {
         return $this->belongsTo(VideoGame::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

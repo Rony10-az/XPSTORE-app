@@ -20,7 +20,7 @@
             Gracias por tu compra. Tus juegos ya están disponibles en tu biblioteca.
         </p>
 
-        <a href="#" class="success-button">
+        <a href="{{ route('library.index') }}" class="success-button">
             <i class="fas fa-gamepad"></i> Ir a Mis Juegos
         </a>
 

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\UserPurchase;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -29,38 +32,56 @@ class CheckoutController extends Controller
 
         $total = $subtotal - $discount_total;
 
-        // Guardamos el total en sesión para validaciones futuras
         session(['cart_total' => $total]);
 
         return view('checkout.index', compact('cart', 'subtotal', 'discount_total', 'total'));
     }
 
+
+
+    // ====================================
+    // 🔥 FUNCIÓN QUE GUARDA LAS COMPRAS
+    // ====================================
+    private function saveUserPurchases()
+    {
+        $cart = session()->get('cart', []);
+
+        foreach ($cart as $item) {
+
+            // Si por alguna razón no tiene ID, evitamos errores
+            if (!isset($item['id'])) {
+                continue;
+            }
+
+            // Generamos código de activación único
+            $activationCode = Str::upper(Str::random(16));
+
+            UserPurchase::create([
+                'user_id' => Auth::id(),
+
+
+                'video_game_id' => $item['id'],        // ← usamos el ID agregado al carrito
+                'price_paid'    => $item['final_price'],
+                'activation_code' => $activationCode,
+            ]);
+        }
+    }
+
+
+
+    // ====================================
+    // CONFIRMAR PAGO
+    // ====================================
     public function confirm(Request $request)
     {
-        // ============================
-        // SI EL PAGO VIENE DESDE PAYPAL
-        // ============================
+        // Si viene de PayPal:
         if ($request->has('paypal_order_id')) {
 
-            $paypalOrderId = $request->paypal_order_id;
-            $payer = $request->payer;
+            // Guardamos compras
+            $this->saveUserPurchases();
 
-            // Aquí puedes crear Order + OrderItems  
-            // o Registrar un Payment en tu DB.
-
-            /*
-            Payment::create([
-                'user_id' => auth()->id(),
-                'method' => 'paypal',
-                'paypal_id' => $paypalOrderId,
-                'payer_email' => $payer['email_address'] ?? null,
-                'total' => session('cart_total'),
-            ]);
-            */
-
-            // Vaciar carrito
-            session()->forget('cart');
-            session()->forget('cart_total');
+            // Vaciamos carrito
+            session()->forget(['cart', 'cart_total']);
 
             return response()->json([
                 'success' => true,
@@ -68,15 +89,17 @@ class CheckoutController extends Controller
             ]);
         }
 
-        // ============================
-        // PAGO NORMAL (TARJETA O BANCO)
-        // ============================
-        session()->forget('cart');
-        session()->forget('cart_total');
+        // Pago normal (tarjeta/banco)
+        $this->saveUserPurchases();
+
+        session()->forget(['cart', 'cart_total']);
 
         return redirect()->route('dashboard.user')
             ->with('success', 'Pago realizado correctamente');
     }
+
+
+
     public function success()
     {
         return view('checkout.success');

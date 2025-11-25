@@ -1,26 +1,5 @@
 <?php
 
-/**
- * Controlador del Carrito de Compras del usuario.
- *
- * Este controlador administra toda la lógica del carrito:
- * - Mostrar el carrito actual desde la sesión.
- * - Agregar productos al carrito (sumar cantidades si ya existe).
- * - Calcular subtotal, descuentos y total final.
- * - Eliminar productos del carrito.
- *
- * El carrito se almacena en la sesión como un array asociativo:
- * cart[id_producto] = [
- *      'title'        => string,
- *      'price'        => float,
- *      'image'        => string (ruta absoluta),
- *      'quantity'     => int,
- *      'discount'     => int,
- *      'final_price'  => float
- * ]
- */
-
-
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
@@ -32,9 +11,6 @@ class CartController extends Controller
     // Mostrar carrito
     public function index()
     {
-
-
-
         $cart = session()->get('cart', []);
 
         if (empty($cart)) {
@@ -74,7 +50,6 @@ class CartController extends Controller
             $cart = session()->get('cart', []);
 
             if (isset($cart[$id])) {
-
                 $cart[$id]['quantity']++;
             } else {
 
@@ -84,7 +59,6 @@ class CartController extends Controller
                 if (is_array($game->images) && count($game->images) > 0) {
                     $possiblePath = 'storage/' . $game->images[0];
 
-                    // Si existe la imagen en storage
                     if (file_exists(public_path($possiblePath))) {
                         $image = asset($possiblePath);
                     }
@@ -93,7 +67,9 @@ class CartController extends Controller
                 // Precio final (accessor)
                 $final_price = $game->price_after_discount;
 
+                // AGREGAMOS EL ID SIN ROMPER NADA
                 $cart[$id] = [
+                    'id'          => $game->id,   // ← ← AQUI ESTÁ LO IMPORTANTE
                     'title'       => $game->title,
                     'price'       => $game->price,
                     'image'       => $image,
@@ -110,7 +86,6 @@ class CartController extends Controller
                 ->with('success', 'Juego agregado al carrito');
         } catch (\Exception $e) {
 
-            // registrar error en logs
             report($e);
 
             return redirect()

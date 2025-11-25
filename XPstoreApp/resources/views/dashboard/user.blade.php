@@ -77,7 +77,41 @@
 
     </section>
 
-    <!-- Otras secciones similares... -->
+    <!-- BOTÓN FLOTANTE -->
+    <div class="community-float-btn" id="openCommunity">
+        <i class="fas fa-comment-alt"></i>
+        <span class="status-dot"></span>
+    </div>
+
+    <!-- PANEL DE COMUNIDAD (INICIALMENTE OCULTO) -->
+    <div class="community-card" id="communityPanel">
+
+        <div class="community-header">
+            <div class="community-icon">
+                <i class="fas fa-comments"></i>
+            </div>
+
+            <h3 class="community-title">Comunidad Gamer</h3>
+        </div>
+
+        <p class="community-text">
+            Únete, comparte reseñas, descubre nuevos juegos y conecta con otros gamers.
+        </p>
+
+        <ul class="community-benefits">
+            <li><i class="fas fa-check-circle"></i> +1,234 usuarios activos</li>
+            <li><i class="fas fa-check-circle"></i> +5,678 reseñas compartidas</li>
+        </ul>
+
+        <a href="{{ route('community.index') }}" class="community-btn">
+            Ir a la Comunidad
+        </a>
+
+    </div>
+
+
+
+
 </div>
 @endsection
 

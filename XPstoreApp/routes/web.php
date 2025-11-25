@@ -11,8 +11,10 @@ use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\CheckoutController;
-
-
+use App\Http\Controllers\User\LibraryController;
+use App\Http\Controllers\Community\CommunityController;
+use App\Http\Controllers\Community\PostController;
+use App\Http\Controllers\Community\CommentController;
 use App\Models\User;
 
 
@@ -34,7 +36,6 @@ Route::get('/', function () {
 // =========================
 
 Route::get('/juegos', [GameStoreController::class, 'index'])
-
     ->name('store.index');
 
 Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])
@@ -72,18 +73,37 @@ Route::middleware('auth')->group(function () {
     Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
 
 
-
-
-
-
     // USER
-    Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
+    Route::get('/dashboard/user', [UserDashboardController::class, 'index'])
+        ->name('dashboard.user');
+
+    // BIBLIOTECA DE JUEGOS (MIS JUEGOS)
+    Route::get('/mis-juegos', [LibraryController::class, 'index'])
+        ->name('library.index');
+
+    // COMUNIDAD 
+
+    Route::get('/comunidad', [CommunityController::class, 'index'])->name('community.index');
+
+    // Crear post
+    Route::get('/comunidad/publicar', [PostController::class, 'create'])->name('community.create');
+    Route::post('/comunidad/publicar', [PostController::class, 'store'])->name('community.store');
+
+    // Comentarios
+    Route::post('/comunidad/{post}/comment', [CommentController::class, 'store'])->name('community.comment');
+    Route::post('/comunidad/review', [PostController::class, 'storeReview'])
+        ->name('community.review');
+
+
+
 
     // PERFIL
     Route::get('/perfil', [ProfileController::class, 'index'])
         ->name('profile.index');
 
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
+
+
 
     // =========================
     // CARRITO DE COMPRAS 

@@ -257,3 +257,10 @@ if (filtersBtn) {
         showToast('Panel de filtros - Funcionalidad en desarrollo', 'info');
     });
 }
+// Funcionalidad para abrir el panel de comunidad
+const btn = document.getElementById("openCommunity");
+const panel = document.getElementById("communityPanel");
+
+btn.addEventListener("click", () => {
+    panel.classList.toggle("active");
+});
