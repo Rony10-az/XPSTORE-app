@@ -15,6 +15,8 @@ use App\Http\Controllers\User\LibraryController;
 use App\Http\Controllers\Community\CommunityController;
 use App\Http\Controllers\Community\PostController;
 use App\Http\Controllers\Community\CommentController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+
 use App\Models\User;
 
 
@@ -73,6 +75,25 @@ Route::middleware('auth')->group(function () {
     Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
 
 
+    // ADMIN
+    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
+
+    // CRUD de Videojuegos (solo admins)
+    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
+
+    // Rutas de usuarios (solo admin)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        // Monté este recurso para listar, ver, editar y eliminar usuarios.
+        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
+    });
+
+    // Rutas de administración (solo admins)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        // CRUD de Videojuegos
+        Route::resource('videojuegos', VideoGameController::class);
+    });
+
+    /* dados de prueba para ver si se sube bien el cambio */
     // USER
     Route::get('/dashboard/user', [UserDashboardController::class, 'index'])
         ->name('dashboard.user');

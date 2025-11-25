@@ -191,45 +191,45 @@
             </div>
 
             {{-- Imágenes --}}
-            <div class="form-section">
-                <h3 class="section-title">
-                    <i class="fas fa-images"></i>
-                    Imágenes del Juego
-                </h3>
+            {{-- Imágenes --}}
+<div class="form-section">
+    <h3 class="section-title">
+        <i class="fas fa-images"></i>
+        Imágenes del Juego
+    </h3>
 
-                <div class="form-group">
-                    <label for="images" class="form-label">Imágenes (Múltiples)</label>
+    <div class="form-group">
+        @if(!empty($videojuego->images))
+            <p class="images-current-info">
+                <i class="fas fa-check-circle"></i>
+                Este juego tiene {{ count($videojuego->images) }} imagen(es) actual(es)
+            </p>
+        @else
+            <p class="images-current-info no-images">
+                <i class="fas fa-info-circle"></i>
+                Este juego no tiene imágenes
+            </p>
+        @endif
 
-                    {{-- Preview de imágenes actuales --}}
-                    @if(!empty($videojuego->images))
-                    <div class="current-images">
-                        <h4>Imágenes Actuales</h4>
-                        <div class="image-grid">
-                            @foreach($videojuego->images as $image)
-                            <div class="current-image">
-                                <img src="{{ $image }}" alt="Imagen actual">
-                                <span>{{ basename($image) }}</span>
-                            </div>
-                            @endforeach
-                        </div>
-                        <p class="image-note">Las nuevas imágenes reemplazarán las actuales</p>
-                    </div>
-                    @endif
-
-                    <div class="file-upload">
-                        <input type="file" id="images" name="images[]" multiple
-                            accept="image/jpeg,image/png,image/jpg,image/gif" class="file-input">
-                        <label for="images" class="file-label">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>Seleccionar nuevas imágenes</span>
-                        </label>
-                        <div id="image-preview" class="image-preview"></div>
-                    </div>
-                    @error('images.*')
-                    <span class="error-message">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
+        <label for="images" class="form-label">Agregar nuevas imágenes</label>
+        <div class="file-upload">
+            <input type="file" id="images" name="images[]" multiple
+                accept="image/jpeg,image/png,image/jpg,image/gif" class="file-input">
+            <label for="images" class="file-label">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Seleccionar imágenes</span>
+            </label>
+            <div id="image-preview" class="image-preview"></div>
+        </div>
+        <p class="helper-text">
+            <i class="fas fa-exclamation-triangle"></i>
+            Las nuevas imágenes reemplazarán las actuales
+        </p>
+        @error('images.*')
+        <span class="error-message">{{ $message }}</span>
+        @enderror
+    </div>
+</div>
 
             {{-- Descripción y Requisitos --}}
             <div class="form-section">

@@ -16,6 +16,9 @@ class User extends Authenticatable
         'password',
         'avatar',
         'role',
+        // Sumé status y last_login_at para exponerlos en la administración.
+        'status',
+        'last_login_at',
     ];
 
     protected $hidden = [
@@ -25,6 +28,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        // Añadí last_login_at para poder mostrar la última sesión en administración.
+        'last_login_at' => 'datetime',
     ];
 
     public function reviews()

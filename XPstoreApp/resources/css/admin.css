@@ -1,4 +1,202 @@
 /* resources/css/admin.css */
+/* Base theme tokens for the admin area */
+:root {
+    --primary-purple: #8b5cf6;
+    --primary-blue: #3b82f6;
+    --dark-bg: #0f172a;
+    --dark-secondary: #1e293b;
+    --dark-tertiary: #334155;
+    --text-primary: #ffffff;
+    --text-secondary: #cbd5e1;
+    --accent-orange: #f97316;
+    --accent-red: #ef4444;
+    --accent-green: #10b981;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(180deg, #0f172a 0%, #0b1020 100%);
+    color: var(--text-primary);
+}
+
+a {
+    color: inherit;
+}
+
+/* Layout shell */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+    background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1), transparent 35%),
+        radial-gradient(circle at 80% 0%, rgba(59, 130, 246, 0.08), transparent 30%),
+        var(--dark-bg);
+}
+
+.admin-sidebar {
+    background: #0b162a;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    font-weight: 700;
+    color: white;
+}
+
+.logo-xp {
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.logo-store {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.nav-item i {
+    width: 20px;
+    text-align: center;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    transform: translateX(4px);
+}
+
+.nav-item.active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.18));
+    color: white;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.admin-main {
+    padding: 2rem 2.5rem;
+}
+
+.admin-main > .admin-header {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.12));
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+.admin-main > .admin-header h1 {
+    margin: 0;
+    font-size: 1.9rem;
+}
+
+.page-hero {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hero-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 1.2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.hero-text h1 {
+    margin: 0.1rem 0 0.2rem 0;
+}
+
+.hero-kicker {
+    margin: 0;
+    color: #cbd5e1;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.hero-subtitle {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.admin-content {
+    margin-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .admin-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 0 0 20px 20px;
+    }
+
+    .admin-main {
+        padding: 1.5rem;
+    }
+}
+
 .admin-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -68,7 +266,7 @@
 
 .stat-header {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
@@ -131,6 +329,71 @@
 
 .crud-table tr:hover {
     background: rgba(139, 92, 246, 0.05);
+}
+
+/* Price, stock and rating badges */
+.price-discounted {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.price-old {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    font-size: 0.9rem;
+}
+
+.price-new {
+    color: var(--accent-green);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.price-normal {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stock-display {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-items: flex-start;
+}
+
+.stock-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 8px;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.stock-count.has-stock {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+}
+
+.stock-count.no-stock {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+}
+
+.rating-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+.status-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
 }
 
 /* Game Info */
@@ -247,10 +510,27 @@
 /* Search and Filters */
 .crud-toolbar {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
     gap: 1rem;
+}
+
+.user-toolbar {
+    flex-wrap: wrap;
+    /* Organicé la barra para que sea flexible en pantallas pequeñas. */
+}
+
+.toolbar-left {
+    flex: 1;
+    min-width: 240px;
+}
+
+.toolbar-right {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .search-box {
@@ -282,6 +562,211 @@
     border-radius: 8px;
     color: var(--text-primary);
     min-width: 150px;
+}
+
+/* Añadí cell-muted para suavizar fechas en la tabla. */
+.cell-muted {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Añadí estos botones extra para las pantallas de usuarios. */
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    color: #f87171;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background: rgba(239, 68, 68, 0.25);
+    transform: translateY(-1px);
+}
+
+.w-100 {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+}
+
+/* Sección de usuarios y formularios */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: 700;
+}
+
+.user-avatar.lg {
+    width: 64px;
+    height: 64px;
+    font-size: 1.2rem;
+}
+
+.user-details strong {
+    display: block;
+    color: var(--text-primary);
+}
+
+.user-email {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.email-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+/* Encajé el email en un span flexible para que el badge quede alineado siempre. */
+.email-text {
+    flex: 1;
+    min-width: 0;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.detail-card {
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-tertiary);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.detail-header h3 {
+    margin: 0;
+}
+
+.detail-header p {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.detail-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+}
+
+.detail-row .label {
+    color: var(--text-secondary);
+}
+
+.detail-row .value {
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.actions-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.form-card {
+    background: var(--dark-secondary);
+    border: 1px solid var(--dark-tertiary);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.form-group input,
+.form-group select,
+.select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--dark-tertiary);
+    background: var(--dark-bg);
+    color: var(--text-primary);
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
 /* Empty State */
@@ -341,12 +826,19 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .alert-success {
     background: rgba(16, 185, 129, 0.2);
     border: 1px solid rgba(16, 185, 129, 0.3);
     color: #10b981;
+}
+
+.alert.fade-out {
+    /* Hice que desaparezca suave después de unos segundos. */
+    opacity: 0;
+    transform: translateY(-6px);
 }
 
 /* Progress Bar */
@@ -453,4 +945,50 @@
     /* Quita borde de enfoque */
     box-shadow: none;
     /* Quita cualquier sombra que algunos navegadores agregan */
+}
+/* Tags wrapper para géneros y plataformas */
+.tags-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    max-width: 220px;
+    max-height: 85px;
+    overflow-y: auto;
+    padding: 0.25rem 0;
+    align-items: flex-start;
+}
+
+.tags-wrapper .badge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.55rem;
+    white-space: nowrap;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+/* Scrollbar personalizado para los tags */
+.tags-wrapper::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.tags-wrapper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 2px;
+}
+
+.tags-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.4);
+    border-radius: 2px;
+}
+
+.tags-wrapper::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.6);
+}
+
+/* Texto para campos vacíos */
+.text-muted {
+    color: #9ca3af;
+    font-style: italic;
+    font-size: 0.85rem;
 }

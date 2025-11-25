@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class VideoGame extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'video_games';
 
     protected $fillable = [
         'title',
@@ -34,7 +35,7 @@ class VideoGame extends Model
         'platform' => 'array',
         'requirements' => 'array',
         'price' => 'decimal:2',
-        'rating' => 'decimal:2',
+        'rating' => 'float',
         'featured' => 'boolean',
         'release_date' => 'date',
     ];

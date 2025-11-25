@@ -18,7 +18,7 @@ class AuthService
      */
     public function attempt(string $email, string $password): ?User
     {
-        // Buscar el usuario por email
+        // Busque el usuario por email.
         $user = User::where('email', $email)->first();
 
         if (!$user) {
@@ -26,19 +26,31 @@ class AuthService
             return null;
         }
 
-        // Verificar la contraseña
-        if (!Hash::check($password, $user->password)) {
-            Log::warning('Login fallido: Contraseña incorrecta', ['email' => $email]);
+        // Bloquee el acceso si el usuario no esta activo.
+        if ($user->status !== 'active') {
+            Log::warning('Login bloqueado por estado de cuenta', [
+                'email' => $email,
+                'status' => $user->status,
+            ]);
             return null;
         }
 
-        // Autenticar al usuario
+        // Verifique la contrasena.
+        if (!Hash::check($password, $user->password)) {
+            Log::warning('Login fallido: Contrasena incorrecta', ['email' => $email]);
+            return null;
+        }
+
+        // Autentique al usuario.
         Auth::login($user);
+
+        // Actualice last_login_at aqui para dejar rastreo de la hora exacta de acceso.
+        $user->forceFill(['last_login_at' => now()])->save();
 
         Log::info('Login exitoso', [
             'user_id' => $user->id,
             'email' => $user->email,
-            'role' => $user->role
+            'role' => $user->role,
         ]);
 
         return $user;
@@ -55,34 +67,34 @@ class AuthService
      */
     public function register(string $name, string $email, string $password): User
     {
-        // Verificar si el email ya existe
+        // Verifique si el email ya existe.
         if (User::where('email', $email)->exists()) {
             Log::warning('Registro fallido: Email ya registrado', ['email' => $email]);
-            throw new \RuntimeException('El correo electrónico ya está registrado');
+            throw new \RuntimeException('El correo electronico ya esta registrado');
         }
 
-        // Crear el nuevo usuario
+        // Cree el nuevo usuario.
         $user = User::create([
             'name' => $name,
             'email' => $email,
             'password' => Hash::make($password),
-            'role' => 'user', // Por defecto es usuario normal
+            'role' => 'user', // Por defecto es usuario normal.
             'avatar' => null,
         ]);
 
-        // Autenticar automáticamente después del registro
+        // Autentique automaticamente despues del registro.
         Auth::login($user);
 
         Log::info('Registro exitoso', [
             'user_id' => $user->id,
-            'email' => $user->email
+            'email' => $user->email,
         ]);
 
         return $user;
     }
 
     /**
-     * Cerrar la sesión del usuario autenticado.
+     * Cerrar la sesion del usuario autenticado.
      *
      * @return void
      */
@@ -93,13 +105,13 @@ class AuthService
         if ($user) {
             Log::info('Logout exitoso', [
                 'user_id' => $user->id,
-                'email' => $user->email
+                'email' => $user->email,
             ]);
         }
 
         Auth::logout();
 
-        // Regenerar el token de sesión para prevenir ataques de fijación de sesión
+        // Regenero el token de sesion para prevenir ataques de fijacion de sesion.
         request()->session()->invalidate();
         request()->session()->regenerateToken();
     }
