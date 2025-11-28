@@ -74,29 +74,32 @@ class CheckoutController extends Controller
     // ====================================
     public function confirm(Request $request)
     {
-        // Si viene de PayPal:
+        // Verificar si es un pago PayPal
         if ($request->has('paypal_order_id')) {
 
-            // Guardamos compras
+            // Guardar compras
             $this->saveUserPurchases();
 
-            // Vaciamos carrito
+            // Vaciar carrito
             session()->forget(['cart', 'cart_total']);
 
             return response()->json([
                 'success' => true,
+                'redirect' => route('dashboard.user'),
                 'message' => 'Pago completado con PayPal'
             ]);
         }
 
-        // Pago normal (tarjeta/banco)
-        $this->saveUserPurchases();
+        // Pago NORMAL ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
+        $this->saveUserPurchases();
         session()->forget(['cart', 'cart_total']);
 
-        return redirect()->route('dashboard.user')
+        return redirect()
+            ->route('dashboard.user')
             ->with('success', 'Pago realizado correctamente');
     }
+
 
 
 
