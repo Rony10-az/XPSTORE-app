@@ -84,7 +84,7 @@
                 <div class="form-grid">
                     {{-- Precio --}}
                     <div class="form-group">
-                        <label for="price" class="form-label">Precio ($) *</label>
+                        <label for="price" class="form-label">Precio (S/.) *</label>
                         <input type="number" id="price" name="price" class="form-input"
    min="0.99" max="999.99" step="any" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
 
@@ -114,21 +114,21 @@
                         @enderror
                     </div>
 
-                    {{-- Rating --}}
+                    {{-- Popularidad --}}
                     <div class="form-group">
-                        <label for="rating" class="form-label">Rating (0-5)</label>
-                        <input type="number" 
-       id="rating" 
-       name="rating" 
+                        <label for="popularity" class="form-label">Popularidad (1-5)</label>
+                        <input type="number"
+       id="popularity"
+       name="popularity"
        class="form-input"
-       min="1" 
-       max="5" 
+       min="1"
+       max="5"
        step="1"
-       placeholder="Popularidad (1 a 5)" 
-       value="{{ old('rating', 3) }}" 
+       placeholder="Popularidad (1 a 5)"
+       value="{{ old('popularity', 3) }}"
        required>
 
-                        @error('rating')
+                        @error('popularity')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>

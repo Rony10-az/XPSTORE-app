@@ -116,12 +116,12 @@
                         @enderror
                     </div>
 
-                    {{-- Rating --}}
+                    {{-- Popularidad --}}
                     <div class="form-group">
-                        <label for="rating" class="form-label">Rating (0-5)</label>
-                        <input type="number" id="rating" name="rating" class="form-input"
-                            step="0.1" min="0" max="5" value="{{ old('rating', $videojuego->rating) }}">
-                        @error('rating')
+                        <label for="popularity" class="form-label">Popularidad (1-5)</label>
+                        <input type="number" id="popularity" name="popularity" class="form-input"
+                            min="1" max="5" step="1" value="{{ old('popularity', $videojuego->popularity ?? 3) }}">
+                        @error('popularity')
                         <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>

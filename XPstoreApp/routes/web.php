@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GameCodeController;
 use App\Http\Controllers\Admin\ReviewController;
@@ -61,16 +62,28 @@ Route::middleware('auth')->group(function () {
 
     // Rutas de administración (solo admins)
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        // Perfil del admin
+        Route::get('profile', [AdminProfileController::class, 'index'])->name('profile.index');
+        Route::put('profile', [AdminProfileController::class, 'updateProfile'])->name('profile.update');
+        Route::put('profile/password', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
+        Route::delete('profile/avatar', [AdminProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
+
         Route::resource('videojuegos', VideoGameController::class);
         Route::resource('users', AdminUserController::class)->except(['create', 'store']);
         Route::resource('gamecodes', GameCodeController::class);
+        Route::post('gamecodes/{gamecode}/mark-used', [GameCodeController::class, 'markAsUsed'])->name('gamecodes.markUsed');
+        Route::post('gamecodes/{gamecode}/mark-expired', [GameCodeController::class, 'markAsExpired'])->name('gamecodes.markExpired');
+        Route::post('gamecodes/destroy-batch', [GameCodeController::class, 'destroyBatch'])->name('gamecodes.destroyBatch');
         Route::resource('reviews', ReviewController::class)->only(['index', 'destroy']);
-        Route::resource('items', ItemController::class)->only(['index']);
+        Route::get('reviews/verified-buyers', [ReviewController::class, 'verifiedBuyers'])->name('reviews.verified');
+        Route::post('reviews/{review}/sentiment', [ReviewController::class, 'updateSentiment'])->name('reviews.sentiment');
+        Route::post('reviews/{review}/warning', [ReviewController::class, 'addWarning'])->name('reviews.warning');
+        Route::post('reviews/{review}/toggle-block', [ReviewController::class, 'toggleBlock'])->name('reviews.toggleBlock');
+        Route::resource('items', ItemController::class);
         Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings');
         Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
     });
 
-    /* dados de prueba para ver si se sube bien el cambio */
     // USER
     Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
 

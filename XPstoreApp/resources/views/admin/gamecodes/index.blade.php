@@ -36,15 +36,22 @@
             <div class="stat-header">
                 <div class="stat-icon"><i class="fas fa-unlock"></i></div>
             </div>
-            <h3 class="stat-number">{{ $metrics['available'] }}</h3>
+            <h3 class="stat-number">{{ $metrics['disponibles'] }}</h3>
             <p class="stat-label">Disponibles</p>
         </div>
         <div class="stat-card">
             <div class="stat-header">
                 <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
             </div>
-            <h3 class="stat-number">{{ $metrics['used'] }}</h3>
+            <h3 class="stat-number">{{ $metrics['usados'] }}</h3>
             <p class="stat-label">Usados</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-header">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            </div>
+            <h3 class="stat-number">{{ $metrics['vencidos'] }}</h3>
+            <p class="stat-label">Vencidos</p>
         </div>
     </div>
 
@@ -52,22 +59,23 @@
         <div class="toolbar-left">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" name="search" value="{{ $search }}" placeholder="Buscar código o videojuego...">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar código o videojuego...">
             </div>
         </div>
         <div class="toolbar-right">
             <select class="filter-select" name="video_game_id">
                 <option value="">Todos los juegos</option>
                 @foreach($videoGames as $game)
-                    <option value="{{ $game->id }}" @selected(optional($videojuego)->id === $game->id)>
+                    <option value="{{ $game->id }}" @selected(request('video_game_id') == $game->id)>
                         {{ $game->title }}
                     </option>
                 @endforeach
             </select>
             <select class="filter-select" name="status">
                 <option value="">Todos</option>
-                <option value="available" @selected($status === 'available')>Disponibles</option>
-                <option value="used" @selected($status === 'used')>Usados</option>
+                <option value="disponible" @selected(request('status') === 'disponible')>Disponibles</option>
+                <option value="usado" @selected(request('status') === 'usado')>Usados</option>
+                <option value="vencido" @selected(request('status') === 'vencido')>Vencidos</option>
             </select>
             <button type="submit" class="btn-primary">
                 <i class="fas fa-filter"></i> Filtrar
@@ -94,11 +102,15 @@
                         <td><code>{{ $code->code }}</code></td>
                         <td>{{ $code->videoGame->title ?? 'Sin juego' }}</td>
                         <td>
-                            @if($code->used)
-                                <span class="badge badge-danger"><i class="fas fa-ban"></i> Usado</span>
-                            @else
-                                <span class="badge badge-success"><i class="fas fa-check"></i> Disponible</span>
-                            @endif
+                            <span class="badge badge-{{ $code->statusColor }}">
+                                @if($code->status === 'disponible')
+                                    <i class="fas fa-check"></i> Disponible
+                                @elseif($code->status === 'usado')
+                                    <i class="fas fa-ban"></i> Usado
+                                @else
+                                    <i class="fas fa-clock"></i> Vencido
+                                @endif
+                            </span>
                         </td>
                         <td>{{ optional($code->created_at)->format('d/m/Y') }}</td>
                         <td class="actions">
@@ -129,7 +141,7 @@
     </div>
 
     <div class="pagination">
-        {{ $codes->links() }}
+        {{ $codes->links('vendor.pagination.admin') }}
     </div>
 </div>
 @endsection

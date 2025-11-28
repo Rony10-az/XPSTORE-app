@@ -137,12 +137,6 @@
     <main class="main-content">
         <div class="container">
 
-            <!-- boton de filtros vertical -->
-            <button class="filters-btn-vertical">
-                <i class="fas fa-sliders-h"></i>
-                <span class="filters-text">FILTROS</span>
-            </button>
-
             <!-- Hero Section -->
             <section class="hero-section">
                 <div class="hero-background">

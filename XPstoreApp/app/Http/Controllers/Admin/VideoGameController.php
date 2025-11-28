@@ -9,11 +9,75 @@ use Illuminate\Support\Facades\Storage;
 
 class VideoGameController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $videojuegos = VideoGame::orderBy('id', 'desc')->paginate(10); // 10 items por página
+        $query = VideoGame::query();
 
-        return view('admin.videojuegos.index', compact('videojuegos'));
+        // Búsqueda por nombre
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('title', 'like', "%{$search}%")
+                  ->orWhere('developer', 'like', "%{$search}%")
+                  ->orWhere('publisher', 'like', "%{$search}%");
+        }
+
+        // Filtrar por plataforma
+        if ($request->filled('platform')) {
+            $query->whereJsonContains('platform', $request->platform);
+        }
+
+        // Filtrar por género
+        if ($request->filled('genre')) {
+            $query->whereJsonContains('genre', $request->genre);
+        }
+
+        // Filtrar por estado
+        if ($request->filled('status')) {
+            switch ($request->status) {
+                case 'stock':
+                    $query->where('stock', '>', 0);
+                    break;
+                case 'out':
+                    $query->where('stock', '=', 0);
+                    break;
+                case 'featured':
+                    $query->where('featured', true);
+                    break;
+                case 'discount':
+                    $query->where('discount', '>', 0);
+                    break;
+            }
+        }
+
+        // Ordenamiento
+        $sort = $request->get('sort', 'recent');
+        switch ($sort) {
+            case 'name':
+                $query->orderBy('title', 'asc');
+                break;
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            case 'popularity':
+                $query->orderBy('popularity', 'desc');
+                break;
+            case 'stock':
+                $query->orderBy('stock', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        $videojuegos = $query->paginate(10)->withQueryString();
+
+        // Obtener listas únicas para filtros
+        $platforms = VideoGame::whereNotNull('platform')->get()->pluck('platform')->flatten()->unique()->sort()->values();
+        $genres = VideoGame::whereNotNull('genre')->get()->pluck('genre')->flatten()->unique()->sort()->values();
+
+        return view('admin.videojuegos.index', compact('videojuegos', 'platforms', 'genres'));
     }
 
     public function create()
@@ -26,16 +90,16 @@ class VideoGameController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0|max:999.99',
+            'price' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0|max:100',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'genre' => 'required|array',
             'platform' => 'required|array',
             'release_date' => 'required|date',
             'developer' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
-            'rating' => 'nullable|numeric|min:0|max:5',
+            'popularity' => 'nullable|integer|min:1|max:5',
             'stock' => 'required|integer|min:0',
             'featured' => 'boolean',
             'requirements' => 'nullable|string',
@@ -64,9 +128,9 @@ class VideoGameController extends Controller
             'release_date' => $request->release_date,
             'developer' => $request->developer,
             'publisher' => $request->publisher,
-            'rating' => $request->rating ?? 0,
             'stock' => $request->stock,
             'featured' => $request->has('featured'),
+            'popularity' => $request->popularity ?? 3,
             'requirements' => $requirements,
         ]);
 
@@ -98,7 +162,7 @@ class VideoGameController extends Controller
             'release_date' => 'required|date',
             'developer' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
-            'rating' => 'nullable|numeric|min:0|max:5',
+            'popularity' => 'nullable|integer|min:1|max:5',
             'stock' => 'required|integer|min:0',
             'featured' => 'boolean',
             'requirements' => 'nullable|string',
@@ -130,9 +194,9 @@ class VideoGameController extends Controller
             'release_date' => $request->release_date,
             'developer' => $request->developer,
             'publisher' => $request->publisher,
-            'rating' => $request->rating ?? 0,
             'stock' => $request->stock,
             'featured' => $request->has('featured'),
+            'popularity' => $request->popularity ?? 3,
             'requirements' => $request->requirements ?? [],
         ]);
 

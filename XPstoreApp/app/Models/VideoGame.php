@@ -22,10 +22,12 @@ class VideoGame extends Model
         'release_date',
         'developer',
         'publisher',
-        'rating',
         'stock',
         'featured',
         'requirements',
+        'popularity',
+        'is_active',
+        'sales_count',
     ];
 
 
@@ -35,9 +37,11 @@ class VideoGame extends Model
         'platform' => 'array',
         'requirements' => 'array',
         'price' => 'decimal:2',
-        'rating' => 'float',
         'featured' => 'boolean',
         'release_date' => 'date',
+        'is_active' => 'boolean',
+        'popularity' => 'integer',
+        'sales_count' => 'integer',
     ];
     // Relación con GameCode
     public function gameCodes()

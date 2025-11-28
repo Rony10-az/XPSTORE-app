@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
-@section('title', 'Gestión de Reseñas - XP Store')
-@section('subtitle', 'Modera comentarios y calificaciones de la comunidad')
+@section('title', 'Reseñas de Compradores Verificados - XP Store')
+@section('subtitle', 'Reseñas escritas por usuarios que compraron juegos')
 
 @section('content')
 <div class="admin-container">
     <div class="admin-header">
         <div class="admin-title">
-            <h1><i class="fas fa-star-half-alt"></i> Gestión de Reseñas</h1>
-            <p class="admin-subtitle">Revisa, filtra y elimina reseñas con baja calidad o reportes.</p>
+            <h1><i class="fas fa-check-circle"></i> Reseñas de Compradores Verificados</h1>
+            <p class="admin-subtitle">Solo se muestran reseñas de usuarios que han comprado juegos en la tienda.</p>
         </div>
-        <a href="{{ route('admin.users.index') }}" class="btn-primary">
-            <i class="fas fa-users"></i> Usuarios Logeados
+        <a href="{{ route('admin.reviews.index') }}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Ver Todas las Reseñas
         </a>
     </div>
 
@@ -25,10 +25,10 @@
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-header">
-                <div class="stat-icon"><i class="fas fa-comments"></i></div>
+                <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
             </div>
             <h3 class="stat-number">{{ $metrics['total'] }}</h3>
-            <p class="stat-label">Total reseñas</p>
+            <p class="stat-label">Reseñas verificadas</p>
         </div>
         <div class="stat-card">
             <div class="stat-header">
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <form class="crud-toolbar" method="GET" action="{{ route('admin.reviews.index') }}">
+    <form class="crud-toolbar" method="GET" action="{{ route('admin.reviews.verified') }}">
         <div class="toolbar-left">
             <div class="search-box">
                 <i class="fas fa-search"></i>
@@ -101,7 +101,10 @@
                         <td>
                             <div class="user-info">
                                 <div class="user-details">
-                                    <p class="user-name">{{ $review->user->name ?? 'Usuario eliminado' }}</p>
+                                    <p class="user-name">
+                                        {{ $review->user->name ?? 'Usuario eliminado' }}
+                                        <i class="fas fa-check-circle" style="color: #10b981; margin-left: 4px;" title="Comprador verificado"></i>
+                                    </p>
                                     <p class="user-email">{{ $review->user->email ?? '-' }}</p>
                                 </div>
                             </div>
@@ -132,7 +135,13 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">No hay reseñas registradas.</td>
+                        <td colspan="8" class="text-center">
+                            <div style="padding: 2rem;">
+                                <i class="fas fa-inbox" style="font-size: 3rem; color: #9ca3af; margin-bottom: 1rem;"></i>
+                                <p style="color: #6b7280; font-size: 1.1rem;">No hay reseñas de compradores verificados.</p>
+                                <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.5rem;">Las reseñas aparecerán aquí cuando los usuarios con compras las escriban.</p>
+                            </div>
+                        </td>
                     </tr>
                 @endforelse
             </tbody>
