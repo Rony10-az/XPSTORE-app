@@ -1,26 +1,23 @@
 <?php
 
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\User\DashboardController as UserDashboardController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Store\GameStoreController;
-use App\Http\Controllers\User\ProfileController;
-use App\Http\Controllers\Admin\VideoGameController;
-use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\Admin\GameCodeController;
+use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
-
-use App\Models\User;
-
-
-
+use App\Http\Controllers\Admin\VideoGameController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Store\GameStoreController;
+use App\Http\Controllers\User\CartController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\ProfileController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 // PÁGINA PRINCIPAL (HOME)
 // =========================
 Route::get('/', function () {
-
     if (Auth::check()) {
         return redirect()->route('dashboard');
     }
@@ -31,14 +28,8 @@ Route::get('/', function () {
 // =========================
 // TIENDA (pública)
 // =========================
-
-Route::get('/juegos', [GameStoreController::class, 'index'])
-
-    ->name('store.index');
-
-Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])
-    ->name('game.show');
-
+Route::get('/juegos', [GameStoreController::class, 'index'])->name('store.index');
+Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])->name('game.show');
 
 // =========================
 // AUTENTICACIÓN (solo invitados)
@@ -51,12 +42,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-
 // =========================
 // ÁREA PRIVADA (solo logueados)
 // =========================
 Route::middleware('auth')->group(function () {
-
     Route::get('/dashboard', function () {
         $user = Auth::user();
         return $user->role === 'admin'
@@ -64,44 +53,35 @@ Route::middleware('auth')->group(function () {
             : redirect()->route('dashboard.user');
     })->name('dashboard');
 
-        // ADMIN
-        Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
+    // ADMIN
+    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
-        // CRUD de Videojuegos (solo admins)
-        Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
+    // CRUD de Videojuegos (solo admins)
+    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
 
-        // Rutas de usuarios (solo admin)
-        Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-            // Monté este recurso para listar, ver, editar y eliminar usuarios.
-        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
-        });
-
-        // Rutas de administración (solo admins)
-        Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        // CRUD de Videojuegos
+    // Rutas de administración (solo admins)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::resource('videojuegos', VideoGameController::class);
+        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
+        Route::resource('gamecodes', GameCodeController::class);
+        Route::resource('reviews', ReviewController::class)->only(['index', 'destroy']);
+        Route::resource('items', ItemController::class)->only(['index']);
+        Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings');
+        Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
+    });
 
-});
-
-/* dados de prueba para ver si se sube bien el cambio */
+    /* dados de prueba para ver si se sube bien el cambio */
     // USER
     Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
 
     // PERFIL
-    Route::get('/perfil', [ProfileController::class, 'index'])
-        ->name('profile.index');
-
+    Route::get('/perfil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Ver carrito
+    // Carrito
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-
-    // Agregar un juego al carrito
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-
-    // Eliminar un juego del carrito
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-
 
     // STORE ACTIONS
     Route::post('/carrito/{videojuego}', [GameStoreController::class, 'addToCart'])->name('store.cart.add');

@@ -31,18 +31,27 @@
                             @endforeach
                         </select>
                         @error('video_game_id')
-                        <p
-                            <p class="text-danger">{{ $message }}</p>
+                        <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
-                    {{-- Input de Código --}}
+                    {{-- Cantidad a generar --}}
                     <div class="form-group">
-                        <label for="code">Código</label>
-                        <input type="text" name="code" id="code" required placeholder="Ej: ABCD-1234-EFGH" value="{{ old('code') }}">
+                        <label for="quantity">Cantidad</label>
+                        <input type="number" name="quantity" id="quantity" min="1" max="100" value="{{ old('quantity', 1) }}" required>
+                        @error('quantity')
+                        <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Input de Código manual --}}
+                    <div class="form-group">
+                        <label for="code">Código manual (opcional)</label>
+                        <input type="text" name="code" id="code" placeholder="Ej: ABCD-1234-EFGH" value="{{ old('code') }}">
                         @error('code')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
+                        <p class="help-text">Si llenas este campo, se creará solo 1 código con este valor.</p>
                     </div>
 
                     {{-- Botones --}}

@@ -44,11 +44,20 @@
                     <i class="fas fa-users"></i>
                     Gestión de Usuarios
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('admin.reviews.index') }}" class="nav-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
+                    <i class="fas fa-star-half-alt"></i>
+                    Gestión de Reseñas
+                </a>
+                <a href="{{ route('admin.items.index') }}" class="nav-item {{ request()->routeIs('admin.items.*') ? 'active' : '' }}">
+                    <i class="fas fa-boxes"></i>
+                    Gestión de Ítems
+                </a>
+                {{-- Agregué este enlace para abrir la gestión de códigos Andy. --}}
+                <a href="{{ route('admin.gamecodes.index') }}" class="nav-item {{ request()->routeIs('admin.gamecodes.*') ? 'active' : '' }}">
                     <i class="fas fa-ticket-alt"></i>
                     Gestión de Códigos
                 </a>
-                <a href="#" class="nav-item">
+                <a href="{{ route('admin.settings') }}" class="nav-item {{ request()->routeIs('admin.settings') ? 'active' : '' }}">
                     <i class="fas fa-cog"></i>
                     Configuración
                 </a>

@@ -608,6 +608,137 @@ a {
     transform: translateY(-1px);
 }
 
+.btn-sm {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+}
+
+.settings-hero {
+    margin-bottom: 1.5rem;
+    padding: 1.75rem 2rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.settings-hero-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.12);
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 1.6rem;
+}
+
+.settings-hero-text h1 {
+    margin: 0.1rem 0 0.2rem;
+}
+
+.settings-hero-text p {
+    margin: 0;
+    color: #e2e8f0;
+}
+
+.settings-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}
+
+.settings-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 1.25rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.card-header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    color: white;
+}
+
+.gradient-purple { background: linear-gradient(135deg, #a78bfa, #7c3aed); }
+.gradient-blue { background: linear-gradient(135deg, #60a5fa, #2563eb); }
+.gradient-green { background: linear-gradient(135deg, #34d399, #059669); }
+
+.card-header h3 {
+    margin: 0;
+}
+
+.card-subtitle {
+    margin: 0;
+    color: var(--text-secondary);
+}
+
+.form-group {
+    margin-bottom: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 0.65rem 0.85rem;
+    border-radius: 8px;
+}
+
+.form-group input:focus {
+    outline: 2px solid rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.4);
+}
+
+.status-card .status-line {
+    margin: 0 0 0.5rem 0;
+}
+
+.helper-block {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.maintenance-actions {
+    margin-top: 0.75rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.settings-actions {
+    margin-top: 1.2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .w-100 {
     width: 100%;
     text-align: center;

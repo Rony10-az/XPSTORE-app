@@ -13,7 +13,24 @@ class GameCodeController extends Controller
     // Listar códigos
     public function index(Request $request)
     {
-        $codes = GameCode::query();
+        $codes = GameCode::with('videoGame');
+
+        $search = $request->input('search', '');
+        if ($search) {
+            $codes->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                    ->orWhereHas('videoGame', function ($game) use ($search) {
+                        $game->where('title', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        $status = $request->input('status', '');
+        if ($status === 'used') {
+            $codes->where('used', true);
+        } elseif ($status === 'available') {
+            $codes->where('used', false);
+        }
 
         // Filtrar por videojuego si se pasa
         $videojuego = null;
@@ -22,9 +39,17 @@ class GameCodeController extends Controller
             $codes->where('video_game_id', $videojuego->id);
         }
 
-        $codes = $codes->paginate(10);
+        $codes = $codes->orderByDesc('id')->paginate(10)->withQueryString();
 
-        return view('admin.gamecodes.index', compact('codes', 'videojuego'));
+        $metrics = [
+            'total' => GameCode::count(),
+            'used' => GameCode::where('used', true)->count(),
+            'available' => GameCode::where('used', false)->count(),
+        ];
+
+        $videoGames = VideoGame::orderBy('title')->get(['id', 'title']);
+
+        return view('admin.gamecodes.index', compact('codes', 'videojuego', 'metrics', 'videoGames', 'search', 'status'));
     }
 
     // Formulario para crear un nuevo código
@@ -40,20 +65,32 @@ class GameCodeController extends Controller
         $request->validate([
             'video_game_id' => 'required|exists:video_games,id',
             'quantity' => 'required|integer|min:1|max:100',
+            'code' => 'nullable|string|unique:game_codes,code',
         ]);
 
         $videojuego = VideoGame::findOrFail($request->video_game_id);
 
-        for ($i = 0; $i < $request->quantity; $i++) {
+        // Si el usuario envía un código manual, solo creamos uno
+        if ($request->filled('code')) {
             GameCode::create([
                 'video_game_id' => $videojuego->id,
-                'code' => strtoupper(Str::random(12)),
+                'code' => strtoupper($request->code),
             ]);
+            $created = 1;
+        } else {
+            for ($i = 0; $i < $request->quantity; $i++) {
+                GameCode::create([
+                    'video_game_id' => $videojuego->id,
+                    'code' => strtoupper(Str::random(12)),
+                ]);
+            }
+            $created = $request->quantity;
         }
 
         return redirect()->route('admin.gamecodes.index')
-            ->with('success', "{$request->quantity} códigos generados para {$videojuego->title}.");
+            ->with('success', "{$created} código(s) generados para {$videojuego->title}.");
     }
+
     public function edit(GameCode $gamecode)
     {
         $videoGames = VideoGame::all();
@@ -78,7 +115,6 @@ class GameCodeController extends Controller
     {
         return view('admin.gamecodes.show', compact('gamecode'));
     }
-
 
     // Eliminar código
     public function destroy(GameCode $gamecode)
