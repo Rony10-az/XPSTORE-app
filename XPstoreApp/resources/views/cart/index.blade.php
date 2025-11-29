@@ -27,7 +27,7 @@
     <div class="cart-content {{ count($cart) == 0 ? 'empty' : '' }}">
 
 
-        {{-- SI EL CARRITO ESTÁ VACÍO --}}
+        <!-- CONDICIONAL PARA CARRITO VACÍO -->
         @if(count($cart) == 0)
 
         <div class="empty-cart">
@@ -45,32 +45,53 @@
         </div>
 
         @else
-
-        {{-- LISTA DE PRODUCTOS --}}
+        <!-- LISTA DE PRODUCTOS -->
         <div class="cart-items">
 
             @foreach($cart as $id => $item)
             <div class="cart-card">
 
+                {{-- IMAGEN --}}
                 <div class="image-box">
-                    <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}">
+                    <img src="{{ $item['image'] ?? asset('images/default-game.jpg') }}"
+                        alt="{{ $item['title'] }}">
 
                     @if($item['discount'] > 0)
                     <span class="discount-tag">-{{ $item['discount'] }}%</span>
                     @endif
                 </div>
 
+                <!-- INFORMACIÓN -->
                 <div class="info-box">
+
+                    <!-- CATEGORÍA -->
                     <span class="category-tag">Videojuego</span>
 
+                    <!-- TÍTULO -->
                     <h3 class="game-title">{{ $item['title'] }}</h3>
 
+                    <!-- TAGS DINÁMICAS (GÉNERO + PLATAFORMA) -->
                     <div class="tag-list">
-                        <span class="tag">RPG</span>
-                        <span class="tag">Acción</span>
-                        <span class="tag">PC</span>
+
+                        <!-- GÉNEROS -->
+                        @if(isset($item['genre']) && is_array($item['genre']) && count($item['genre']) > 0)
+                        @foreach($item['genre'] as $g)
+                        <span class="tag">{{ $g }}</span>
+                        @endforeach
+                        @else
+                        <span class="tag">Sin género</span>
+                        @endif
+
+                        <!-- PLATAFORMAS -->
+                        @if(isset($item['platform']) && is_array($item['platform'] ) && count($item['platform']) > 0)
+                        @foreach($item['platform'] as $pf)
+                        <span class="tag platform-tag">{{ $pf }}</span>
+                        @endforeach
+                        @endif
+
                     </div>
 
+                    <!-- PRECIO -->
                     <div class="price-box">
                         @if($item['discount'] > 0)
                         <span class="old-price">${{ number_format($item['price'], 2) }}</span>
@@ -79,12 +100,14 @@
                         <span class="new-price">${{ number_format($item['final_price'], 2) }}</span>
                     </div>
 
+                    <!-- ELIMINAR -->
                     <form action="{{ route('cart.remove', $id) }}" method="POST" class="delete-form">
                         @csrf
                         <button type="submit" class="delete-btn">
                             <i class="fas fa-trash"></i> Eliminar
                         </button>
                     </form>
+
                 </div>
 
             </div>
@@ -92,7 +115,9 @@
 
         </div>
 
-        {{-- RESUMEN SOLO SI HAY PRODUCTOS --}}
+
+
+        <!-- RESUMEN SOLO SI HAY PRODUCTOS -->
         <div class="summary-box">
 
             <h2 class="summary-title">
@@ -133,10 +158,4 @@
 
     </div>
 
-
-
-</div>
-
-</div>
-
-@endsection
+    @endsection

@@ -30,9 +30,18 @@
 
         {{-- AVATAR --}}
         <div class="avatar-section">
+            @php
+            $avatar = $user->avatar;
+
+            if ($avatar) {
+            $isUrl = Str::startsWith($avatar, ['http://', 'https://']);
+            }
+            @endphp
+
             <img class="avatar-img"
-                src="{{ $user->avatar ? asset('storage/'.$user->avatar) : 'https://via.placeholder.com/150' }}"
+                src="{{ $avatar ? ($isUrl ? $avatar : asset('storage/'.$avatar)) : 'https://via.placeholder.com/150' }}"
                 alt="Avatar">
+
 
             <label class="avatar-label">Cambiar avatar</label>
             <input type="file" name="avatar" class="file-input">

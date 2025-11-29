@@ -255,20 +255,24 @@
     cursor: pointer;
     font-weight: 600;
     transition: .2s;
+    color: #e2e8f0 !important;
 }
 
 .tab:hover {
     background: rgba(255, 255, 255, .09);
 }
 
+
 .tab.active {
-    border-color: #8b5cf6;
-    background: rgba(139, 92, 246, .2);
+    color: #fff !important;
+    background: rgba(139, 92, 246, 0.3) !important;
+    border-color: #a78bfa !important;
 }
 
 .tab-content {
     display: none;
     margin-top: 20px;
+    color: #e2e8f0 !important;
 }
 
 .tab-content.active {
@@ -561,11 +565,24 @@
 
 /* Imagen principal */
 .hero-main {
-    height: 370px;
+    height: 450px;
     /* 🔹 más bajo que antes */
     border-radius: 14px;
     overflow: hidden;
 }
+
+@media (max-width: 1024px) {
+    .hero-main {
+        height: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-main {
+        height: 300px;
+    }
+}
+
 
 .hero-main img {
     width: 100%;
@@ -608,8 +625,8 @@
 }
 
 .hero-thumb {
-    width: 120px;
-    height: 68px;
+    width: 150px;
+    height: 85px;
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;

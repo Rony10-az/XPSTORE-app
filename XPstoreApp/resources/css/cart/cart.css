@@ -42,7 +42,7 @@ body {
 .cart-content {
     display: grid;
     grid-template-columns: 1.7fr 0.8fr;
-    /* Resumen se acerca más a los productos */
+
     gap: 30px;
     align-items: start;
 }
@@ -64,7 +64,8 @@ body {
 }
 
 .image-box img {
-    width: 180px;
+    width: 250px;
+    height: auto;
     border-radius: 14px;
 }
 
@@ -457,4 +458,20 @@ body {
     align-items: center;
     flex-direction: column;
     width: 100%;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
 }

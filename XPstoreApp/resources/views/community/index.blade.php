@@ -80,11 +80,13 @@
             <h3 class="sidebar-title">🎮 Juegos populares</h3>
 
             <ul class="sidebar-list">
-                <li><i class="fas fa-fire"></i> Cyberpunk Odyssey</li>
-                <li><i class="fas fa-fire"></i> Dragonfall Legends</li>
-                <li><i class="fas fa-fire"></i> Pixel Frontier</li>
-                <li><i class="fas fa-fire"></i> Mecha Strike</li>
+                @foreach ($popularGames as $game)
+                <li>
+                    <i class="fas fa-fire"></i> {{ $game->title }}
+                </li>
+                @endforeach
             </ul>
+
         </div>
 
         {{-- USUARIOS DESTACADOS --}}

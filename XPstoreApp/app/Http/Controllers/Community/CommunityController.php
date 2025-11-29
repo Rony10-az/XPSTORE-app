@@ -21,7 +21,12 @@ class CommunityController extends Controller
 
         $posts = $query->paginate(10);
 
-        return view('community.index', compact('posts', 'filter'));
+        // AGREGADO: juegos populares de la BD
+        $popularGames = VideoGame::orderBy('sales_count', 'desc')
+            ->take(4)
+            ->get();
+
+        return view('community.index', compact('posts', 'filter', 'popularGames'));
     }
 
     public function create(Request $request)

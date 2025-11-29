@@ -27,22 +27,29 @@ class ProfileController extends Controller
             'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
-        $avatarPath = $user->avatar; // por defecto conserva el mismo avatar
+        $avatarPath = $user->avatar; // default
 
-        // Subir nueva imagen
+        // Procesar nueva imagen
         if ($request->hasFile('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+
+            // Guardar en /public/avatars/
+            $file->move(public_path('avatars'), $filename);
+
+            // Guardar ruta para BD
+            $avatarPath = 'avatars/' . $filename;
         }
 
-
+        // ACTUALIZAR USANDO "::"
         User::where('id', $user->id)->update([
-            'name' => $request->name,
-            'avatar' => $avatarPath
+            'name'   => $request->name,
+            'avatar' => $avatarPath,
         ]);
 
         return back()->with('success', 'Perfil actualizado correctamente.');
     }
-
 
 
     public function ejemplo()
