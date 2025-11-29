@@ -28,6 +28,8 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
         // Añadí last_login_at para poder mostrar la última sesión en administración.
         'last_login_at' => 'datetime',
     ];
