@@ -32,6 +32,6 @@ class MarketplaceController extends Controller
             }
         }
 
-        return view('marketplace.index', compact('items'));
+        return view('market.index', compact('items'));
     }
 }

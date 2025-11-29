@@ -51,17 +51,19 @@
                     @endphp
 
                     <div class="user-avatar">
-                        <<<<<<< HEAD
-                            @if(auth()->user()->avatar)
-                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
-                            =======
-                            @if($avatar)
-                            <img src="{{ $isUrl ? $avatar : asset('storage/'.$avatar) }}" alt="Avatar" class="avatar-thumb">
-                            >>>>>>> feat/codigo
-                            @else
-                            <i class="fas fa-user"></i>
-                            @endif
+                        @if(auth()->user()->avatar)
+
+                        @if($avatar)
+                        <img src="{{ $isUrl ? $avatar : asset('storage/'.$avatar) }}" alt="Avatar" class="avatar-thumb">
+                        @else
+                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                        @endif
+
+                        @else
+                        <i class="fas fa-user"></i>
+                        @endif
                     </div>
+
 
                     <span class="user-name">
                         {{ auth()->user()->name }}
@@ -116,11 +118,6 @@
         <a href="{{ route('market.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
         <a href="{{ route('streaming.index') }}" class="nav-link {{ request()->routeIs('streaming.index') ? 'active' : '' }}">Códigos</a>
         <a href="{{ route('library.index') }}" class="nav-link">Mis Pedidos</a>
-        <<<<<<< HEAD
-            <a href="#" class="nav-link">Wishlist</a>
-            <a href="{{ route('marketplace.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
-            =======
 
-            >>>>>>> feat/codigo
     </div>
 </nav>
