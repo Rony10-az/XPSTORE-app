@@ -1,5 +1,7 @@
 <?php
 
+//** Middleware para verificar si el usuario es admin **//
+
 namespace App\Http\Middleware;
 
 use Closure;

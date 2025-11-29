@@ -1,5 +1,7 @@
 <?php
 
+/** Middleware para redirigir si el usuario ya está autenticado */
+
 namespace App\Http\Middleware;
 
 use Closure;
