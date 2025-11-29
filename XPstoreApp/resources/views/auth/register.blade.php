@@ -1,24 +1,24 @@
 @extends('layouts.auth')
 
-@section('title', 'Registro - XP Store')
+@section('title', 'Crear Cuenta - XP Store')
 
 @section('content')
 <div class="register-container">
     <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
         <!-- Fondo animado -->
-        <div class="absolute inset-0 bg-animated">
-            <div class="bg-glow"></div>
-            <div class="particles" id="particles"></div>
-
-            <!-- Orbes de luz -->
+        <div class="absolute inset-0 bg-linear-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.15),transparent_50%)]"></div>
             <div class="orb orb-1"></div>
             <div class="orb orb-2"></div>
             <div class="orb orb-3"></div>
         </div>
 
-        <!-- Contenedor principal -->
-        <div class="grid-container">
-            <!-- Sección del logo (Desktop) -->
+        <!-- Partículas -->
+        <div class="particles-container" id="particles"></div>
+
+        <!-- Grid principal -->
+        <div class="grid-container lg:grid-cols-2">
+            <!-- Hero -->
             <div class="logo-section">
                 <div class="logo-animation">
                     <div class="logo-glow"></div>
@@ -31,44 +31,40 @@
                 </div>
 
                 <div class="welcome-text">
-                    <h1>Únete a <span class="brand-gradient">XP STORE</span></h1>
-                    <p>Crea tu cuenta y descubre miles de juegos, skins exclusivos y códigos de streaming.</p>
+                    <h1 class="text-5xl text-white">Únete a <span class="brand-gradient">XP STORE</span></h1>
+                    <p class="text-xl text-gray-300 max-w-md">
+                        Crea tu cuenta y desbloquea miles de juegos, skins exclusivos y códigos de streaming.
+                    </p>
                 </div>
 
                 <div class="features-grid">
-                    <div class="feature-card">
+                    <div class="feature-card feature-purple">
                         <div class="feature-icon">🎮</div>
-                        <p class="feature-text">Catálogo exclusivo</p>
+                        <p class="feature-text">Miles de juegos</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <p class="feature-text">Descargas rápidas</p>
+                    <div class="feature-card feature-pink">
+                        <div class="feature-icon">✨</div>
+                        <p class="feature-text">Skins exclusivos</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card feature-blue">
                         <div class="feature-icon">🛡️</div>
-                        <p class="feature-text">Cuenta segura</p>
+                        <p class="feature-text">Compra segura</p>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎁</div>
-                        <p class="feature-text">Rewards de bienvenida</p>
+                    <div class="feature-card feature-yellow">
+                        <div class="feature-icon">🏆</div>
+                        <p class="feature-text">Rewards diarios</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Formulario de registro -->
+            <!-- Formulario -->
             <div class="form-section">
-                <!-- Saludo móvil -->
-                <div class="mobile-greeting">
-                    <div class="mobile-logo">
+                <!-- Mobile logo -->
+                <div class="mobile-greeting lg:hidden">
+                    <div class="flex justify-center mb-4">
                         <div class="logo">
                             <div class="logo-text">XP STORE</div>
                             <div class="logo-sparkle"></div>
-                        </div>
-                    </div>
-                    <div class="greeting-container">
-                        <div class="greeting-card">
-                            <div class="greeting-icon">🚀</div>
-                            <span class="greeting-text">¡Comienza tu aventura!</span>
                         </div>
                     </div>
                 </div>
@@ -77,7 +73,7 @@
                     <div class="card-glow-border"></div>
 
                     <div class="card-header">
-                        <div class="header-content">
+                        <div class="flex items-center space-x-4">
                             <div class="header-icon">
                                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -85,7 +81,7 @@
                                     <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                                 </svg>
                             </div>
-                            <div class="header-text">
+                            <div>
                                 <h2 class="card-title">Crear Cuenta</h2>
                                 <p class="card-description">Únete a la comunidad gamer</p>
                             </div>
@@ -95,9 +91,9 @@
                     <div class="card-content">
                         @if($errors->any())
                         <div class="error-container">
-                            <ul class="error-list">
+                            <ul>
                                 @foreach($errors->all() as $err)
-                                <li class="error-item">{{ $err }}</li>
+                                <li>{{ $err }}</li>
                                 @endforeach
                             </ul>
                         </div>
@@ -106,7 +102,7 @@
                         <form method="POST" action="{{ route('register') }}" class="register-form">
                             @csrf
 
-                            <!-- Nombre Completo -->
+                            <!-- Nombre -->
                             <div class="input-group">
                                 <label for="name" class="input-label">
                                     <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -163,7 +159,7 @@
                                         id="password"
                                         type="password"
                                         name="password"
-                                        placeholder="••••••••"
+                                        placeholder="********"
                                         class="form-input password-input"
                                         required />
                                     <button type="button" class="password-toggle">
@@ -177,15 +173,9 @@
                                         </svg>
                                     </button>
                                 </div>
-                                <div class="password-strength">
-                                    <div class="strength-bar">
-                                        <div class="strength-fill" id="strengthFill"></div>
-                                    </div>
-                                    <span class="strength-text" id="strengthText">Seguridad de la contraseña</span>
-                                </div>
                             </div>
 
-                            <!-- Confirmar Contraseña -->
+                            <!-- Confirmar -->
                             <div class="input-group">
                                 <label for="password_confirmation" class="input-label">
                                     <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -199,7 +189,7 @@
                                         id="password_confirmation"
                                         type="password"
                                         name="password_confirmation"
-                                        placeholder="••••••••"
+                                        placeholder="********"
                                         class="form-input password-input"
                                         required />
                                     <button type="button" class="password-toggle">
@@ -215,12 +205,15 @@
                                 </div>
                             </div>
 
-                            <!-- Términos y Condiciones -->
+                            <!-- Términos -->
                             <div class="checkbox-group">
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="terms" id="terms" required>
                                     <span class="checkmark"></span>
-                                    Acepto los <a href="#" class="link">Términos y Condiciones</a> y la <a href="#" class="link">Política de Privacidad</a>
+                                    <span>Acepto los</span>
+                                    <a href="#" class="link">Términos y Condiciones</a>
+                                    <span>y la</span>
+                                    <a href="#" class="link">Política de Privacidad</a>
                                 </label>
                             </div>
 
@@ -229,11 +222,11 @@
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="newsletter" id="newsletter" checked>
                                     <span class="checkmark"></span>
-                                    Quiero recibir noticias sobre nuevos juegos y ofertas exclusivas
+                                    Quiero recibir noticias y ofertas exclusivas
                                 </label>
                             </div>
 
-                            <!-- Botón de Registro -->
+                            <!-- Botón -->
                             <button type="submit" class="register-button" id="register-button">
                                 <div class="button-shine"></div>
                                 <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -245,13 +238,10 @@
                             </button>
                         </form>
 
-                        <!-- Link a login -->
                         <div class="login-link">
                             <p class="link-text">
                                 ¿Ya tienes una cuenta?
-                                <a href="{{ route('login') }}" class="link-button">
-                                    Inicia sesión aquí
-                                </a>
+                                <a href="{{ route('login') }}" class="link-button">Inicia sesión aquí</a>
                             </p>
                         </div>
                     </div>
@@ -261,7 +251,6 @@
     </div>
 </div>
 
-<!-- Toast Container -->
 <div id="toast-container" class="toast-container"></div>
 
 @vite(['resources/css/register.css', 'resources/js/register.js'])

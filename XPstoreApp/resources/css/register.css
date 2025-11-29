@@ -182,8 +182,67 @@ body {
     display: grid;
 }
 
+.grid-container {
+    display: grid;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    gap: 1.5rem;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.grid-container .form-section {
+    width: 100%;
+    max-width: 24rem; /* igual que el login */
+    margin: 0 auto;
+}
+
+.grid-container .logo-section {
+    width: 100%;
+}
+
 .lg\:grid-cols-2 {
     grid-template-columns: 1fr 1fr;
+}
+
+.lg\:grid-cols-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* Compactar la card al estilo login */
+.register-card {
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow:
+        0 20px 40px -12px rgba(147, 51, 234, 0.25),
+        0 0 0 1px var(--border),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    animation: fadeIn 0.6s ease-out;
+    width: 100%;
+}
+
+.register-card:hover {
+    box-shadow:
+        0 25px 50px -15px rgba(147, 51, 234, 0.35),
+        0 0 0 1px rgba(168, 85, 247, 0.3),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.card-header {
+    padding: 2rem 2rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-content {
+    padding: 0 2rem 2rem;
 }
 
 .gap-8 {
