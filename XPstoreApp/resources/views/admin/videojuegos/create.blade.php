@@ -13,8 +13,8 @@
             <p class="admin-subtitle">Agrega un nuevo juego al catálogo de XP Store</p>
         </div>
         <a href="{{ route('videojuegos.index') }}" class="btn-secondary">
-    <i class="fas fa-arrow-left"></i> Volver al Listado
-</a>
+            <i class="fas fa-arrow-left"></i> Volver al Listado
+        </a>
 
     </div>
 
@@ -86,7 +86,7 @@
                     <div class="form-group">
                         <label for="price" class="form-label">Precio (S/.) *</label>
                         <input type="number" id="price" name="price" class="form-input"
-   min="0.99" max="999.99" step="any" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
+                            min="0.99" max="999.99" step="any" placeholder="ingrese el precio desde 0.99" value="{{ old('price') }}" required>
 
                         @error('price')
                         <span class="error-message">{{ $message }}</span>
@@ -97,7 +97,7 @@
                     <div class="form-group">
                         <label for="discount" class="form-label">Descuento (%)</label>
                         <input type="number" id="discount" name="discount" min="5" max="90" step="5"
-    placeholder="(Desde 5% hasta 90%)" value="{{ old('discount') }}" required>
+                            placeholder="(Desde 5% hasta 90%)" value="{{ old('discount') }}" required>
 
                         @error('discount')
                         <span class="error-message">{{ $message }}</span>
@@ -118,15 +118,15 @@
                     <div class="form-group">
                         <label for="popularity" class="form-label">Popularidad (1-5)</label>
                         <input type="number"
-       id="popularity"
-       name="popularity"
-       class="form-input"
-       min="1"
-       max="5"
-       step="1"
-       placeholder="Popularidad (1 a 5)"
-       value="{{ old('popularity', 3) }}"
-       required>
+                            id="popularity"
+                            name="popularity"
+                            class="form-input"
+                            min="1"
+                            max="5"
+                            step="1"
+                            placeholder="Popularidad (1 a 5)"
+                            value="{{ old('popularity', 3) }}"
+                            required>
 
                         @error('popularity')
                         <span class="error-message">{{ $message }}</span>

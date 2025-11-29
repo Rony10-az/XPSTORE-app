@@ -1,7 +1,5 @@
 <?php
 
-//** Middleware para verificar si el usuario es admin **//
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -13,10 +11,11 @@ class IsAdmin
     /**
      * Handle an incoming request.
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
+        // Agregué este guard para asegurarme de que solo admin pase a estas rutas.
         if (!$request->user() || $request->user()->role !== 'admin') {
-            return redirect()->route('dashboard.user');
+            abort(403, 'Acceso solo para administradores.');
         }
 
         return $next($request);

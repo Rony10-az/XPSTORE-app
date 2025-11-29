@@ -87,18 +87,15 @@ class DashboardController extends Controller
             $game->image = $this->getFirstImage($game->images);
             return $game;
         });
-
-        /* ============================================================
-         * ALL GAMES (CATÁLOGO COMPLETO)
-         * ============================================================ */
         $allGames = VideoGame::where('stock', '>', 0)
-            ->orderBy('title', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $allGames->transform(function ($game) {
             $game->image = $this->getFirstImage($game->images);
             return $game;
         });
+
 
         /* ============================================================
          * RETORNAR VISTA

@@ -84,7 +84,6 @@ class VideoGameController extends Controller
     {
         return view('admin.videojuegos.create');
     }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -105,45 +104,24 @@ class VideoGameController extends Controller
             'requirements' => 'nullable|string',
         ]);
 
-        // ==========================
-        // CONVERTIR IMÁGENES A BASE64
-        // ==========================
         $imagePaths = [];
-
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $img) {
-
-                // Leer los bytes del archivo
-                $data = file_get_contents($img);
-
-                // Convertir en URL BASE64
-                $base64 = 'data:' . $img->getMimeType() . ';base64,' . base64_encode($data);
-
-                // Guardamos esa "URL" en el array
-                $imagePaths[] = $base64;
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('videojuegos', 'public');
+                $imagePaths[] = $path;
             }
         }
-
-        // ==========================
-        // REQUERIMIENTOS
-        // ==========================
         $requirements = [];
         if ($request->requirements) {
             $requirements = json_decode($request->requirements, true) ?? [];
         }
 
-        // ==========================
-        // GUARDAR EL VIDEOJUEGO
-        // ==========================
         VideoGame::create([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'discount' => $request->discount ?? 0,
-
-            // Guardamos URLs base64 directamente en la BD
-            'images' => $imagePaths,
-
+            'images' => !empty($imagePaths) ? $imagePaths : [],
             'genre' => $request->genre,
             'platform' => $request->platform,
             'release_date' => $request->release_date,
