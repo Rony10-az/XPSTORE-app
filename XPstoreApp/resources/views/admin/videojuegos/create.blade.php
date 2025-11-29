@@ -96,8 +96,9 @@
                     {{-- Descuento --}}
                     <div class="form-group">
                         <label for="discount" class="form-label">Descuento (%)</label>
-                        <input type="number" id="discount" name="discount" min="5" max="90" step="5"
-    placeholder="(Desde 5% hasta 90%)" value="{{ old('discount') }}" required>
+                        <input type="number" id="discount" name="discount" class="form-input"
+                            min="0" max="100" step="1"
+                            placeholder="Ingrese el descuento (0-100%)" value="{{ old('discount', 0) }}">
 
                         @error('discount')
                         <span class="error-message">{{ $message }}</span>
@@ -206,7 +207,7 @@
                     <label for="images" class="form-label">Imágenes (Múltiples)</label>
                     <div class="file-upload">
                         <input type="file" id="images" name="images[]" multiple
-                            accept="image/jpeg,image/png,image/jpg,image/gif" class="file-input">
+                            accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="file-input">
                         <label for="images" class="file-label">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <span>Seleccionar imágenes</span>
@@ -287,44 +288,80 @@
 
 @push('scripts')
 <script>
-    // Preview de imágenes
+    // Preview de imágenes con validación
     document.getElementById('images').addEventListener('change', function(e) {
         const preview = document.getElementById('image-preview');
         preview.innerHTML = '';
 
         const files = e.target.files;
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-            const reader = new FileReader();
 
+            // Validar tipo de archivo
+            if (!allowedTypes.includes(file.type)) {
+                alert(`El archivo "${file.name}" no es una imagen válida. Solo se permiten JPG, PNG, GIF y WebP.`);
+                this.value = ''; // Limpiar el input
+                preview.innerHTML = '';
+                return;
+            }
+
+            // Validar tamaño
+            if (file.size > maxSize) {
+                alert(`El archivo "${file.name}" es demasiado grande. El tamaño máximo es 5MB.`);
+                this.value = '';
+                preview.innerHTML = '';
+                return;
+            }
+
+            // Mostrar preview
+            const reader = new FileReader();
             reader.onload = function(e) {
                 const img = document.createElement('div');
                 img.className = 'preview-image';
                 img.innerHTML = `
-                <img src="${e.target.result}" alt="Preview">
-                <span>${file.name}</span>
-            `;
+                    <img src="${e.target.result}" alt="Preview">
+                    <span>${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)</span>
+                `;
                 preview.appendChild(img);
             }
-
             reader.readAsDataURL(file);
         }
     });
 
     // Validación de formulario
-    document.querySelector('.crud-form').addEventListener('submit', function(e) {
-        const price = document.getElementById('price').value;
-        const discount = document.getElementById('discount').value;
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const price = parseFloat(document.getElementById('price').value);
+        const discount = parseInt(document.getElementById('discount').value || 0);
+        const files = document.getElementById('images').files;
 
-        if (price < 0) {
+        if (price < 0.99) {
             e.preventDefault();
-            alert('El precio no puede ser negativo');
+            alert('El precio mínimo es S/. 0.99');
             return false;
         }
 
         if (discount < 0 || discount > 100) {
             e.preventDefault();
             alert('El descuento debe estar entre 0 y 100');
+            return false;
+        }
+
+        // Validar que al menos seleccionó géneros y plataformas
+        const genres = document.querySelectorAll('input[name="genre[]"]:checked');
+        const platforms = document.querySelectorAll('input[name="platform[]"]:checked');
+
+        if (genres.length === 0) {
+            e.preventDefault();
+            alert('Debes seleccionar al menos un género');
+            return false;
+        }
+
+        if (platforms.length === 0) {
+            e.preventDefault();
+            alert('Debes seleccionar al menos una plataforma');
             return false;
         }
     });

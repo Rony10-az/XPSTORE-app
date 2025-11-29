@@ -214,7 +214,7 @@
         <label for="images" class="form-label">Agregar nuevas imágenes</label>
         <div class="file-upload">
             <input type="file" id="images" name="images[]" multiple
-                accept="image/jpeg,image/png,image/jpg,image/gif" class="file-input">
+                accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" class="file-input">
             <label for="images" class="file-label">
                 <i class="fas fa-cloud-upload-alt"></i>
                 <span>Seleccionar imágenes</span>
