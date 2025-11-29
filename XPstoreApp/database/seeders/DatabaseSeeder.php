@@ -35,286 +35,246 @@ class DatabaseSeeder extends Seeder
             'role' => 'user',
         ]);
 
-        // Crear videojuegos
-        $game1 = VideoGame::create([
-            'title' => 'Cyberpunk Odyssey',
-            'description' => 'Explora un futuro distópico en esta épica aventura de ciencia ficción. Toma decisiones que afectarán el destino de la humanidad.',
+        // ==========================
+        //  VIDEOJUEGOS REALES
+        // ==========================
+
+        // 1. God of War Ragnarok
+        VideoGame::create([
+            'title' => 'God of War Ragnarok',
+            'description' => 'Acompaña a Kratos y Atreus en el inicio del fin de los tiempos mientras enfrentan a dioses nórdicos.',
             'price' => 59.99,
-            'discount' => 20,
+            'discount' => 10,
             'images' => [
-                'https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&h=450&fit=crop'
+                'https://wallpapers.com/images/high/kratos-in-cave-god-of-war-ragnarok-hmaawiodgr64ldzm.webp'
             ],
-            'genre' => ['RPG', 'Acción', 'Ciencia Ficción'],
+            'genre' => ['Acción', 'Aventura'],
+            'platform' => ['PlayStation 5', 'PC'],
+            'release_date' => '2022-11-09',
+            'developer' => 'Santa Monica Studio',
+            'publisher' => 'Sony Interactive Entertainment',
+            'rating' => 4.9,
+            'stock' => 120,
+            'featured' => true,
+            'requirements' => [
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'Ryzen 5', 'memory' => '8 GB', 'graphics' => 'GTX 1060', 'storage' => '80 GB'],
+                'recommended' => ['os' => 'Windows 11', 'processor' => 'Ryzen 7', 'memory' => '16 GB', 'graphics' => 'RTX 2060', 'storage' => '80 GB SSD']
+            ]
+        ]);
+
+        // 2. Elden Ring
+        VideoGame::create([
+            'title' => 'Elden Ring',
+            'description' => 'Una aventura épica desarrollada por FromSoftware en un vasto mundo abierto lleno de desafíos.',
+            'price' => 49.99,
+            'discount' => 0,
+            'images' => [
+                'https://images2.alphacoders.com/124/thumb-440-1246524.webp'
+            ],
+            'genre' => ['RPG', 'Acción', 'Mundo Abierto'],
             'platform' => ['PC', 'PlayStation 5', 'Xbox Series X'],
-            'release_date' => '2024-03-15',
-            'developer' => 'Future Games Studio',
-            'publisher' => 'Mega Publisher Inc.',
+            'release_date' => '2022-02-25',
+            'developer' => 'FromSoftware',
+            'publisher' => 'Bandai Namco',
+            'rating' => 4.8,
+            'stock' => 200,
+            'featured' => true,
+            'requirements' => [
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i5-8400', 'memory' => '12 GB', 'graphics' => 'GTX 1060', 'storage' => '60 GB'],
+                'recommended' => ['os' => 'Windows 11', 'processor' => 'Ryzen 7', 'memory' => '16 GB', 'graphics' => 'RTX 3060', 'storage' => '60 GB SSD']
+            ]
+        ]);
+
+        // 3. Marvel’s Spider-Man 2
+        VideoGame::create([
+            'title' => 'Marvel’s Spider-Man 2',
+            'description' => 'Vive una historia épica junto a Peter Parker y Miles Morales en Nueva York.',
+            'price' => 69.99,
+            'discount' => 15,
+            'images' => [
+                'https://wallpapers.com/images/high/spider-man-ps4-4k-i5ssgd6fq17lrz7i.webp'
+            ],
+            'genre' => ['Acción', 'Aventura'],
+            'platform' => ['PlayStation 5'],
+            'release_date' => '2023-10-20',
+            'developer' => 'Insomniac Games',
+            'publisher' => 'Sony Interactive Entertainment',
             'rating' => 4.8,
             'stock' => 150,
             'featured' => true,
             'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i5-8400 / AMD Ryzen 5 2600',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 1060 6GB / AMD RX 580',
-                    'storage' => '70 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i7-10700K / AMD Ryzen 7 3700X',
-                    'memory' => '16 GB RAM',
-                    'graphics' => 'NVIDIA RTX 3070 / AMD RX 6800',
-                    'storage' => '70 GB SSD'
-                ]
+                'minimum' => ['os' => 'N/A', 'processor' => 'N/A', 'memory' => 'N/A', 'graphics' => 'N/A', 'storage' => 'N/A'],
+                'recommended' => ['os' => 'N/A', 'processor' => 'N/A', 'memory' => 'N/A', 'graphics' => 'N/A', 'storage' => 'N/A']
             ]
         ]);
 
-        $game2 = VideoGame::create([
-            'title' => 'Fantasy Legends Online',
-            'description' => 'MMORPG épico con combates estratégicos y un vasto mundo por explorar. Únete a millones de jugadores en batallas legendarias.',
-            'price' => 49.99,
+        // 4. Horizon Zero Dawn
+        VideoGame::create([
+            'title' => 'Horizon Zero Dawn',
+            'description' => 'Acompaña a Aloy en una aventura por un mundo dominado por criaturas mecánicas.',
+            'price' => 39.99,
             'discount' => 0,
             'images' => [
-                'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&h=450&fit=crop'
+                'https://images4.alphacoders.com/936/936631.jpg'
             ],
-            'genre' => ['MMORPG', 'Fantasía', 'Multijugador'],
-            'platform' => ['PC', 'PlayStation 5'],
-            'release_date' => '2024-01-20',
-            'developer' => 'Epic Fantasy Studios',
-            'publisher' => 'Online Games Corp',
-            'rating' => 4.5,
-            'stock' => 200,
+            'genre' => ['Aventura', 'Acción', 'RPG'],
+            'platform' => ['PC', 'PlayStation 4'],
+            'release_date' => '2017-02-28',
+            'developer' => 'Guerrilla Games',
+            'publisher' => 'Sony Interactive Entertainment',
+            'rating' => 4.7,
+            'stock' => 300,
+            'featured' => false,
+            'requirements' => [
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i5-2500K', 'memory' => '8 GB', 'graphics' => 'GTX 780', 'storage' => '100 GB'],
+                'recommended' => ['os' => 'Windows 11', 'processor' => 'Ryzen 5', 'memory' => '16 GB', 'graphics' => 'GTX 1080', 'storage' => '100 GB SSD']
+            ]
+        ]);
+
+        // 5. Grand Theft Auto V
+        VideoGame::create([
+            'title' => 'Grand Theft Auto V',
+            'description' => 'Vive la historia de tres criminales en una ciudad llena de caos y oportunidades.',
+            'price' => 19.99,
+            'discount' => 0,
+            'images' => [
+                'https://wallpapers.com/images/high/4k-gta-5-franklin-looking-at-city-at-night-bq6nlp808hn0xoi5.webp'
+            ],
+            'genre' => ['Acción', 'Mundo Abierto'],
+            'platform' => ['PC', 'PlayStation', 'Xbox'],
+            'release_date' => '2013-09-17',
+            'developer' => 'Rockstar Games',
+            'publisher' => 'Rockstar Games',
+            'rating' => 4.9,
+            'stock' => 500,
             'featured' => true,
             'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i5-6600K / AMD Ryzen 3 1300X',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 970 / AMD RX 570',
-                    'storage' => '50 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i7-9700K / AMD Ryzen 5 3600',
-                    'memory' => '16 GB RAM',
-                    'graphics' => 'NVIDIA RTX 2070 / AMD RX 5700 XT',
-                    'storage' => '50 GB SSD'
-                ]
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i5-3470', 'memory' => '8 GB', 'graphics' => 'GTX 660', 'storage' => '75 GB'],
+                'recommended' => ['os' => 'Windows 10', 'processor' => 'i7-3770', 'memory' => '16 GB', 'graphics' => 'GTX 1050 Ti', 'storage' => '75 GB SSD']
             ]
         ]);
 
-        $game3 = VideoGame::create([
-            'title' => 'Racing Champions 2024',
-            'description' => 'La experiencia de carreras más realista. Compite en circuitos mundiales con los mejores pilotos del planeta.',
-            'price' => 39.99,
-            'discount' => 15,
-            'images' => [
-                'https://images.unsplash.com/photo-1511882150382-421056c89033?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=450&fit=crop'
-            ],
-            'genre' => ['Carreras', 'Simulación', 'Deportes'],
-            'platform' => ['PC', 'PlayStation 5', 'Xbox Series X', 'Nintendo Switch'],
-            'release_date' => '2024-02-10',
-            'developer' => 'Speed Masters',
-            'publisher' => 'Racing Games Ltd',
-            'rating' => 4.6,
-            'stock' => 180,
-            'featured' => false,
-            'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i5-7500 / AMD Ryzen 5 1600',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 1050 Ti / AMD RX 560',
-                    'storage' => '40 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i7-8700K / AMD Ryzen 7 2700X',
-                    'memory' => '16 GB RAM',
-                    'graphics' => 'NVIDIA RTX 2060 / AMD RX 5600 XT',
-                    'storage' => '40 GB SSD'
-                ]
-            ]
-        ]);
-
-        $game4 = VideoGame::create([
-            'title' => 'Horror Mansion: The Awakening',
-            'description' => 'Sobrevive en una mansión llena de secretos oscuros. Terror psicológico que te mantendrá al borde de tu asiento.',
-            'price' => 29.99,
-            'discount' => 0,
-            'images' => [
-                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1526779259212-5f6b3f4f4e8f?w=800&h=450&fit=crop'
-            ],
-            'genre' => ['Terror', 'Aventura', 'Suspenso'],
-            'platform' => ['PC', 'PlayStation 5', 'Xbox Series X'],
-            'release_date' => '2024-04-01',
-            'developer' => 'Nightmare Studios',
-            'publisher' => 'Horror Games Inc',
-            'rating' => 4.7,
-            'stock' => 120,
-            'featured' => false,
-            'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i5-6600 / AMD Ryzen 3 1200',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 960 / AMD RX 470',
-                    'storage' => '30 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i7-8700 / AMD Ryzen 5 2600X',
-                    'memory' => '16 GB RAM',
-                    'graphics' => 'NVIDIA RTX 2060 / AMD RX 5600 XT',
-                    'storage' => '30 GB SSD'
-                ]
-            ]
-        ]);
-
-        $game5 = VideoGame::create([
-            'title' => 'Battle Royale Legends',
-            'description' => '100 jugadores, un solo superviviente. El Battle Royale definitivo con mapas dinámicos y armas personalizables.',
+        // 6. Fortnite
+        VideoGame::create([
+            'title' => 'Fortnite',
+            'description' => 'Battle Royale gratuito y en constante evolución con millones de jugadores.',
             'price' => 0,
             'discount' => 0,
             'images' => [
-                'https://images.unsplash.com/photo-1542751110-97427bbecf20?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1556438758-8d49568ce18e?w=800&h=450&fit=crop'
+                'https://images6.alphacoders.com/901/thumb-440-901682.webp'
             ],
-            'genre' => ['Battle Royale', 'Acción', 'Multijugador'],
-            'platform' => ['PC', 'PlayStation 5', 'Xbox Series X', 'Mobile'],
-            'release_date' => '2023-11-15',
-            'developer' => 'Battle Masters',
-            'publisher' => 'Free Games Network',
+            'genre' => ['Battle Royale', 'Multijugador'],
+            'platform' => ['PC', 'PlayStation', 'Xbox', 'Switch', 'Mobile'],
+            'release_date' => '2017-07-21',
+            'developer' => 'Epic Games',
+            'publisher' => 'Epic Games',
             'rating' => 4.4,
             'stock' => 999,
             'featured' => true,
             'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i3-6100 / AMD FX-8300',
-                    'memory' => '6 GB RAM',
-                    'graphics' => 'NVIDIA GTX 750 Ti / AMD Radeon HD 7850',
-                    'storage' => '25 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i5-9400F / AMD Ryzen 5 2600',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 1660 / AMD RX 580',
-                    'storage' => '25 GB SSD'
-                ]
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i3', 'memory' => '8 GB', 'graphics' => 'Intel HD 4000', 'storage' => '30 GB'],
+                'recommended' => ['os' => 'Windows 10', 'processor' => 'i5', 'memory' => '16 GB', 'graphics' => 'GTX 960', 'storage' => '30 GB SSD']
             ]
         ]);
 
+        // 7. Call of Duty: Modern Warfare II
         VideoGame::create([
-            'title' => 'Strategy Empire Builder',
-            'description' => 'Construye tu imperio desde cero. Gestiona recursos, diplomacia y ejércitos en este juego de estrategia en tiempo real.',
-            'price' => 44.99,
-            'discount' => 10,
+            'title' => 'Call of Duty: Modern Warfare II',
+            'description' => 'La secuela del exitoso reboot de Modern Warfare con acción intensa y multijugador competitivo.',
+            'price' => 69.99,
+            'discount' => 20,
             'images' => [
-                'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1518365050014-70fe7232897f?w=800&h=450&fit=crop'
+                'https://images.alphacoders.com/129/thumbbig-1294266.webp'
             ],
-            'genre' => ['Estrategia', 'Simulación', 'Gestión'],
-            'platform' => ['PC', 'Mac'],
-            'release_date' => '2024-05-01',
-            'developer' => 'Strategy Masters',
-            'publisher' => 'Tactical Games',
-            'rating' => 4.9,
-            'stock' => 90,
-            'featured' => false,
-            'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i5-4590 / AMD Ryzen 3 1200',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 960 / AMD RX 560',
-                    'storage' => '35 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i7-7700 / AMD Ryzen 5 2600',
-                    'memory' => '16 GB RAM',
-                    'graphics' => 'NVIDIA GTX 1070 / AMD RX Vega 56',
-                    'storage' => '35 GB SSD'
-                ]
-            ]
-        ]);
-
-        VideoGame::create([
-            'title' => 'Space Explorer Chronicles',
-            'description' => 'Explora galaxias desconocidas, descubre civilizaciones alienígenas y desvela los misterios del universo.',
-            'price' => 54.99,
-            'discount' => 0,
-            'images' => [
-                'https://images.unsplash.com/photo-1614732484003-ef9881555dc3?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=800&h=450&fit=crop'
-            ],
-            'genre' => ['Aventura', 'Ciencia Ficción', 'Exploración'],
+            'genre' => ['Shooter', 'Multijugador'],
             'platform' => ['PC', 'PlayStation 5', 'Xbox Series X'],
-            'release_date' => '2024-06-15',
-            'developer' => 'Cosmic Games',
-            'publisher' => 'Space Ventures',
-            'rating' => 4.8,
-            'stock' => 110,
-            'featured' => true,
-            'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i5-8400 / AMD Ryzen 5 2600',
-                    'memory' => '12 GB RAM',
-                    'graphics' => 'NVIDIA GTX 1060 / AMD RX 580',
-                    'storage' => '60 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i7-10700K / AMD Ryzen 7 3700X',
-                    'memory' => '16 GB RAM',
-                    'graphics' => 'NVIDIA RTX 3060 Ti / AMD RX 6700 XT',
-                    'storage' => '60 GB SSD'
-                ]
-            ]
-        ]);
-
-        VideoGame::create([
-            'title' => 'Puzzle Master Collection',
-            'description' => 'Desafía tu mente con cientos de puzzles únicos. Desde rompecabezas clásicos hasta acertijos imposibles.',
-            'price' => 19.99,
-            'discount' => 0,
-            'images' => [
-                'https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=800&h=450&fit=crop',
-                'https://images.unsplash.com/photo-1587731556938-38755b4803a6?w=800&h=450&fit=crop'
-            ],
-            'genre' => ['Puzzle', 'Casual', 'Lógica'],
-            'platform' => ['PC', 'Nintendo Switch', 'Mobile'],
-            'release_date' => '2024-01-05',
-            'developer' => 'Brain Games',
-            'publisher' => 'Indie Publishers',
-            'rating' => 4.3,
+            'release_date' => '2022-10-28',
+            'developer' => 'Infinity Ward',
+            'publisher' => 'Activision',
+            'rating' => 4.5,
             'stock' => 250,
             'featured' => false,
             'requirements' => [
-                'minimum' => [
-                    'os' => 'Windows 10 64-bit',
-                    'processor' => 'Intel Core i3-4170 / AMD A8-7600',
-                    'memory' => '4 GB RAM',
-                    'graphics' => 'Intel HD Graphics 4400 / AMD Radeon R5',
-                    'storage' => '10 GB'
-                ],
-                'recommended' => [
-                    'os' => 'Windows 11 64-bit',
-                    'processor' => 'Intel Core i5-6500 / AMD Ryzen 3 1200',
-                    'memory' => '8 GB RAM',
-                    'graphics' => 'NVIDIA GTX 750 / AMD RX 460',
-                    'storage' => '10 GB SSD'
-                ]
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i5-6600', 'memory' => '8 GB', 'graphics' => 'GTX 960', 'storage' => '72 GB'],
+                'recommended' => ['os' => 'Windows 11', 'processor' => 'i7-8700K', 'memory' => '16 GB', 'graphics' => 'RTX 2060', 'storage' => '72 GB SSD']
             ]
         ]);
+
+        // 8. Red Dead Redemption 2
+        VideoGame::create([
+            'title' => 'Red Dead Redemption 2',
+            'description' => 'Una obra maestra narrativa que te lleva al corazón del Viejo Oeste.',
+            'price' => 39.99,
+            'discount' => 0,
+            'images' => [
+                'https://images7.alphacoders.com/749/thumb-440-749807.webp'
+            ],
+            'genre' => ['Acción', 'Aventura', 'Mundo Abierto'],
+            'platform' => ['PC', 'PlayStation', 'Xbox'],
+            'release_date' => '2018-10-26',
+            'developer' => 'Rockstar Games',
+            'publisher' => 'Rockstar Games',
+            'rating' => 4.9,
+            'stock' => 300,
+            'featured' => false,
+            'requirements' => [
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i5-2500K', 'memory' => '8 GB', 'graphics' => 'GTX 770', 'storage' => '150 GB'],
+                'recommended' => ['os' => 'Windows 11', 'processor' => 'Ryzen 5', 'memory' => '16 GB', 'graphics' => 'GTX 1070', 'storage' => '150 GB SSD']
+            ]
+        ]);
+
+        // 9. Minecraft
+        VideoGame::create([
+            'title' => 'Minecraft',
+            'description' => 'Construye, explora y sobrevive en un mundo generado proceduralmente.',
+            'price' => 29.99,
+            'discount' => 0,
+            'images' => [
+                'https://images2.alphacoders.com/135/thumbbig-1353836.webp'
+            ],
+            'genre' => ['Sandbox', 'Supervivencia', 'Creativo'],
+            'platform' => ['PC', 'PlayStation', 'Xbox', 'Switch', 'Mobile'],
+            'release_date' => '2011-11-18',
+            'developer' => 'Mojang Studios',
+            'publisher' => 'Mojang Studios',
+            'rating' => 4.8,
+            'stock' => 500,
+            'featured' => false,
+            'requirements' => [
+                'minimum' => ['os' => 'Windows 10', 'processor' => 'i3', 'memory' => '4 GB', 'graphics' => 'Intel HD', 'storage' => '4 GB'],
+                'recommended' => ['os' => 'Windows 10', 'processor' => 'i5', 'memory' => '8 GB', 'graphics' => 'GTX 660', 'storage' => '4 GB SSD']
+            ]
+        ]);
+
+        // 10. Among Us
+        VideoGame::create([
+            'title' => 'Among Us',
+            'description' => 'Juego social de deducción donde debes descubrir al impostor entre la tripulación.',
+            'price' => 4.99,
+            'discount' => 0,
+            'images' => [
+                'https://images4.alphacoders.com/110/thumb-440-1104860.webp'
+            ],
+            'genre' => ['Multijugador', 'Casual'],
+            'platform' => ['PC', 'Mobile', 'Switch', 'PlayStation'],
+            'release_date' => '2018-06-15',
+            'developer' => 'Innersloth',
+            'publisher' => 'Innersloth',
+            'rating' => 4.3,
+            'stock' => 999,
+            'featured' => false,
+            'requirements' => [
+                'minimum' => ['os' => 'Windows 7', 'processor' => 'i3', 'memory' => '1 GB', 'graphics' => 'Intel HD', 'storage' => '250 MB'],
+                'recommended' => ['os' => 'Windows 10', 'processor' => 'i5', 'memory' => '4 GB', 'graphics' => 'GTX 650', 'storage' => '250 MB']
+            ]
+        ]);
+
+
+        $this->call([
+            MarketItemSeeder::class,
+        ]);
+        $this->call(StreamingCodesSeeder::class);
+
 
         $this->command->info('✅ Base de datos poblada exitosamente!');
         $this->command->info('🔐 Admin: admin@xpstore.com | Password: admin123');

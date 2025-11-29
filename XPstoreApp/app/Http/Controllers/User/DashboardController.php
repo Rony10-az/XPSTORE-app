@@ -9,76 +9,126 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // DEBUG: Verificar juegos
-        $totalGames = VideoGame::count();
-        $gamesWithStock = VideoGame::where('stock', '>', 0)->count();
-        \Log::info("Total juegos en DB: $totalGames");
-        \Log::info("Juegos con stock > 0: $gamesWithStock");
-
-        // ===== Featured Games (Todos los destacados) =====
-        $featuredGames = VideoGame::where('featured', true)
+        // ======================================
+        // FEATURED GAME
+        // ======================================
+        $featuredGame = VideoGame::where('featured', true)
             ->where('stock', '>', 0)
-            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'developer', 'images', 'description']);
+            ->first(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
 
-        foreach ($featuredGames as $game) {
-            $images = is_string($game->images) ? json_decode($game->images, true) : $game->images;
-            $firstImage = $images[0] ?? null;
-
-            if ($firstImage) {
-                if (!str_starts_with($firstImage, 'http')) {
-                    if (!str_starts_with($firstImage, 'storage/')) {
-                        $game->image = asset('storage/' . $firstImage);
-                    } else {
-                        $game->image = asset($firstImage);
-                    }
-                } else {
-                    $game->image = $firstImage;
-                }
-            } else {
-                $game->image = 'https://via.placeholder.com/800x400?text=Sin+Imagen';
-            }
-
-            // Convertir géneros a array
-            $game->genres = is_array($game->genre) ? $game->genre : json_decode($game->genre ?? '[]', true);
-
-            unset($game->images);
+        if ($featuredGame) {
+            $featuredGame->image = $this->getFirstImage($featuredGame->images);
+            unset($featuredGame->images);
         }
 
-        // ===== ALL GAMES (Catálogo completo) =====
-        // Traer TODOS los juegos, incluso si stock es 0 o NULL
-        $allGames = VideoGame::orderBy('created_at', 'desc')
-            ->paginate(12);
 
-        foreach ($allGames as $game) {
-            $images = is_string($game->images) ? json_decode($game->images, true) : $game->images;
+        // ======================================
+        // POPULAR GAMES
+        // ======================================
+        $popularGames = VideoGame::where('stock', '>', 0)
+            ->orderBy('rating', 'desc')
+            ->take(4)
+            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
 
-            // Si la imagen está guardada como ruta de storage, agregarle asset
-            $firstImage = $images[0] ?? null;
 
-            if ($firstImage) {
-                // Si la ruta NO empieza con http (es decir, es una ruta local)
-                if (!str_starts_with($firstImage, 'http')) {
-                    // Si NO tiene 'storage/' al inicio, agregarlo
-                    if (!str_starts_with($firstImage, 'storage/')) {
-                        $game->image = asset('storage/' . $firstImage);
-                    } else {
-                        $game->image = asset($firstImage);
-                    }
-                } else {
-                    // Es una URL externa, dejarla tal cual
-                    $game->image = $firstImage;
-                }
-            } else {
-                // Imagen por defecto si no hay ninguna
-                $game->image = 'https://via.placeholder.com/300x200?text=Sin+Imagen';
-            }
-
+        $popularGames->transform(function ($game) {
+            $game->image = $this->getFirstImage($game->images);
             unset($game->images);
-        }
+            return $game;
+        });
+
+
+        // ======================================
+        // DISCOUNTED GAMES (MEJORES OFERTAS)
+        // ======================================
+        $bestOffers = VideoGame::where('discount', '>', 0)
+            ->where('stock', '>', 0)
+            ->orderBy('discount', 'desc')
+            ->take(6)
+            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+
+        $bestOffers->transform(function ($game) {
+            $game->image = $this->getFirstImage($game->images);
+            unset($game->images);
+            return $game;
+        });
+
+
+        // ======================================
+        // TOP RATED (MEJOR VALORADOS)
+        // ======================================
+        $topRated = VideoGame::where('stock', '>', 0)
+            ->orderBy('rating', 'desc')
+            ->take(6)
+            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+
+        $topRated->transform(function ($game) {
+            $game->image = $this->getFirstImage($game->images);
+            unset($game->images);
+            return $game;
+        });
+
+
+        // ======================================
+        // ALL GAMES (CATÁLOGO COMPLETO)
+        // ======================================
+        $allGames = VideoGame::where('stock', '>', 0)
+            ->orderBy('title', 'asc')
+            ->get(['id', 'title', 'price', 'discount', 'rating', 'platform', 'genre', 'developer', 'images']);
+
+        $allGames->transform(function ($game) {
+            $game->image = $this->getFirstImage($game->images);
+            unset($game->images);
+            return $game;
+        });
+
+
+        // ======================================
+        // NEW RELEASES
+        // ======================================
+        $newReleases = VideoGame::where('stock', '>', 0)
+            ->orderBy('created_at', 'desc')
+            ->take(4)
+            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+
+        $newReleases->transform(function ($game) {
+            $game->image = $this->getFirstImage($game->images);
+            unset($game->images);
+            return $game;
+        });
+
 
         return view('dashboard.user', compact(
-            'featuredGames',
+            'featuredGame',
+            'popularGames',
+            'newReleases',
+            'bestOffers',
+            'topRated',
             'allGames'
         ));
+    }
+
+
+    private function normalizeJson($value)
+    {
+        if (is_array($value)) return $value;
+
+        // Si llega como ['img1','img2'] convertirlo a JSON válido
+        if (is_string($value) && str_contains($value, "'")) {
+            $value = str_replace("'", '"', $value);
+        }
+
+        $decoded = json_decode($value, true);
+        return $decoded ?? [];
+    }
+    private function getFirstImage($images)
+    {
+        $arr = $this->normalizeJson($images);
+
+        if (empty($arr)) {
+            return asset("images/no-image.png");
+        }
+
+        return $arr[0];
     }
 }

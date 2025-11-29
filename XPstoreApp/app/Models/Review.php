@@ -5,6 +5,35 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $video_game_id
+ * @property int $rating
+ * @property string $title
+ * @property string $content
+ * @property int $helpful
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $user
+ * @property-read \App\Models\VideoGame $videoGame
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review byRating($rating)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review mostHelpful()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review recent()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereHelpful($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Review whereVideoGameId($value)
+ * @mixin \Eloquent
+ */
 class Review extends Model
 {
     use HasFactory;

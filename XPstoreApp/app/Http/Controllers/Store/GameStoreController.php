@@ -3,17 +3,26 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\VideoGame;
+use Illuminate\Http\Request;
 
 class GameStoreController extends Controller
 {
+    // ===============================
+    // LISTADO DE JUEGOS DE LA TIENDA
+    // ===============================
     public function index()
     {
-        $games = VideoGame::orderBy('featured', 'desc')->get();
-        return view('layouts.app', compact('games'));
+        $games = VideoGame::orderBy('featured', 'desc')
+            ->orderBy('rating', 'desc')
+            ->get();
+
+        return view('store.index', compact('games'));
     }
 
+    // ===============================
+    // MOSTRAR UN JUEGO INDIVIDUAL
+    // ===============================
     public function show(VideoGame $videojuego)
     {
         return view('store.games.show', [
@@ -21,18 +30,20 @@ class GameStoreController extends Controller
         ]);
     }
 
-    public function addToCart(VideoGame $videojuego)
-    {
-        // lógica carrito
-    }
 
+    // ===============================
+    // TOGGLE WISHLIST
+    // ===============================
     public function toggleWishlist(VideoGame $videojuego)
     {
-        // lógica wishlist
+        // Lógica para wishlist después
     }
 
+    // ===============================
+    // GUARDAR RESEÑA
+    // ===============================
     public function storeReview(Request $request, VideoGame $videojuego)
     {
-        // lógica de reseñas
+        // lógica de reseñas luego
     }
 }

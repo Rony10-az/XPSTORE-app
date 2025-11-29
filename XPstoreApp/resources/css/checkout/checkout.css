@@ -1,0 +1,533 @@
+/* ======== FONDO GENERAL ======== */
+body {
+    background: radial-gradient(circle at center, #22104a, #0d0220);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ======== CONTENEDOR PRINCIPAL ======== */
+.checkout-page {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 40px;
+}
+
+/* Header superior */
+.checkout-top {
+    max-width: 1300px;
+    margin: 0 auto 20px auto;
+    padding: 0 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.checkout-title {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ======== BOTÓN VOLVER ======== */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.07);
+    padding: 10px 18px;
+    border-radius: 12px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease-in-out;
+    backdrop-filter: blur(6px);
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.03);
+}
+
+/* ======== CUERPO DEL CHECKOUT ======== */
+.checkout-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    display: flex;
+    gap: 40px;
+}
+
+/* ========= LISTA DE PRODUCTOS ========= */
+.checkout-items {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+.section-title {
+    font-size: 22px;
+    margin-bottom: 18px;
+}
+
+.checkout-item {
+    display: flex;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 18px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    backdrop-filter: blur(14px);
+}
+
+.checkout-item img {
+    width: 110px;
+    border-radius: 12px;
+}
+
+.item-info h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.item-info p {
+    font-size: 14px;
+    opacity: 0.85;
+}
+
+.item-info .price {
+    font-size: 22px;
+    margin-top: 10px;
+    color: #4dffae;
+    font-weight: 700;
+}
+
+/* ========= RESUMEN DE PAGO ========= */
+.checkout-summary {
+    width: 380px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 25px;
+    border-radius: 20px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+}
+
+.checkout-summary .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    font-size: 15px;
+}
+
+/* ======== DESCUENTOS ======== */
+.discount-row span:first-child {
+    color: #ff4d4d;
+    /* texto */
+    font-weight: 600;
+}
+
+.discount-row span:last-child {
+    color: #ff4d4d;
+    font-weight: 700;
+}
+
+/* ======== TOTAL ======== */
+.total-row {
+    margin-top: 20px;
+    font-size: 24px;
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+}
+
+/* ========= BOTÓN DE PAGO ========= */
+.pay-button {
+    margin-top: 25px;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, #673fff, #9d47ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.pay-button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 18px rgba(154, 71, 255, 0.45);
+}
+
+/* ========= RESPONSIVE ========= */
+@media (max-width: 900px) {
+    .checkout-container {
+        flex-direction: column;
+    }
+
+    .checkout-summary {
+        width: 100%;
+    }
+}
+
+.checkout-page {
+    animation: fadeInCheckout 0.6s ease forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInCheckout {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.checkout-item {
+    animation: itemSlideIn 0.5s ease both;
+}
+
+.checkout-item:nth-child(1) {
+    animation-delay: 0.10s;
+}
+
+.checkout-item:nth-child(2) {
+    animation-delay: 0.20s;
+}
+
+.checkout-item:nth-child(3) {
+    animation-delay: 0.30s;
+}
+
+/* Se adapta automáticamente si hay más */
+
+@keyframes itemSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.checkout-summary {
+    animation: summarySlide 0.6s ease both;
+    animation-delay: 0.25s;
+}
+
+@keyframes summarySlide {
+    from {
+        opacity: 0;
+        transform: translateX(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.pay-button {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.pay-button:hover {
+    transform: scale(1.04);
+}
+
+.pay-button:active {
+    transform: scale(0.98);
+}
+
+.pay-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 120%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    transform: skewX(-20deg);
+    transition: none;
+}
+
+.pay-button:hover::after {
+    animation: shine 0.6s ease;
+}
+
+@keyframes shine {
+    from {
+        left: -150%;
+    }
+
+    to {
+        left: 150%;
+    }
+}
+
+/* =============================
+   BLOQUES NUEVOS DEL CHECKOUT
+   (Métodos de pago y tarjeta)
+============================= */
+
+/* Contenedor general del formulario */
+.payment-methods,
+.payment-form {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
+}
+
+/* Título */
+.payment-methods h3,
+.payment-form h4 {
+    font-size: 20px;
+    margin-bottom: 18px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Cada opción de método de pago */
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+}
+
+.payment-option:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(139, 92, 246, 0.4);
+    transform: scale(1.02);
+}
+
+/* Inputs del formulario de tarjeta */
+.payment-form input {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 0.09);
+    color: #fff;
+    font-size: 15px;
+    transition: background 0.25s ease, transform 0.1s ease;
+}
+
+.payment-form input:focus {
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.02);
+}
+
+/* Asegura que los bloques NO toquen bordes */
+.payment-methods,
+.payment-form,
+.checkout-items,
+.checkout-summary {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* ANIMACIÓN para entrar suave */
+.payment-methods,
+.payment-form {
+    animation: fadeBlock 0.5s ease;
+}
+
+@keyframes fadeBlock {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================================
+   NUEVO LAYOUT EXACTO IGUAL A FIGMA
+===================================================== */
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px 30px;
+}
+
+/* Columna izquierda */
+.checkout-left {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Columna derecha */
+.checkout-right {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* ==========================================
+   BLOQUES PRINCIPALES — método tarjeta
+========================================== */
+
+.payment-methods,
+.payment-form {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 22px;
+    padding: 25px 30px;
+    box-shadow: 0 0 35px rgba(120, 60, 255, 0.18);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Título */
+.payment-methods h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    opacity: 0.7;
+    margin-bottom: 20px;
+}
+
+/* ==========================================
+   OPCIONES DE MÉTODO DE PAGO (ESTILO FIGMA)
+========================================== */
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 18px 20px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    font-size: 15px;
+    border: 2px solid transparent;
+    transition: all 0.25s ease;
+}
+
+.payment-option:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(159, 88, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.payment-option input {
+    transform: scale(1.2);
+}
+
+/* Estado seleccionado estilo FIGMA */
+.payment-option input:checked+span,
+.payment-option input:checked {
+    border-color: #a470ff;
+    box-shadow: 0 0 10px rgba(164, 112, 255, 0.6);
+}
+
+/* ==========================================
+   FORMULARIO DE TARJETA PROFESIONAL
+========================================== */
+
+.payment-form h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.payment-form input {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 15px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+    font-size: 15px;
+    backdrop-filter: blur(10px);
+    transition: all 0.25s ease;
+}
+
+.payment-form input:focus {
+    border-color: #a470ff;
+    background: rgba(255, 255, 255, 0.14);
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(164, 112, 255, 0.35);
+}
+
+/* ==========================================
+   AJUSTES DE LOS BLOQUES DERECHA (FIGMA)
+========================================== */
+
+.checkout-items,
+.checkout-summary {
+    padding: 25px 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 22px;
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 30px rgba(80, 40, 180, 0.28);
+}
+
+/* ==========================================
+   Asegurar que TODO tenga separación
+========================================== */
+
+.checkout-left>*,
+.checkout-right>* {
+    margin-bottom: 0 !important;
+}
+
+
+/* ==========================================
+   RESPONSIVE — estilo premium
+========================================== */
+
+@media (max-width: 950px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+}

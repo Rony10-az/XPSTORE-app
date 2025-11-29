@@ -1,32 +1,13 @@
 <?php
 
-/**
- * Controlador del Carrito de Compras del usuario.
- *
- * Este controlador administra toda la lógica del carrito:
- * - Mostrar el carrito actual desde la sesión.
- * - Agregar productos al carrito (sumar cantidades si ya existe).
- * - Calcular subtotal, descuentos y total final.
- * - Eliminar productos del carrito.
- *
- * El carrito se almacena en la sesión como un array asociativo:
- * cart[id_producto] = [
- *      'title'        => string,
- *      'price'        => float,
- *      'image'        => string (ruta absoluta),
- *      'quantity'     => int,
- *      'discount'     => int,
- *      'final_price'  => float
- * ]
- */
-
-
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\VideoGame;
-use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Models\MarketItem;
+use Illuminate\Support\Facades\Session;
+
 
 class CartController extends Controller
 {
@@ -34,12 +15,10 @@ class CartController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
-        $cartItems = session()->get('cart_items', []);
 
-        if (empty($cart) && empty($cartItems)) {
+        if (empty($cart)) {
             return view('cart.index', [
                 'cart' => [],
-                'cartItems' => [],
                 'subtotal' => 0,
                 'discount_total' => 0,
                 'total' => 0
@@ -49,8 +28,8 @@ class CartController extends Controller
         $subtotal = 0;
         $discount_total = 0;
 
-        // Calcular totales de videojuegos
         foreach ($cart as $item) {
+
             $subtotal += $item['price'] * $item['quantity'];
 
             if ($item['discount'] > 0) {
@@ -59,82 +38,107 @@ class CartController extends Controller
             }
         }
 
-        // Calcular totales de items
-        foreach ($cartItems as $item) {
-            $subtotal += $item['price'] * $item['quantity'];
-        }
-
         $total = $subtotal - $discount_total;
 
-        return view('cart.index', compact('cart', 'cartItems', 'subtotal', 'discount_total', 'total'));
+        return view('cart.index', compact('cart', 'subtotal', 'discount_total', 'total'));
     }
 
 
     // Agregar al carrito
+    // Agregar al carrito
     public function add(Request $request, $id)
     {
         try {
-            $game = VideoGame::findOrFail($id);
+            // Recibir el tipo enviado por el formulario
+            $type = $request->input('type', 'video_game');
 
             $cart = session()->get('cart', []);
 
-            if (isset($cart[$id])) {
-                $cart[$id]['quantity']++;
-            } else {
-                // Intento de obtener la imagen real
-                $image = 'https://via.placeholder.com/120';
+            /* ==========================================
+         *   AGREGAR VIDEOJUEGO
+         * ========================================== */
+            if ($type === 'video_game') {
 
-                if (is_array($game->images) && count($game->images) > 0) {
-                    $possiblePath = 'storage/' . $game->images[0];
+                $game = VideoGame::findOrFail($id);
 
-                    // Si existe la imagen en storage
-                    if (file_exists(public_path($possiblePath))) {
-                        $image = asset($possiblePath);
-                    }
+                if (isset($cart["game_$id"])) {
+                    $cart["game_$id"]['quantity']++;
+                } else {
+
+                    $image = $this->getFirstImage($game->images);
+                    $genres = $this->normalizeJson($game->genre);
+                    $final_price = $game->price_after_discount;
+
+                    $cart["game_$id"] = [
+                        'id'          => $game->id,
+                        'type'        => 'video_game',
+                        'title'       => $game->title,
+                        'price'       => $game->price,
+                        'final_price' => $final_price,
+                        'discount'    => $game->discount,
+                        'image'       => $image,
+                        'genre'       => $genres,
+                        'platform'    => $game->platform,
+                        'quantity'    => 1,
+                    ];
                 }
+            }
 
-                // Precio final (accessor)
-                $final_price = $game->price_after_discount;
+            /* ==========================================
+         *   AGREGAR ÍTEM DEL MARKETPLACE
+         * ========================================== */
+            if ($type === 'market_item') {
 
-                $cart[$id] = [
-                    'title'       => $game->title,
-                    'price'       => $game->price,
-                    'image'       => $image,
-                    'discount'    => $game->discount,
-                    'final_price' => $final_price,
-                    'quantity'    => 1,
-                ];
+                $item = MarketItem::findOrFail($id);
+
+                if (isset($cart["item_$id"])) {
+                    $cart["item_$id"]['quantity']++;
+                } else {
+
+                    $cart["item_$id"] = [
+                        'id'          => $item->id,
+                        'type'        => 'market_item',
+                        'title'       => $item->title,
+                        'price'       => $item->price,
+                        'final_price' => $item->price, // marketplace no maneja desconto
+                        'discount'    => 0,
+                        'image'       => $item->image,
+                        'genre'       => [],
+                        'platform'    => [],
+                        'quantity'    => 1,
+                    ];
+                }
+            }
+
+            /** =========================================
+             * 3. AGREGAR STREAMING CODE
+             * ========================================= */
+            if ($type === 'streaming_code') {
+                $code = \App\Models\StreamingCode::findOrFail($id);
+
+                if (isset($cart["stream_$id"])) {
+                    $cart["stream_$id"]['quantity']++;
+                } else {
+                    $cart["stream_$id"] = [
+                        'id'          => $code->id,
+                        'type'        => 'streaming_code',
+                        'title'       => "{$code->service} ({$code->duration})",
+                        'price'       => $code->price,
+                        'final_price' => $code->price,
+                        'discount'    => 0,
+                        'image'       => $code->image,
+                        'quantity'    => 1,
+                    ];
+                }
             }
 
             session()->put('cart', $cart);
 
-            // Calcular total de productos en el carrito
-            $cartCount = collect($cart)->sum('quantity');
-
-            // Si es una petición AJAX, devolver JSON
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Juego agregado al carrito',
-                    'cartCount' => $cartCount
-                ]);
-            }
-
-            // Si no es AJAX, redirigir como antes
             return redirect()
                 ->route('cart.index')
                 ->with('success', 'Juego agregado al carrito');
         } catch (\Exception $e) {
-            // registrar error en logs
             report($e);
-
-            // Si es AJAX
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al agregar el producto al carrito'
-                ], 500);
-            }
 
             return redirect()
                 ->route('cart.index')
@@ -143,142 +147,40 @@ class CartController extends Controller
     }
 
 
-    // Agregar item del marketplace al carrito
-    public function addItem(Request $request, $id)
-    {
-        try {
-            $item = Item::findOrFail($id);
-
-            $cartItems = session()->get('cart_items', []);
-
-            if (isset($cartItems[$id])) {
-                $cartItems[$id]['quantity']++;
-            } else {
-                // Procesar imagen
-                $image = 'https://via.placeholder.com/120';
-
-                if ($item->image) {
-                    if (!str_starts_with($item->image, 'http')) {
-                        if (!str_starts_with($item->image, 'storage/')) {
-                            $image = asset('storage/' . $item->image);
-                        } else {
-                            $image = asset($item->image);
-                        }
-                    } else {
-                        $image = $item->image;
-                    }
-                }
-
-                $cartItems[$id] = [
-                    'name'        => $item->name,
-                    'price'       => $item->price,
-                    'image'       => $image,
-                    'type'        => $item->type,
-                    'rarity'      => $item->rarity,
-                    'quantity'    => 1,
-                ];
-            }
-
-            session()->put('cart_items', $cartItems);
-
-            // Calcular total de productos en el carrito (videojuegos + items)
-            $cart = session()->get('cart', []);
-            $cartCount = collect($cart)->sum('quantity') + collect($cartItems)->sum('quantity');
-
-            // Si es una petición AJAX, devolver JSON
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Item agregado al carrito',
-                    'cartCount' => $cartCount
-                ]);
-            }
-
-            // Si no es AJAX, redirigir como antes
-            return redirect()
-                ->route('cart.index')
-                ->with('success', 'Item agregado al carrito');
-        } catch (\Exception $e) {
-            // registrar error en logs
-            report($e);
-
-            // Si es AJAX
-            if ($request->ajax() || $request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Error al agregar el item al carrito'
-                ], 500);
-            }
-
-            return redirect()
-                ->route('marketplace.index')
-                ->with('error', 'Ocurrió un problema al agregar el item al carrito.');
-        }
-    }
-
-    // Actualizar cantidad
-    public function update(Request $request, $id)
-    {
-        $type = $request->input('type', 'game');
-
-        if ($type === 'item') {
-            $cartItems = session()->get('cart_items', []);
-
-            if (isset($cartItems[$id])) {
-                $action = $request->input('action');
-
-                if ($action === 'increase') {
-                    $cartItems[$id]['quantity']++;
-                } elseif ($action === 'decrease' && $cartItems[$id]['quantity'] > 1) {
-                    $cartItems[$id]['quantity']--;
-                }
-
-                session()->put('cart_items', $cartItems);
-                return back()->with('success', 'Cantidad actualizada');
-            }
-        } else {
-            $cart = session()->get('cart', []);
-
-            if (isset($cart[$id])) {
-                $action = $request->input('action');
-
-                if ($action === 'increase') {
-                    $cart[$id]['quantity']++;
-                } elseif ($action === 'decrease' && $cart[$id]['quantity'] > 1) {
-                    $cart[$id]['quantity']--;
-                }
-
-                session()->put('cart', $cart);
-                return back()->with('success', 'Cantidad actualizada');
-            }
-        }
-
-        return back()->with('error', 'Producto no encontrado en el carrito');
-    }
 
     // Eliminar
-    public function remove(Request $request, $id)
+    public function remove($id)
     {
-        $type = $request->input('type', 'game');
+        $cart = session()->get('cart', []);
 
-        if ($type === 'item') {
-            $cartItems = session()->get('cart_items', []);
-
-            if (isset($cartItems[$id])) {
-                unset($cartItems[$id]);
-                session()->put('cart_items', $cartItems);
-            }
-
-            return back()->with('success', 'Item eliminado del carrito');
-        } else {
-            $cart = session()->get('cart', []);
-
-            if (isset($cart[$id])) {
-                unset($cart[$id]);
-                session()->put('cart', $cart);
-            }
-
-            return back()->with('success', 'Juego eliminado del carrito');
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
         }
+
+        return back()->with('success', 'Juego eliminado del carrito');
+    }
+
+    private function normalizeJson($value)
+    {
+        if (is_array($value)) return $value;
+
+        if (is_string($value) && str_contains($value, "'")) {
+            $value = str_replace("'", '"', $value);
+        }
+
+        $decoded = json_decode($value, true);
+        return $decoded ?? [];
+    }
+
+    private function getFirstImage($images)
+    {
+        $arr = $this->normalizeJson($images);
+
+        if (empty($arr)) {
+            return asset("images/no-image.png");
+        }
+
+        return $arr[0];
     }
 }
