@@ -72,13 +72,7 @@
         </div>
 
         {{-- Botón agregar --}}
-        <form action="{{ route('cart.add', $game->id) }}" method="POST" class="add-to-cart-form">
-            @csrf
-            <button type="submit" class="add-cart-btn">
-                <i class="fas fa-shopping-cart"></i>
-                Agregar
-            </button>
-        </form>
+
         <div class="bottom-row">
             <form action="{{ route('cart.add', $game->id) }}" method="POST">
                 @csrf

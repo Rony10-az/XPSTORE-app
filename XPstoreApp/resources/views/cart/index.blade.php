@@ -149,7 +149,7 @@
             @endforeach
 
             <!-- ITEMS DEL MARKETPLACE -->
-            @if(!empty($cartItems))
+            @if(!empty($MarketItems))
             <div class="cart-section-header" style="margin-top: 2rem;">
                 <i class="fas fa-shopping-bag"></i>
                 <h2>Items del Marketplace</h2>
