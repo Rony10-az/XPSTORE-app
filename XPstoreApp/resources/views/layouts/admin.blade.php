@@ -111,9 +111,9 @@
                     <div class="admin-profile-trigger">
                         <div class="admin-avatar">
                             @if(auth()->user()->avatar)
-                                <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
                             @else
-                                <i class="fas fa-user-shield"></i>
+                            <i class="fas fa-user-shield"></i>
                             @endif
                         </div>
                         <div class="admin-info">

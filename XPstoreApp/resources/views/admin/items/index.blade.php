@@ -79,18 +79,18 @@
             <select class="filter-select" name="type">
                 <option value="">Todos los tipos</option>
                 @foreach($types as $type)
-                    <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
-                        {{ ucfirst($type) }}
-                    </option>
+                <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
+                    {{ ucfirst($type) }}
+                </option>
                 @endforeach
             </select>
 
             <select class="filter-select" name="rarity">
                 <option value="">Todas las rarezas</option>
                 @foreach($rarities as $rarity)
-                    <option value="{{ $rarity }}" {{ request('rarity') == $rarity ? 'selected' : '' }}>
-                        {{ ucfirst($rarity) }}
-                    </option>
+                <option value="{{ $rarity }}" {{ request('rarity') == $rarity ? 'selected' : '' }}>
+                    {{ ucfirst($rarity) }}
+                </option>
                 @endforeach
             </select>
 
@@ -116,9 +116,9 @@
             </button>
 
             @if(request()->hasAny(['search', 'type', 'rarity', 'status', 'sort']))
-                <a href="{{ route('admin.items.index') }}" class="btn-secondary">
-                    <i class="fas fa-times"></i> Limpiar
-                </a>
+            <a href="{{ route('admin.items.index') }}" class="btn-secondary">
+                <i class="fas fa-times"></i> Limpiar
+            </a>
             @endif
         </div>
     </form>
@@ -146,16 +146,24 @@
                     <td>
                         <div class="game-info">
                             @if($item->image)
-                            <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="game-thumb">
+                            @if(Str::startsWith($item->image, ['http://', 'https://']))
+                            {{-- Imagen externa --}}
+                            <img src="{{ $item->image }}" alt="{{ $item->name }}" class="game-thumb">
                             @else
+                            {{-- Imagen local dentro de /public --}}
+                            <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="game-thumb">
+                            @endif
+                            @else
+                            {{-- Sin imagen: ícono --}}
                             <div class="game-thumb placeholder">
                                 <i class="fas {{ $item->type_icon }}"></i>
                             </div>
                             @endif
+
                             <div class="game-details">
                                 <strong>{{ $item->name }}</strong>
                                 @if($item->description)
-                                    <span class="game-developer">{{ \Illuminate\Support\Str::limit($item->description, 40) }}</span>
+                                <span class="game-developer">{{ \Illuminate\Support\Str::limit($item->description, 40) }}</span>
                                 @endif
                             </div>
                         </div>
@@ -180,7 +188,7 @@
                             </span>
                             @if($item->stock > 0)
                             <div class="progress">
-                                <div class="progress-bar stock-progress" style="width: {{ min(100, ($item->stock / 50) * 100) }}%"></div>
+                                <div class="progress-bar stock-progress"></div>
                             </div>
                             @endif
                         </div>
@@ -219,9 +227,9 @@
                             <h4>No hay ítems</h4>
                             <p>
                                 @if(request()->hasAny(['search', 'type', 'rarity', 'status']))
-                                    No se encontraron resultados con los filtros aplicados.
+                                No se encontraron resultados con los filtros aplicados.
                                 @else
-                                    Comienza agregando tu primer ítem al marketplace.
+                                Comienza agregando tu primer ítem al marketplace.
                                 @endif
                             </p>
                         </div>
@@ -261,46 +269,46 @@
 </div>
 
 <style>
-.sales-count {
-    color: #10b981;
-    font-weight: 600;
-}
+    .sales-count {
+        color: #10b981;
+        font-weight: 600;
+    }
 
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-}
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.25);
-    color: white;
-}
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
 
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: #8b92a7;
-}
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #8b92a7;
+    }
 
-.empty-state i {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.3;
-}
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
 
-.empty-state h4 {
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
+    .empty-state h4 {
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
 </style>
 @endsection

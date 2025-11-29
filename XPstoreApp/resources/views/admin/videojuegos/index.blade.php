@@ -80,18 +80,18 @@
             <select class="filter-select" name="platform">
                 <option value="">Todas las plataformas</option>
                 @foreach($platforms as $platform)
-                    <option value="{{ $platform }}" {{ request('platform') == $platform ? 'selected' : '' }}>
-                        {{ $platform }}
-                    </option>
+                <option value="{{ $platform }}" {{ request('platform') == $platform ? 'selected' : '' }}>
+                    {{ $platform }}
+                </option>
                 @endforeach
             </select>
 
             <select class="filter-select" name="genre">
                 <option value="">Todos los géneros</option>
                 @foreach($genres as $genre)
-                    <option value="{{ $genre }}" {{ request('genre') == $genre ? 'selected' : '' }}>
-                        {{ $genre }}
-                    </option>
+                <option value="{{ $genre }}" {{ request('genre') == $genre ? 'selected' : '' }}>
+                    {{ $genre }}
+                </option>
                 @endforeach
             </select>
 
@@ -117,9 +117,9 @@
             </button>
 
             @if(request()->hasAny(['search', 'platform', 'genre', 'status', 'sort']))
-                <a href="{{ route('videojuegos.index') }}" class="btn-secondary">
-                    <i class="fas fa-times"></i> Limpiar
-                </a>
+            <a href="{{ route('videojuegos.index') }}" class="btn-secondary">
+                <i class="fas fa-times"></i> Limpiar
+            </a>
             @endif
         </div>
     </form>
@@ -146,13 +146,26 @@
                     <td class="text-center">#{{ $juego->id }}</td>
                     <td>
                         <div class="game-info">
-                            @if(!empty($juego->images))
-                            <img src="{{ asset('storage/' . $juego->images[0]) }}" alt="{{ $juego->title }}" class="game-thumb">
+                            @php
+                            $img = $juego->images[0] ?? null;
+                            @endphp
+
+                            @if($img)
+                            @if(Str::startsWith($img, ['http://', 'https://']))
+                            <img src="{{ $img }}" alt="{{ $juego->title }}" class="game-thumb">
+                            @else
+                            <img src="{{ asset($img) }}" alt="{{ $juego->title }}" class="game-thumb">
+                            @endif
                             @else
                             <div class="game-thumb placeholder">
                                 <i class="fas fa-gamepad"></i>
                             </div>
                             @endif
+
+                            <div class="game-thumb placeholder">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+
                             <div class="game-details">
                                 <strong>{{ $juego->title }}</strong>
                                 <span class="game-developer">{{ $juego->developer }}</span>
@@ -177,7 +190,7 @@
                             </span>
                             @if($juego->stock > 0)
                             <div class="progress">
-                                <div class="progress-bar stock-progress" style="width: {{ min(100, ($juego->stock / 100) * 100) }}%"></div>
+                                <div class="progress-bar stock-progress"></div>
                             </div>
                             @endif
                         </div>
@@ -185,22 +198,22 @@
                     <td>
                         <div class="tags-scrollable">
                             @if(!empty($juego->genre))
-                                @foreach($juego->genre as $genero)
-                                    <span class="badge badge-primary">{{ $genero }}</span>
-                                @endforeach
+                            @foreach($juego->genre as $genero)
+                            <span class="badge badge-primary">{{ $genero }}</span>
+                            @endforeach
                             @else
-                                <span class="text-muted">-</span>
+                            <span class="text-muted">-</span>
                             @endif
                         </div>
                     </td>
                     <td>
                         <div class="tags-scrollable">
                             @if(!empty($juego->platform))
-                                @foreach($juego->platform as $plataforma)
-                                    <span class="badge badge-info">{{ $plataforma }}</span>
-                                @endforeach
+                            @foreach($juego->platform as $plataforma)
+                            <span class="badge badge-info">{{ $plataforma }}</span>
+                            @endforeach
                             @else
-                                <span class="text-muted">-</span>
+                            <span class="text-muted">-</span>
                             @endif
                         </div>
                     </td>
@@ -248,9 +261,9 @@
                             <h4>No hay videojuegos</h4>
                             <p>
                                 @if(request()->hasAny(['search', 'platform', 'genre', 'status']))
-                                    No se encontraron resultados con los filtros aplicados.
+                                No se encontraron resultados con los filtros aplicados.
                                 @else
-                                    Comienza agregando tu primer videojuego al catálogo.
+                                Comienza agregando tu primer videojuego al catálogo.
                                 @endif
                             </p>
                         </div>
@@ -290,99 +303,99 @@
 </div>
 
 <style>
-.popularity-display {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    color: #f97316;
-    font-weight: 600;
-}
+    .popularity-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: #f97316;
+        font-weight: 600;
+    }
 
-.popularity-display i {
-    color: #f97316;
-}
+    .popularity-display i {
+        color: #f97316;
+    }
 
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-}
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.25);
-    color: white;
-}
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: white;
+    }
 
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: #8b92a7;
-}
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #8b92a7;
+    }
 
-.empty-state i {
-    font-size: 4rem;
-    margin-bottom: 1rem;
-    opacity: 0.3;
-}
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
 
-.empty-state h4 {
-    color: #fff;
-    margin-bottom: 0.5rem;
-}
+    .empty-state h4 {
+        color: #fff;
+        margin-bottom: 0.5rem;
+    }
 
-/* Contenedor con scroll para géneros y plataformas */
-.tags-scrollable {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    max-height: 100px;
-    overflow-y: auto;
-    padding: 0.25rem;
-    align-items: flex-start;
-}
+    /* Contenedor con scroll para géneros y plataformas */
+    .tags-scrollable {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        max-height: 100px;
+        overflow-y: auto;
+        padding: 0.25rem;
+        align-items: flex-start;
+    }
 
-.tags-scrollable .badge {
-    font-size: 0.7rem;
-    padding: 0.25rem 0.55rem;
-    white-space: nowrap;
-    margin: 0;
-    flex-shrink: 0;
-    width: fit-content;
-}
+    .tags-scrollable .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.55rem;
+        white-space: nowrap;
+        margin: 0;
+        flex-shrink: 0;
+        width: fit-content;
+    }
 
-/* Scrollbar personalizado para tags */
-.tags-scrollable::-webkit-scrollbar {
-    width: 6px;
-}
+    /* Scrollbar personalizado para tags */
+    .tags-scrollable::-webkit-scrollbar {
+        width: 6px;
+    }
 
-.tags-scrollable::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 3px;
-}
+    .tags-scrollable::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+    }
 
-.tags-scrollable::-webkit-scrollbar-thumb {
-    background: rgba(139, 92, 246, 0.5);
-    border-radius: 3px;
-}
+    .tags-scrollable::-webkit-scrollbar-thumb {
+        background: rgba(139, 92, 246, 0.5);
+        border-radius: 3px;
+    }
 
-.tags-scrollable::-webkit-scrollbar-thumb:hover {
-    background: rgba(139, 92, 246, 0.7);
-}
+    .tags-scrollable::-webkit-scrollbar-thumb:hover {
+        background: rgba(139, 92, 246, 0.7);
+    }
 
-/* Para Firefox */
-.tags-scrollable {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(139, 92, 246, 0.5) rgba(255, 255, 255, 0.05);
-}
+    /* Para Firefox */
+    .tags-scrollable {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(139, 92, 246, 0.5) rgba(255, 255, 255, 0.05);
+    }
 </style>
 @endsection

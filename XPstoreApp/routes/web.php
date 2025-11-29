@@ -137,12 +137,11 @@ Route::middleware('auth')->group(function () {
 
     // MARKETPLACE
     Route::get('/marketplace', [MarketplaceController::class, 'index'])
-        ->name('market.index');
+        ->name('marketplace.index');
 
     Route::get('/marketplace/item/{item}', [MarketplaceController::class, 'show'])
-        ->name('market.show');
+        ->name('marketplace.show');
 
-    // Streaming Codes
     // STREAMING STORE
     Route::get('/streaming', [StreamingStoreController::class, 'index'])
         ->name('streaming.index');
@@ -165,10 +164,6 @@ Route::middleware('auth')->group(function () {
         ->name('community.review');
 
 
-
-
-    // MARKETPLACE
-    Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace.index');
 
     // PERFIL
     Route::get('/perfil', [ProfileController::class, 'index'])->name('profile.index');

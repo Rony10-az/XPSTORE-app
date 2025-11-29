@@ -3,35 +3,34 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\Item;
+use App\Models\MarketItem;
 use Illuminate\Http\Request;
 
 class MarketplaceController extends Controller
 {
+
     public function index()
     {
-        // Obtener todos los items activos
-        $items = Item::where('is_active', true)
+        $items = MarketItem::where('is_active', true)
             ->orderBy('created_at', 'desc')
             ->paginate(12);
 
-        // Procesar imágenes para cada item
+
+        // Procesar cada item
         foreach ($items as $item) {
-            if ($item->image) {
-                if (!str_starts_with($item->image, 'http')) {
-                    if (!str_starts_with($item->image, 'storage/')) {
-                        $item->image_url = asset('storage/' . $item->image);
-                    } else {
-                        $item->image_url = asset($item->image);
-                    }
-                } else {
-                    $item->image_url = $item->image;
-                }
+
+            // Si la imagen es URL externa
+            if (str_starts_with($item->image, 'http')) {
+                $item->image_url = $item->image;
             } else {
-                $item->image_url = 'https://via.placeholder.com/300x200?text=Sin+Imagen';
+                // Imagen local en storage
+                $item->image_url = asset('storage/' . $item->image);
             }
+
+            // Cambiar name → title (para la vista)
+            $item->title = $item->name;
         }
 
-        return view('market.index', compact('items'));
+        return view('marketplace.index', compact('items'));
     }
 }

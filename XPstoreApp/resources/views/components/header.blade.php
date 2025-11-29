@@ -115,7 +115,7 @@
 <nav class="nav-bar">
     <div class="container">
         <a href="{{ route('dashboard.user') }}" class="nav-link {{ request()->routeIs('dashboard.user') ? 'active' : '' }}">Catálogo</a>
-        <a href="{{ route('market.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
+        <a href="{{ route('marketplace.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
         <a href="{{ route('streaming.index') }}" class="nav-link {{ request()->routeIs('streaming.index') ? 'active' : '' }}">Códigos</a>
         <a href="{{ route('library.index') }}" class="nav-link">Mis Pedidos</a>
 
