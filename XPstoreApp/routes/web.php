@@ -12,6 +12,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Store\GameStoreController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\MarketplaceController;
 use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -87,13 +88,20 @@ Route::middleware('auth')->group(function () {
     // USER
     Route::get('/dashboard/user', [UserDashboardController::class, 'index'])->name('dashboard.user');
 
+    // MARKETPLACE
+    Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace.index');
+
     // PERFIL
     Route::get('/perfil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::delete('/perfil/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 
     // Carrito
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add-item/{id}', [CartController::class, 'addItem'])->name('cart.add.item');
+    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     // STORE ACTIONS

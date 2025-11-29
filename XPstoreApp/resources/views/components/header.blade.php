@@ -24,23 +24,33 @@
 
                 <a href="{{ route('cart.index') }}" class="cart-icon" id="cartIcon">
                     <i class="fas fa-shopping-cart"></i>
-
-                    <span class="cart-count" id="cartCount">
-                        {{ session('cart') ? collect(session('cart'))->sum('quantity') : 0 }}
-                    </span>
-
+                    @php
+                        $cart = session('cart', []);
+                        $cartItems = session('cart_items', []);
+                        $cartCount = collect($cart)->sum('quantity') + collect($cartItems)->sum('quantity');
+                    @endphp
+                    @if($cartCount > 0)
+                    <span class="cart-count" id="cartCount">{{ $cartCount }}</span>
+                    @endif
                 </a>
-
-
 
                 <div class="messages-icon" id="notificationsIcon">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-count" id="notificationCount">0</span>
+                    @php
+                        $notificationCount = 0; // Puedes cambiarlo cuando tengas notificaciones reales
+                    @endphp
+                    @if($notificationCount > 0)
+                    <span class="notification-count" id="notificationCount">{{ $notificationCount }}</span>
+                    @endif
                 </div>
 
                 <div class="user-profile">
                     <div class="user-avatar">
-                        <i class="fas fa-user"></i>
+                        @if(auth()->user()->avatar)
+                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                        @else
+                            <i class="fas fa-user"></i>
+                        @endif
                     </div>
                     <span class="user-name">
                         {{ auth()->user()->name }}
@@ -49,9 +59,21 @@
 
                     <!-- Dropdown Menu -->
                     <div class="user-dropdown">
+                        @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('dashboard.admin') }}" class="dropdown-item admin-item">
+                            <i class="fas fa-crown"></i>
+                            Panel de Administrador
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        @endif
+
                         <a href="{{ route('profile.index') }}" class="dropdown-item">
                             <i class="fas fa-user"></i>
                             Mi Perfil
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-box"></i>
+                            Mis Pedidos
                         </a>
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-shopping-bag"></i>
@@ -60,10 +82,6 @@
                         <a href="#" class="dropdown-item">
                             <i class="fas fa-heart"></i>
                             Wishlist
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-cog"></i>
-                            Configuración
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -84,9 +102,6 @@
 <nav class="nav-bar">
     <div class="container">
         <a href="{{ route('dashboard.user') }}" class="nav-link {{ request()->routeIs('dashboard.user') ? 'active' : '' }}">Catálogo</a>
-        <a href="#}" class="nav-link">Marketplace</a>
-        <a href="#" class="nav-link">Códigos</a>
-        <a href="# " class="nav-link">Mis Pedidos</a>
-        <a href="#" class="nav-link">Wishlist</a>
+        <a href="{{ route('marketplace.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
     </div>
 </nav>

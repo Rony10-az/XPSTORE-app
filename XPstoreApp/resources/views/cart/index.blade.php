@@ -32,6 +32,14 @@
         <!-- LISTA DE PRODUCTOS -->
         <div class="cart-items">
 
+            <!-- VIDEOJUEGOS -->
+            @if(!empty($cart))
+            <div class="cart-section-header">
+                <i class="fas fa-gamepad"></i>
+                <h2>Videojuegos</h2>
+            </div>
+            @endif
+
             @foreach($cart as $id => $item)
 
             <div class="cart-card">
@@ -55,17 +63,116 @@
                         <span class="tag">PC</span>
                     </div>
 
+                    <!-- Cantidad -->
+                    <div class="quantity-section">
+                        <span class="quantity-label">Cantidad:</span>
+                        <div class="quantity-controls">
+                            <form action="{{ route('cart.update', $id) }}" method="POST" class="quantity-form" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="action" value="decrease">
+                                <button type="submit" class="qty-btn" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </form>
+                            <span class="quantity-value">{{ $item['quantity'] }}</span>
+                            <form action="{{ route('cart.update', $id) }}" method="POST" class="quantity-form" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="action" value="increase">
+                                <button type="submit" class="qty-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                     <div class="price-box">
 
                         @if($item['discount'] > 0)
-                        <span class="old-price">${{ number_format($item['price'], 2) }}</span>
+                        <span class="old-price">S/.{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
                         @endif
 
-                        <span class="new-price">${{ number_format($item['final_price'], 2) }}</span>
+                        <span class="new-price">S/.{{ number_format($item['final_price'] * $item['quantity'], 2) }}</span>
+                        @if($item['quantity'] > 1)
+                        <span class="unit-price">S/.{{ number_format($item['final_price'], 2) }} c/u</span>
+                        @endif
                     </div>
 
                     <form action="{{ route('cart.remove', $id) }}" method="POST" class="delete-form">
                         @csrf
+                        <button type="submit" class="delete-btn">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
+                    </form>
+
+                </div>
+
+            </div>
+
+            @endforeach
+
+            <!-- ITEMS DEL MARKETPLACE -->
+            @if(!empty($cartItems))
+            <div class="cart-section-header" style="margin-top: 2rem;">
+                <i class="fas fa-shopping-bag"></i>
+                <h2>Items del Marketplace</h2>
+            </div>
+            @endif
+
+            @foreach($cartItems as $id => $item)
+
+            <div class="cart-card">
+
+                <div class="image-box">
+                    <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}">
+
+                    <span class="rarity-tag rarity-{{ strtolower($item['rarity']) }}">
+                        {{ ucfirst($item['rarity']) }}
+                    </span>
+                </div>
+
+                <div class="info-box">
+                    <span class="category-tag category-item">{{ ucfirst($item['type']) }}</span>
+
+                    <h3 class="game-title">{{ $item['name'] }}</h3>
+
+                    <!-- Cantidad -->
+                    <div class="quantity-section">
+                        <span class="quantity-label">Cantidad:</span>
+                        <div class="quantity-controls">
+                            <form action="{{ route('cart.update', $id) }}" method="POST" class="quantity-form" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="action" value="decrease">
+                                <input type="hidden" name="type" value="item">
+                                <button type="submit" class="qty-btn" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </form>
+                            <span class="quantity-value">{{ $item['quantity'] }}</span>
+                            <form action="{{ route('cart.update', $id) }}" method="POST" class="quantity-form" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="action" value="increase">
+                                <input type="hidden" name="type" value="item">
+                                <button type="submit" class="qty-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="price-box">
+                        <span class="new-price">S/.{{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                        @if($item['quantity'] > 1)
+                        <span class="unit-price">S/.{{ number_format($item['price'], 2) }} c/u</span>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('cart.remove', $id) }}" method="POST" class="delete-form">
+                        @csrf
+                        <input type="hidden" name="type" value="item">
                         <button type="submit" class="delete-btn">
                             <i class="fas fa-trash"></i> Eliminar
                         </button>
@@ -106,7 +213,7 @@
 
             <div class="summary-save">
                 <i class="fas fa-badge-check"></i>
-                ¡Ahorras ${{ number_format($discount_total, 2) }} en esta compra!
+                ¡Ahorras S/.{{ number_format($discount_total, 2) }} en esta compra!
             </div>
 
             <a href="#" class="pay-btn">
