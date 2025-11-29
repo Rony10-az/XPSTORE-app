@@ -29,11 +29,11 @@
                 <div class="avatar-section">
                     <div class="avatar-preview">
                         @if($user->avatar)
-                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" id="avatarImage">
+                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" id="avatarImage">
                         @else
-                            <div class="avatar-placeholder">
-                                <i class="fas fa-user"></i>
-                            </div>
+                        <div class="avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
                         @endif
                     </div>
 
@@ -132,9 +132,9 @@
                         <div class="readonly-value">
                             <span class="role-badge role-{{ $user->role }}">
                                 @if($user->role === 'admin')
-                                    <i class="fas fa-crown"></i> Administrador
+                                <i class="fas fa-crown"></i> Administrador
                                 @else
-                                    <i class="fas fa-user"></i> Usuario
+                                <i class="fas fa-user"></i> Usuario
                                 @endif
                             </span>
                         </div>
@@ -202,327 +202,368 @@
 
         </div>
     </div>
+    @endif
+
+    {{-- FORMULARIO --}}
+    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        {{-- AVATAR --}}
+        <div class="avatar-section">
+            @php
+            $avatar = $user->avatar;
+
+            if ($avatar) {
+            $isUrl = Str::startsWith($avatar, ['http://', 'https://']);
+            }
+            @endphp
+
+            <img class="avatar-img"
+                src="{{ $avatar ? ($isUrl ? $avatar : asset('storage/'.$avatar)) : 'https://via.placeholder.com/150' }}"
+                alt="Avatar">
+
+
+            <label class="avatar-label">Cambiar avatar</label>
+            <input type="file" name="avatar" class="file-input">
+        </div>
+
+        {{-- NOMBRE --}}
+        <div class="input-group">
+            <label>Nombre</label>
+            <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
+        </div>
+
+        {{-- EMAIL --}}
+        <div class="input-group">
+            <label>Email</label>
+            <input type="text" value="{{ $user->email }}" disabled>
+        </div>
+
+        <button class="btn-save">Guardar cambios</button>
+    </form>
+
 </div>
 @endsection
 
 @push('styles')
 <style>
-/* Profile Page */
-.profile-page {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
-}
-
-.profile-header .header-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.5rem;
-    color: white;
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-}
-
-.page-title {
-    font-size: 2.5rem;
-    font-weight: 900;
-    margin: 0;
-    background: linear-gradient(135deg, #ffffff, #cbd5e1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.page-subtitle {
-    font-size: 1.1rem;
-    color: var(--text-secondary);
-    margin: 0.5rem 0 0;
-}
-
-/* Profile Content */
-.profile-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-/* Profile Card */
-.profile-card {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 2rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.card-title i {
-    color: var(--primary-purple);
-}
-
-/* Avatar Section */
-.avatar-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-}
-
-.avatar-preview {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 4px solid var(--primary-purple);
-    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
-}
-
-.avatar-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    color: white;
-}
-
-.avatar-actions {
-    display: flex;
-    gap: 1rem;
-}
-
-.btn-upload,
-.btn-delete {
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    border: none;
-}
-
-.btn-upload {
-    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
-    color: white;
-}
-
-.btn-upload:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
-}
-
-.btn-delete {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.btn-delete:hover {
-    background: rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.5);
-}
-
-.avatar-hint {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin: 0;
-}
-
-#avatar {
-    display: none;
-}
-
-/* Profile Form */
-.profile-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.form-group label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.form-group label i {
-    color: var(--primary-purple);
-}
-
-.form-group input {
-    padding: 0.875rem 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary-purple);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.form-hint {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 0.25rem;
-}
-
-.error-message {
-    font-size: 0.85rem;
-    color: #ef4444;
-    margin-top: 0.25rem;
-}
-
-/* Readonly Info */
-.readonly-info .readonly-value {
-    padding: 0.875rem 1rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.time-badge {
-    background: rgba(139, 92, 246, 0.2);
-    color: var(--primary-purple);
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.role-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
-}
-
-.role-admin {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #1f2937;
-}
-
-.role-user {
-    background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
-    color: white;
-}
-
-/* Form Actions */
-.form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-.btn-save {
-    padding: 1rem 2rem;
-    background: linear-gradient(135deg, #10b981, #059669);
-    border: none;
-    border-radius: 12px;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-save:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-}
-
-.btn-warning {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-}
-
-.btn-warning:hover {
-    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
+    /* Profile Page */
     .profile-page {
-        padding: 1rem;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 0;
     }
 
     .profile-header {
-        flex-direction: column;
-        text-align: center;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .profile-header .header-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
     }
 
     .page-title {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 0;
+        background: linear-gradient(135deg, #ffffff, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin: 0.5rem 0 0;
+    }
+
+    /* Profile Content */
+    .profile-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    /* Profile Card */
+    .profile-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .card-title i {
+        color: var(--primary-purple);
+    }
+
+    /* Avatar Section */
+    .avatar-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .avatar-preview {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid var(--primary-purple);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+    }
+
+    .avatar-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: white;
     }
 
     .avatar-actions {
-        flex-direction: column;
-        width: 100%;
+        display: flex;
+        gap: 1rem;
     }
 
     .btn-upload,
     .btn-delete {
-        width: 100%;
-        justify-content: center;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        border: none;
     }
-}
+
+    .btn-upload {
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+        color: white;
+    }
+
+    .btn-upload:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(139, 92, 246, 0.5);
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-delete:hover {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    .avatar-hint {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    #avatar {
+        display: none;
+    }
+
+    /* Profile Form */
+    .profile-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .form-group label i {
+        color: var(--primary-purple);
+    }
+
+    .form-group input {
+        padding: 0.875rem 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-purple);
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .form-hint {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 0.25rem;
+    }
+
+    .error-message {
+        font-size: 0.85rem;
+        color: #ef4444;
+        margin-top: 0.25rem;
+    }
+
+    /* Readonly Info */
+    .readonly-info .readonly-value {
+        padding: 0.875rem 1rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .time-badge {
+        background: rgba(139, 92, 246, 0.2);
+        color: var(--primary-purple);
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .role-admin {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #1f2937;
+    }
+
+    .role-user {
+        background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue));
+        color: white;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .btn-save {
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .btn-warning:hover {
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-page {
+            padding: 1rem;
+        }
+
+        .profile-header {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+        }
+
+        .avatar-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .btn-upload,
+        .btn-delete {
+            width: 100%;
+            justify-content: center;
+        }
+    }
 </style>
 @endpush
 
@@ -575,37 +616,37 @@
         uploadButton.style.pointerEvents = 'none';
 
         fetch(form.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ||
-                               document.querySelector('input[name="_token"]').value
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showToast(data.message || 'Avatar actualizado correctamente', 'success');
-
-                // Actualizar avatar en el header si existe
-                const headerAvatar = document.querySelector('.user-avatar img');
-                if (headerAvatar && data.avatar_url) {
-                    headerAvatar.src = data.avatar_url;
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ||
+                        document.querySelector('input[name="_token"]').value
                 }
-            } else {
-                showToast(data.message || 'Error al actualizar avatar', 'error');
-            }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message || 'Avatar actualizado correctamente', 'success');
 
-            uploadButton.innerHTML = originalText;
-            uploadButton.style.pointerEvents = 'auto';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showToast('Error al subir la imagen', 'error');
-            uploadButton.innerHTML = originalText;
-            uploadButton.style.pointerEvents = 'auto';
-        });
+                    // Actualizar avatar en el header si existe
+                    const headerAvatar = document.querySelector('.user-avatar img');
+                    if (headerAvatar && data.avatar_url) {
+                        headerAvatar.src = data.avatar_url;
+                    }
+                } else {
+                    showToast(data.message || 'Error al actualizar avatar', 'error');
+                }
+
+                uploadButton.innerHTML = originalText;
+                uploadButton.style.pointerEvents = 'auto';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error al subir la imagen', 'error');
+                uploadButton.innerHTML = originalText;
+                uploadButton.style.pointerEvents = 'auto';
+            });
     }
 </script>
 @endpush

@@ -23,6 +23,15 @@ use App\Http\Controllers\User\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Streaming\StreamingStoreController;
+use App\Http\Controllers\User\PurchaseController;
+use App\Http\Controllers\User\WishlistController;
+use App\Http\Controllers\User\SettingsController;
+use App\Models\User;
+
+
+
+
 // PÁGINA PRINCIPAL (HOME)
 // =========================
 Route::get('/', function () {
@@ -126,6 +135,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/mis-juegos', [LibraryController::class, 'index'])
         ->name('library.index');
 
+    // MARKETPLACE
+    Route::get('/marketplace', [MarketplaceController::class, 'index'])
+        ->name('market.index');
+
+    Route::get('/marketplace/item/{item}', [MarketplaceController::class, 'show'])
+        ->name('market.show');
+
+    // Streaming Codes
+    // STREAMING STORE
+    Route::get('/streaming', [StreamingStoreController::class, 'index'])
+        ->name('streaming.index');
+
+    Route::get('/streaming/{code}', [StreamingStoreController::class, 'show'])
+        ->name('streaming.show');
+
+
     // COMUNIDAD 
 
     Route::get('/comunidad', [CommunityController::class, 'index'])->name('community.index');
@@ -150,6 +175,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/perfil/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
+
+    Route::get('/compras', [PurchaseController::class, 'index'])->name('purchases.index');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
+    Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])
+        ->name('wishlist.remove');
+    Route::get('/configuracion', [SettingsController::class, 'index'])->name('settings.index');
+
 
 
 

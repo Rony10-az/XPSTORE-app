@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property-read \App\Models\CommunityPost|null $post
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PostComment newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PostComment newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PostComment query()
+ * @mixin \Eloquent
+ */
 class PostComment extends Model
 {
     protected $fillable = ['post_id', 'user_id', 'comment'];

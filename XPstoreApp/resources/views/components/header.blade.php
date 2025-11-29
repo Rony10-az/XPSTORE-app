@@ -45,13 +45,24 @@
                 </div>
 
                 <div class="user-profile">
+                    @php
+                    $avatar = auth()->user()->avatar ?? null;
+                    $isUrl = $avatar && Str::startsWith($avatar, ['http://', 'https://']);
+                    @endphp
+
                     <div class="user-avatar">
-                        @if(auth()->user()->avatar)
-                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
-                        @else
-                        <i class="fas fa-user"></i>
-                        @endif
+                        <<<<<<< HEAD
+                            @if(auth()->user()->avatar)
+                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                            =======
+                            @if($avatar)
+                            <img src="{{ $isUrl ? $avatar : asset('storage/'.$avatar) }}" alt="Avatar" class="avatar-thumb">
+                            >>>>>>> feat/codigo
+                            @else
+                            <i class="fas fa-user"></i>
+                            @endif
                     </div>
+
                     <span class="user-name">
                         {{ auth()->user()->name }}
                     </span>
@@ -71,17 +82,17 @@
                             <i class="fas fa-user"></i>
                             Mi Perfil
                         </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-box"></i>
-                            Mis Pedidos
-                        </a>
-                        <a href="#" class="dropdown-item">
+                        <a href="{{ route('purchases.index') }}" class="dropdown-item">
                             <i class="fas fa-shopping-bag"></i>
                             Mis Compras
                         </a>
-                        <a href="#" class="dropdown-item">
+                        <a href="{{ route('wishlist.index') }}" class="dropdown-item">
                             <i class="fas fa-heart"></i>
                             Wishlist
+                        </a>
+                        <a href="{{ route('settings.index') }}" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            Configuración
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -102,10 +113,14 @@
 <nav class="nav-bar">
     <div class="container">
         <a href="{{ route('dashboard.user') }}" class="nav-link {{ request()->routeIs('dashboard.user') ? 'active' : '' }}">Catálogo</a>
-        <a href="#}" class="nav-link">Marketplace</a>
-        <a href="#" class="nav-link">Códigos</a>
+        <a href="{{ route('market.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
+        <a href="{{ route('streaming.index') }}" class="nav-link {{ request()->routeIs('streaming.index') ? 'active' : '' }}">Códigos</a>
         <a href="{{ route('library.index') }}" class="nav-link">Mis Pedidos</a>
-        <a href="#" class="nav-link">Wishlist</a>
-        <a href="{{ route('marketplace.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
+        <<<<<<< HEAD
+            <a href="#" class="nav-link">Wishlist</a>
+            <a href="{{ route('marketplace.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
+            =======
+
+            >>>>>>> feat/codigo
     </div>
 </nav>
