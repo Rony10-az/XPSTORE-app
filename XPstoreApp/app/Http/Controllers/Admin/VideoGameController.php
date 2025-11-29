@@ -17,8 +17,8 @@ class VideoGameController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('developer', 'like', "%{$search}%")
-                  ->orWhere('publisher', 'like', "%{$search}%");
+                ->orWhere('developer', 'like', "%{$search}%")
+                ->orWhere('publisher', 'like', "%{$search}%");
         }
 
         // Filtrar por plataforma
@@ -105,24 +105,45 @@ class VideoGameController extends Controller
             'requirements' => 'nullable|string',
         ]);
 
+        // ==========================
+        // CONVERTIR IMÁGENES A BASE64
+        // ==========================
         $imagePaths = [];
+
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('videojuegos', 'public');
-                $imagePaths[] = $path;
+            foreach ($request->file('images') as $img) {
+
+                // Leer los bytes del archivo
+                $data = file_get_contents($img);
+
+                // Convertir en URL BASE64
+                $base64 = 'data:' . $img->getMimeType() . ';base64,' . base64_encode($data);
+
+                // Guardamos esa "URL" en el array
+                $imagePaths[] = $base64;
             }
         }
+
+        // ==========================
+        // REQUERIMIENTOS
+        // ==========================
         $requirements = [];
         if ($request->requirements) {
-        $requirements = json_decode($request->requirements, true) ?? [];
-       }
+            $requirements = json_decode($request->requirements, true) ?? [];
+        }
 
+        // ==========================
+        // GUARDAR EL VIDEOJUEGO
+        // ==========================
         VideoGame::create([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'discount' => $request->discount ?? 0,
-            'images' => !empty($imagePaths) ? $imagePaths : [],
+
+            // Guardamos URLs base64 directamente en la BD
+            'images' => $imagePaths,
+
             'genre' => $request->genre,
             'platform' => $request->platform,
             'release_date' => $request->release_date,
@@ -137,6 +158,7 @@ class VideoGameController extends Controller
         return redirect()->route('admin.videojuegos.index')
             ->with('success', 'Videojuego creado exitosamente.');
     }
+
 
     public function show(VideoGame $videojuego)
     {
