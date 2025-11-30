@@ -110,8 +110,16 @@
                 <div class="admin-user-menu">
                     <div class="admin-profile-trigger">
                         <div class="admin-avatar">
-                            @if(auth()->user()->avatar)
-                            <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                            @php
+                                $avatar = auth()->user()->avatar ?? null;
+                                if ($avatar) {
+                                    $avatarUrl = \Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://', 'data:image'])
+                                        ? $avatar
+                                        : asset('storage/' . ltrim($avatar, '/'));
+                                }
+                            @endphp
+                            @if($avatar ?? false)
+                            <img src="{{ $avatarUrl }}" alt="{{ auth()->user()->name }}">
                             @else
                             <i class="fas fa-user-shield"></i>
                             @endif

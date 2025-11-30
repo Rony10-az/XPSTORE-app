@@ -148,23 +148,20 @@
                         <div class="game-info">
                             @php
                             $img = $juego->images[0] ?? null;
+                            if ($img) {
+                                $src = Str::startsWith($img, ['http://', 'https://', 'data:image'])
+                                    ? $img
+                                    : asset('storage/' . ltrim($img, '/'));
+                            }
                             @endphp
 
                             @if($img)
-                            @if(Str::startsWith($img, ['http://', 'https://']))
-                            <img src="{{ $img }}" alt="{{ $juego->title }}" class="game-thumb">
-                            @else
-                            <img src="{{ asset($img) }}" alt="{{ $juego->title }}" class="game-thumb">
-                            @endif
+                            <img src="{{ $src }}" alt="{{ $juego->title }}" class="game-thumb">
                             @else
                             <div class="game-thumb placeholder">
                                 <i class="fas fa-gamepad"></i>
                             </div>
                             @endif
-
-                            <div class="game-thumb placeholder">
-                                <i class="fas fa-gamepad"></i>
-                            </div>
 
                             <div class="game-details">
                                 <strong>{{ $juego->title }}</strong>

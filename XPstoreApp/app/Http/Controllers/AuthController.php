@@ -66,7 +66,7 @@ class AuthController extends Controller
     {
         try {
             $this->auth->register($request->get('name'), $request->get('email'), $request->get('password'));
-            return redirect()->route('layouts.principal')->with('success', 'Cuenta creada');
+            return redirect()->route('home')->with('success', 'Cuenta creada');
         } catch (\RuntimeException $e) {
             return back()
                 ->withErrors(['email' => $e->getMessage()])

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Marketplace de Ítems - XP Store')
+@section('title', 'Marketplace de ítems - XP Store')
 @section('subtitle', 'Gestiona los ítems de tu marketplace')
 
 @section('content')
@@ -8,11 +8,11 @@
     {{-- Header --}}
     <div class="admin-header">
         <div class="admin-title">
-            <h1><i class="fas fa-boxes"></i> Marketplace de Ítems</h1>
+            <h1><i class="fas fa-boxes"></i> Marketplace de ítems</h1>
             <p class="admin-subtitle">Administra skins, armas, emotes y más</p>
         </div>
         <a href="{{ route('admin.items.create') }}" class="btn-primary">
-            <i class="fas fa-plus"></i> Nuevo Ítem
+            <i class="fas fa-plus"></i> Nuevo ítem
         </a>
     </div>
 
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <h3 class="stat-number">{{ $items->total() }}</h3>
-            <p class="stat-label">Total Ítems</p>
+            <p class="stat-label">Total ítems</p>
         </div>
 
         <div class="stat-card">
@@ -146,22 +146,22 @@
                     <td>
                         <div class="game-info">
                             @if($item->image)
-                            @if(Str::startsWith($item->image, ['http://', 'https://']))
-                            {{-- Imagen externa --}}
-                            <img src="{{ $item->image }}" alt="{{ $item->name }}" class="game-thumb">
+                                @php
+                                    $img = $item->image;
+                                    $imgSrc = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://', 'data:image'])
+                                        ? $img
+                                        : asset('storage/' . ltrim($img, '/'));
+                                @endphp
+                                <img src="{{ $imgSrc }}" alt="{{ $item->title ?? $item->name }}" class="game-thumb">
                             @else
-                            {{-- Imagen local dentro de /public --}}
-                            <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="game-thumb">
-                            @endif
-                            @else
-                            {{-- Sin imagen: ícono --}}
-                            <div class="game-thumb placeholder">
-                                <i class="fas {{ $item->type_icon }}"></i>
-                            </div>
+                                {{-- Sin imagen: icono --}}
+                                <div class="game-thumb placeholder">
+                                    <i class="fas {{ $item->type_icon }}"></i>
+                                </div>
                             @endif
 
                             <div class="game-details">
-                                <strong>{{ $item->name }}</strong>
+                                <strong>{{ $item->title ?? $item->name }}</strong>
                                 @if($item->description)
                                 <span class="game-developer">{{ \Illuminate\Support\Str::limit($item->description, 40) }}</span>
                                 @endif

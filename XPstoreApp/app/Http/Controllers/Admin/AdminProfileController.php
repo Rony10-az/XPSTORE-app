@@ -17,6 +17,8 @@ class AdminProfileController extends Controller
     public function index()
     {
         try {
+
+            /** @var User $admin */
             $admin = Auth::user();
 
             if (!$admin) {
@@ -35,27 +37,34 @@ class AdminProfileController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        $admin = Auth::user();
+        // MANEJO DE ERRORES AL ACTUALIZAR PERFIL
+        try {
+            $admin = Auth::user();
 
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $admin->id],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-        ]);
+            $validated = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $admin->id],
+                'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            ]);
 
-        // Manejar la carga de avatar
-        if ($request->hasFile('avatar')) {
-            // Eliminar avatar anterior si existe
-            if ($admin->avatar && Storage::disk('public')->exists($admin->avatar)) {
-                Storage::disk('public')->delete($admin->avatar);
+            // Manejar la carga del avatar
+            if ($request->hasFile('avatar')) {
+
+                // Eliminar avatar anterior si existe
+                if ($admin->avatar && Storage::disk('public')->exists($admin->avatar)) {
+                    Storage::disk('public')->delete($admin->avatar);
+                }
+
+                // Guardar nuevo avatar
+                $avatarPath = $request->file('avatar')->store('avatars', 'public');
+                $validated['avatar'] = $avatarPath;
             }
-
-            // Guardar nuevo avatar
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $validated['avatar'] = $avatarPath;
+        } catch (\Exception $e) {
+            return redirect()->route('admin.profile.index')
+                ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
         }
-
-        $admin->update($validated);
+        // ACTUALIZACIÓN DIRECTA POR QUERY BUILDER
+        DB::table('users')->where('id', $admin->id)->update($validated);
 
         return redirect()->route('admin.profile.index')
             ->with('success', 'Perfil actualizado correctamente');
@@ -66,11 +75,12 @@ class AdminProfileController extends Controller
      */
     public function updatePassword(Request $request)
     {
+        /** @var User $admin */
         $admin = Auth::user();
 
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password'         => ['required', 'confirmed', Password::defaults()],
         ]);
 
         $admin->update([
@@ -86,6 +96,7 @@ class AdminProfileController extends Controller
      */
     public function deleteAvatar()
     {
+        /** @var User $admin */
         $admin = Auth::user();
 
         if ($admin->avatar && Storage::disk('public')->exists($admin->avatar)) {

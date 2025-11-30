@@ -102,7 +102,22 @@
             <div class="user-comment-card">
                 <div class="user-card-header">
                     <div class="user-info">
-                        <div class="user-avatar">{{ strtoupper(mb_substr($user->name, 0, 1)) }}</div>
+                        @php
+                            $avatar = $user->avatar ?? null;
+                            if ($avatar) {
+                                $avatarUrl = \Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://', 'data:image'])
+                                    ? $avatar
+                                    : asset('storage/' . ltrim($avatar, '/'));
+                            }
+                            $initial = strtoupper(mb_substr($user->name, 0, 1));
+                        @endphp
+                        <div class="user-avatar">
+                            @if($avatar ?? false)
+                                <img src="{{ $avatarUrl }}" alt="{{ $user->name }}">
+                            @else
+                                {{ $initial }}
+                            @endif
+                        </div>
                         <div class="user-details">
                             <h3>{{ $user->name }}</h3>
                             <p class="user-email">{{ $user->email }}</p>
@@ -317,6 +332,13 @@
     font-size: 1.5rem;
     font-weight: bold;
     color: white;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .user-details h3 {

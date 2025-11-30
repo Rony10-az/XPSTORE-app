@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Editar Ítem - XP Store')
+@section('title', 'Editar ítem - XP Store')
 @section('subtitle', 'Modifica la información del ítem')
 
 @section('content')
 <div class="admin-container">
     <div class="admin-header">
         <div class="admin-title">
-            <h1><i class="fas fa-edit"></i> Editar Ítem</h1>
-            <p class="admin-subtitle">{{ $item->name }}</p>
+            <h1><i class="fas fa-edit"></i> Editar ítem</h1>
+            <p class="admin-subtitle">{{ $item->title ?? $item->name }}</p>
         </div>
         <a href="{{ route('admin.items.index') }}" class="btn-secondary">
             <i class="fas fa-arrow-left"></i> Volver
@@ -32,20 +32,31 @@
 
         <div class="form-grid">
             <div class="form-group">
-                <label for="name">Nombre del Ítem *</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $item->name) }}" required>
+                <label for="title">Nombre del ítem *</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ old('title', $item->title ?? $item->name) }}" required>
             </div>
 
             <div class="form-group">
-                <label for="type">Tipo de Ítem *</label>
+                <label for="video_game_id">Videojuego asociado *</label>
+                <select id="video_game_id" name="video_game_id" class="form-control" required>
+                    <option value="">Selecciona un videojuego</option>
+                    @foreach($videoGames as $game)
+                        <option value="{{ $game->id }}" {{ old('video_game_id', $item->video_game_id) == $game->id ? 'selected' : '' }}>
+                            {{ $game->title }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Tipo de ítem *</label>
                 <select id="type" name="type" class="form-control" required>
                     <option value="">Selecciona un tipo</option>
                     <option value="skin" {{ old('type', $item->type) == 'skin' ? 'selected' : '' }}>Skin</option>
-                    <option value="arma" {{ old('type', $item->type) == 'arma' ? 'selected' : '' }}>Arma</option>
+                    <option value="weapon" {{ old('type', $item->type) == 'weapon' ? 'selected' : '' }}>Arma</option>
                     <option value="emote" {{ old('type', $item->type) == 'emote' ? 'selected' : '' }}>Emote</option>
-                    <option value="moneda" {{ old('type', $item->type) == 'moneda' ? 'selected' : '' }}>Moneda</option>
-                    <option value="pase" {{ old('type', $item->type) == 'pase' ? 'selected' : '' }}>Pase</option>
-                    <option value="otro" {{ old('type', $item->type) == 'otro' ? 'selected' : '' }}>Otro</option>
+                    <option value="item" {{ old('type', $item->type) == 'item' ? 'selected' : '' }}>Ítem</option>
+                    <option value="bundle" {{ old('type', $item->type) == 'bundle' ? 'selected' : '' }}>Paquete</option>
                 </select>
             </div>
 
@@ -75,7 +86,7 @@
                 <label for="image">Imagen</label>
                 @if($item->image)
                     <div style="margin-bottom: 1rem;">
-                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" style="max-width: 200px; border-radius: 8px; border: 1px solid #3a3d4a;">
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->title ?? $item->name }}" style="max-width: 200px; border-radius: 8px; border: 1px solid #3a3d4a;">
                         <p style="color: #8b92a7; font-size: 0.85rem; margin-top: 0.5rem;">Imagen actual. Sube una nueva para reemplazarla.</p>
                     </div>
                 @endif
@@ -100,7 +111,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn-primary">
-                <i class="fas fa-save"></i> Actualizar Ítem
+                <i class="fas fa-save"></i> Actualizar ítem
             </button>
             <a href="{{ route('admin.items.index') }}" class="btn-secondary">
                 <i class="fas fa-times"></i> Cancelar

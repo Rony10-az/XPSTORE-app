@@ -104,11 +104,21 @@ class VideoGameController extends Controller
             'requirements' => 'nullable|string',
         ]);
 
+        // ==========================
+        // CONVERTIR IMÁGENES A BASE64
+        // ==========================
         $imagePaths = [];
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $path = $image->store('videojuegos', 'public');
-                $imagePaths[] = $path;
+            foreach ($request->file('images') as $img) {
+
+                // Leer los bytes del archivo
+                $data = file_get_contents($img);
+
+                // Convertir en URL BASE64
+                $base64 = 'data:' . $img->getMimeType() . ';base64,' . base64_encode($data);
+
+                // Guardamos esa "URL" en el array
+                $imagePaths[] = $base64;
             }
         }
         $requirements = [];
@@ -170,9 +180,11 @@ class VideoGameController extends Controller
 
         $imagePaths = $videojuego->images ?? [];
         if ($request->hasFile('images')) {
-            // Eliminar imágenes antiguas
-            foreach ($videojuego->images as $oldImage) {
-                Storage::disk('public')->delete($oldImage);
+            // Eliminar imágenes antiguas solo si eran rutas locales
+            foreach ($videojuego->images ?? [] as $oldImage) {
+                if (!\Illuminate\Support\Str::startsWith($oldImage, ['http://', 'https://', 'data:image'])) {
+                    Storage::disk('public')->delete($oldImage);
+                }
             }
 
             // Subir nuevas imágenes
