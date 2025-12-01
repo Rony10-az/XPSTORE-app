@@ -513,9 +513,9 @@
                             id="avatar"
                             name="avatar"
                             class="form-input-file @error('avatar') is-invalid @enderror"
-                            accept="image/jpeg,image/png,image/jpg,image/gif"
+                            accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
                         >
-                        <small class="form-hint">JPG, PNG o GIF. Máximo 2MB.</small>
+                        <small class="form-hint">JPG, PNG, GIF o WEBP. Máximo 2MB.</small>
                         @error('avatar')
                             <span class="form-error">{{ $message }}</span>
                         @enderror

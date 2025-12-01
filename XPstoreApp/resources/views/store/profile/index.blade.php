@@ -50,17 +50,13 @@
                         <label for="avatar" class="btn-upload">
                             <i class="fas fa-upload"></i> Cambiar avatar
                         </label>
-                        <input type="file" name="avatar" id="avatar" accept="image/*" style="display: none;">
+                        <input type="file" name="avatar" id="avatar" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" style="display: none;">
                         <p class="avatar-hint">Formatos: JPG, PNG, WEBP (máx. 2MB)</p>
 
                         @if($user->avatar)
-                        <form action="{{ route('profile.avatar.delete') }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn-delete" onclick="return confirm('¿Eliminar avatar?')">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </button>
-                        </form>
+                        <button type="submit" form="delete-avatar-form" class="btn-delete" onclick="return confirm('Eliminar avatar?')">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </button>
                         @endif
 
                     </div>
@@ -116,6 +112,12 @@
                     </div>
 
                 </form>
+                @if($user->avatar)
+                <form id="delete-avatar-form" action="{{ route('profile.avatar.delete') }}" method="POST" style="display:none;">
+                    @csrf
+                    @method('DELETE')
+                </form>
+                @endif
             </div>
 
             <!-- Change Password -->

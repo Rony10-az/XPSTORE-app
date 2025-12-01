@@ -34,7 +34,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'nickname' => 'nullable|string|max:255|unique:users,nickname,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'avatar' => 'nullable|image|max:2048'
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048'
         ]);
 
         $data = [
@@ -44,6 +44,10 @@ class ProfileController extends Controller
         ];
 
         if ($request->hasFile('avatar')) {
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
             $path = $request->file('avatar')->store('avatars', 'public');
             $data['avatar'] = $path;
         }

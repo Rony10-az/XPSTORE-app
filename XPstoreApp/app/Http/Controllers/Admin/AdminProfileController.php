@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB; // ← FALTA ESTE IMPORT
 use Illuminate\Validation\Rules\Password;
 
 class AdminProfileController extends Controller
@@ -37,14 +38,15 @@ class AdminProfileController extends Controller
      */
     public function updateProfile(Request $request)
     {
-        // MANEJO DE ERRORES AL ACTUALIZAR PERFIL
+        /** @var User $admin */
+        $admin = Auth::user(); // ← MUEVO ESTO FUERA DEL TRY (IMPORTANTE)
+
         try {
-            $admin = Auth::user();
 
             $validated = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $admin->id],
-                'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
             ]);
 
             // Manejar la carga del avatar
@@ -63,6 +65,7 @@ class AdminProfileController extends Controller
             return redirect()->route('admin.profile.index')
                 ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
         }
+
         // ACTUALIZACIÓN DIRECTA POR QUERY BUILDER
         DB::table('users')->where('id', $admin->id)->update($validated);
 
