@@ -84,8 +84,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="batch_name">Nombre del Lote (opcional)</label>
-                    <input type="text" id="batch_name" name="batch_name" class="form-control" value="{{ old('batch_name') }}" placeholder="Ej: PROMO-NAVIDAD-2025">
+                    <label for="batch_name_batch">Nombre del Lote (opcional)</label>
+                    <input type="text" id="batch_name_batch" name="batch_name" class="form-control" value="{{ old('batch_name') }}" placeholder="Ej: PROMO-NAVIDAD-2025">
                     <small class="form-text">Se generará automáticamente si no especificas uno</small>
                 </div>
             </div>
@@ -114,6 +114,8 @@ function toggleGenerationMode() {
     const singleMode = document.getElementById('single-mode');
     const batchMode = document.getElementById('batch-mode');
     const singleBatchField = document.getElementById('single-batch-field');
+    const batchNameBatch = document.getElementById('batch_name_batch');
+    const batchNameSingle = document.getElementById('batch_name_single');
 
     if (mode === 'single') {
         singleMode.style.display = 'block';
@@ -123,6 +125,12 @@ function toggleGenerationMode() {
         // Desactivar validación de campos batch
         document.getElementById('quantity').removeAttribute('required');
         document.getElementById('code').removeAttribute('required');
+
+        // Deshabilitar el campo batch del modo lote para que no se envíe
+        batchNameBatch.disabled = true;
+        batchNameBatch.value = '';
+        // Habilitar el campo batch del modo individual
+        batchNameSingle.disabled = false;
     } else {
         singleMode.style.display = 'none';
         batchMode.style.display = 'block';
@@ -131,6 +139,12 @@ function toggleGenerationMode() {
         // Activar validación para cantidad
         document.getElementById('quantity').setAttribute('required', 'required');
         document.getElementById('code').value = '';
+
+        // Habilitar el campo batch del modo lote
+        batchNameBatch.disabled = false;
+        // Deshabilitar el campo batch del modo individual para que no se envíe
+        batchNameSingle.disabled = true;
+        batchNameSingle.value = '';
     }
 }
 

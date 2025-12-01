@@ -78,17 +78,27 @@
                 </div>
                 @endif
 
-                {{-- Código --}}
-                @if(!empty($purchase->activation_code))
+                {{-- Códigos de activación --}}
+                @if(isset($purchase->activation_codes) && count($purchase->activation_codes) > 0)
                 <div class="code-box">
-                    <label>Código de activación</label>
+                    <label>
+                        Código{{ count($purchase->activation_codes) > 1 ? 's' : '' }} de activación
+                        @if(count($purchase->activation_codes) > 1)
+                            <span class="code-count-badge">{{ count($purchase->activation_codes) }} copias</span>
+                        @endif
+                    </label>
 
+                    @foreach($purchase->activation_codes as $index => $code)
                     <div class="code-row">
-                        <input type="text" value="{{ $purchase->activation_code }}" readonly class="code-input">
-                        <button class="copy-btn" data-code="{{ $purchase->activation_code }}">
+                        @if(count($purchase->activation_codes) > 1)
+                            <span class="code-number">#{{ $index + 1 }}</span>
+                        @endif
+                        <input type="text" value="{{ $code }}" readonly class="code-input">
+                        <button class="copy-btn" data-code="{{ $code }}">
                             <i class="far fa-copy"></i>
                         </button>
                     </div>
+                    @endforeach
                 </div>
                 @endif
 

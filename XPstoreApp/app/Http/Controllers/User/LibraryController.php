@@ -11,12 +11,25 @@ class LibraryController extends Controller
 {
     public function index()
     {
-        $libraryItems = UserPurchase::where('user_id', Auth::id())
-            ->whereNotNull('video_game_id')  // ← evita registros corruptos
+        $purchases = UserPurchase::where('user_id', Auth::id())
+            ->whereNotNull('video_game_id')
             ->with('videoGame')
             ->latest()
-            ->get();
+            ->get()
+            ->filter(function($purchase) {
+                // Solo mostrar compras donde el videojuego aún existe
+                return $purchase->videoGame !== null;
+            });
 
+        // Agrupar compras por video_game_id
+        $libraryItems = $purchases->groupBy('video_game_id')->map(function($group) {
+            // Retornar el primer item del grupo con todos los códigos
+            $firstPurchase = $group->first();
+            $firstPurchase->activation_codes = $group->pluck('activation_code')->toArray();
+            $firstPurchase->purchase_count = $group->count();
+            $firstPurchase->purchase_dates = $group->pluck('created_at')->toArray();
+            return $firstPurchase;
+        })->values();
 
         return view('library.index', compact('libraryItems'));
     }

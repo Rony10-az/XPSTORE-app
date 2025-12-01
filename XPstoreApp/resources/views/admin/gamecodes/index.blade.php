@@ -90,6 +90,7 @@
                     <th width="60">ID</th>
                     <th>Código</th>
                     <th>Videojuego</th>
+                    <th>Lote</th>
                     <th>Estado</th>
                     <th>Creado</th>
                     <th width="180">Acciones</th>
@@ -101,6 +102,15 @@
                         <td class="text-center">#{{ $code->id }}</td>
                         <td><code>{{ $code->code }}</code></td>
                         <td>{{ $code->videoGame->title ?? 'Sin juego' }}</td>
+                        <td>
+                            @if($code->batch)
+                                <span class="batch-badge">
+                                    <i class="fas fa-layer-group"></i> {{ $code->batch }}
+                                </span>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
                         <td>
                             <span class="badge badge-{{ $code->statusColor }}">
                                 @if($code->status === 'disponible')
@@ -133,7 +143,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">No hay códigos generados.</td>
+                        <td colspan="7" class="text-center">No hay códigos generados.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -103,10 +103,68 @@ body {
     border-radius: 12px;
 }
 
-.price-box {
+/* QUANTITY CONTROLS */
+.quantity-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.quantity-box label {
+    font-size: 14px;
+    color: #cbd5e1;
+    font-weight: 500;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(139, 92, 246, 0.1);
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.qty-btn {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: #a78bfa;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.qty-btn:hover:not(:disabled) {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.6);
+    color: #c4b5fd;
+}
+
+.qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.quantity-display {
+    font-size: 18px;
+    font-weight: 700;
+    color: #a78bfa;
+    min-width: 30px;
+    text-align: center;
+}
+
+.price-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .old-price {
@@ -117,6 +175,12 @@ body {
 .new-price {
     font-size: 26px;
     color: #4dffae;
+}
+
+.price-subtotal {
+    font-size: 14px;
+    color: #8b92a7;
+    font-weight: 600;
 }
 
 /* BOTÓN ELIMINAR */

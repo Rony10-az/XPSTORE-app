@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserPurchase;
+use App\Models\GameCode;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -53,13 +54,25 @@ class CheckoutController extends Controller
                 continue;
             }
 
-            // Generamos código de activación único
-            $activationCode = Str::upper(Str::random(16));
+            // Buscar un código de activación disponible para este videojuego
+            $gameCode = GameCode::where('video_game_id', $item['id'])
+                                ->where('status', 'disponible')
+                                ->whereNull('user_id')
+                                ->first();
+
+            // Si encontramos un código disponible, lo usamos
+            if ($gameCode) {
+                $activationCode = $gameCode->code;
+
+                // Marcar el código como usado y asignarlo al usuario
+                $gameCode->markAsUsed(Auth::id());
+            } else {
+                // Si no hay códigos disponibles, generamos uno automático como fallback
+                $activationCode = Str::upper(Str::random(16));
+            }
 
             UserPurchase::create([
                 'user_id' => Auth::id(),
-
-
                 'video_game_id' => $item['id'],        // ← usamos el ID agregado al carrito
                 'price_paid'    => $item['final_price'],
                 'activation_code' => $activationCode,

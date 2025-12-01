@@ -91,13 +91,45 @@
 
                     </div>
 
+                    <!-- CANTIDAD -->
+                    <div class="quantity-box">
+                        <label>Cantidad:</label>
+                        <div class="quantity-controls">
+                            <form action="{{ route('cart.update', $id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="action" value="decrease">
+                                <button type="submit" class="qty-btn" {{ $item['quantity'] <= 1 ? 'disabled' : '' }}>
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </form>
+
+                            <span class="quantity-display">{{ $item['quantity'] }}</span>
+
+                            <form action="{{ route('cart.update', $id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                @method('PATCH')
+                                <input type="hidden" name="action" value="increase">
+                                <button type="submit" class="qty-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                     <!-- PRECIO -->
                     <div class="price-box">
                         @if($item['discount'] > 0)
-                        <span class="old-price">${{ number_format($item['price'], 2) }}</span>
+                        <span class="old-price">S/. {{ number_format($item['price'], 2) }}</span>
                         @endif
 
-                        <span class="new-price">${{ number_format($item['final_price'], 2) }}</span>
+                        <span class="new-price">S/. {{ number_format($item['final_price'], 2) }}</span>
+
+                        @if($item['quantity'] > 1)
+                        <span class="price-subtotal">
+                            Subtotal: S/. {{ number_format($item['final_price'] * $item['quantity'], 2) }}
+                        </span>
+                        @endif
                     </div>
 
                     <!-- ELIMINAR -->
@@ -128,22 +160,22 @@
 
             <div class="summary-row">
                 <span>Subtotal</span>
-                <span>${{ number_format($subtotal, 2) }}</span>
+                <span>S/. {{ number_format($subtotal, 2) }}</span>
             </div>
 
             <div class="summary-row discount">
                 <span><i class="fas fa-tags"></i> Descuentos</span>
-                <span>- ${{ number_format($discount_total, 2) }}</span>
+                <span>- S/. {{ number_format($discount_total, 2) }}</span>
             </div>
 
             <div class="summary-total">
-                Total <strong>${{ number_format($total, 2) }}</strong>
+                Total <strong>S/. {{ number_format($total, 2) }}</strong>
             </div>
 
             @if($discount_total > 0)
             <div class="summary-save">
                 <i class="fas fa-badge-check"></i>
-                ¡Ahorras ${{ number_format($discount_total, 2) }} en esta compra!
+                ¡Ahorras S/. {{ number_format($discount_total, 2) }} en esta compra!
             </div>
             @endif
 

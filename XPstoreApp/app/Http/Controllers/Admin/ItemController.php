@@ -12,7 +12,7 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $query = MarketItem::query();
+        $query = MarketItem::with('game');
 
         // Búsqueda por nombre o descripción
         if ($request->filled('search')) {

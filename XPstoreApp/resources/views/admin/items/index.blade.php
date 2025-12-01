@@ -130,6 +130,7 @@
                 <tr>
                     <th width="60">ID</th>
                     <th>Ítem</th>
+                    <th>Juego</th>
                     <th>Tipo</th>
                     <th>Precio</th>
                     <th>Rareza</th>
@@ -169,8 +170,17 @@
                         </div>
                     </td>
                     <td>
+                        @if($item->game)
+                            <span class="game-badge">
+                                <i class="fas fa-gamepad"></i> {{ $item->game->title }}
+                            </span>
+                        @else
+                            <span class="text-muted">Sin juego</span>
+                        @endif
+                    </td>
+                    <td>
                         <span class="badge badge-secondary">
-                            <i class="fas {{ $item->type_icon }}"></i> {{ ucfirst($item->type) }}
+                            <i class="fas {{ $item->type_icon }}"></i> {{ $item->type_spanish }}
                         </span>
                     </td>
                     <td>
@@ -178,7 +188,7 @@
                     </td>
                     <td>
                         <span class="badge badge-{{ $item->rarity_color }}">
-                            {{ ucfirst($item->rarity) }}
+                            {{ $item->rarity_spanish }}
                         </span>
                     </td>
                     <td>
@@ -221,7 +231,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="9">
+                    <td colspan="10">
                         <div class="empty-state">
                             <i class="fas fa-boxes"></i>
                             <h4>No hay ítems</h4>
@@ -269,6 +279,28 @@
 </div>
 
 <style>
+    .game-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(139, 92, 246, 0.15);
+        color: #a78bfa;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .game-badge i {
+        font-size: 0.9rem;
+    }
+
+    .text-muted {
+        color: #64748b;
+        font-style: italic;
+    }
+
     .sales-count {
         color: #10b981;
         font-weight: 600;
