@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Crear Nuevo Ítem - XP Store')
+@section('title', 'Crear Nuevo ítem - XP Store')
 @section('subtitle', 'Agrega un nuevo ítem al marketplace')
 
 @section('content')
 <div class="admin-container">
     <div class="admin-header">
         <div class="admin-title">
-            <h1><i class="fas fa-plus"></i> Crear Nuevo Ítem</h1>
+            <h1><i class="fas fa-plus"></i> Crear Nuevo ítem</h1>
             <p class="admin-subtitle">Completa la información del ítem</p>
         </div>
         <a href="{{ route('admin.items.index') }}" class="btn-secondary">
@@ -31,20 +31,31 @@
 
         <div class="form-grid">
             <div class="form-group">
-                <label for="name">Nombre del Ítem *</label>
-                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required>
+                <label for="title">Nombre del ítem *</label>
+                <input type="text" id="title" name="title" class="form-control" value="{{ old('title', old('name')) }}" required>
             </div>
 
             <div class="form-group">
-                <label for="type">Tipo de Ítem *</label>
+                <label for="video_game_id">Videojuego asociado *</label>
+                <select id="video_game_id" name="video_game_id" class="form-control" required>
+                    <option value="">Selecciona un videojuego</option>
+                    @foreach($videoGames as $game)
+                        <option value="{{ $game->id }}" {{ old('video_game_id') == $game->id ? 'selected' : '' }}>
+                            {{ $game->title }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="type">Tipo de ítem *</label>
                 <select id="type" name="type" class="form-control" required>
                     <option value="">Selecciona un tipo</option>
                     <option value="skin" {{ old('type') == 'skin' ? 'selected' : '' }}>Skin</option>
-                    <option value="arma" {{ old('type') == 'arma' ? 'selected' : '' }}>Arma</option>
+                    <option value="weapon" {{ old('type') == 'weapon' ? 'selected' : '' }}>Arma</option>
                     <option value="emote" {{ old('type') == 'emote' ? 'selected' : '' }}>Emote</option>
-                    <option value="moneda" {{ old('type') == 'moneda' ? 'selected' : '' }}>Moneda</option>
-                    <option value="pase" {{ old('type') == 'pase' ? 'selected' : '' }}>Pase</option>
-                    <option value="otro" {{ old('type') == 'otro' ? 'selected' : '' }}>Otro</option>
+                    <option value="item" {{ old('type') == 'item' ? 'selected' : '' }}>Ítem</option>
+                    <option value="bundle" {{ old('type') == 'bundle' ? 'selected' : '' }}>Paquete</option>
                 </select>
             </div>
 
@@ -93,7 +104,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn-primary">
-                <i class="fas fa-save"></i> Crear Ítem
+                <i class="fas fa-save"></i> Crear ítem
             </button>
             <a href="{{ route('admin.items.index') }}" class="btn-secondary">
                 <i class="fas fa-times"></i> Cancelar

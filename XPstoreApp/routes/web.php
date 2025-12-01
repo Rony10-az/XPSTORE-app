@@ -1,5 +1,11 @@
 <?php
 
+
+use App\Http\Controllers\User\CheckoutController;
+use App\Http\Controllers\User\LibraryController;
+use App\Http\Controllers\Community\CommunityController;
+use App\Http\Controllers\Community\PostController;
+use App\Http\Controllers\Community\CommentController;
 use App\Http\Controllers\Admin\AdminProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\GameCodeController;
@@ -12,19 +18,19 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Store\GameStoreController;
 use App\Http\Controllers\User\CartController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
+use App\Http\Controllers\User\MarketplaceController;
 use App\Http\Controllers\User\ProfileController;
-use App\Http\Controllers\User\CheckoutController;
-use App\Http\Controllers\User\LibraryController;
-use App\Http\Controllers\Community\CommunityController;
-use App\Http\Controllers\Community\PostController;
-use App\Http\Controllers\Community\CommentController;
-use App\Http\Controllers\Items\MarketplaceController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Streaming\StreamingStoreController;
 use App\Http\Controllers\User\PurchaseController;
 use App\Http\Controllers\User\WishlistController;
 use App\Http\Controllers\User\SettingsController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Models\User;
+
+
+
 
 // PÁGINA PRINCIPAL (HOME)
 // =========================
@@ -39,6 +45,12 @@ Route::get('/', function () {
 // =========================
 // TIENDA (pública)
 // =========================
+
+Route::get('/juegos', [GameStoreController::class, 'index'])
+    ->name('store.index');
+
+Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])
+    ->name('game.show');
 
 Route::get('/juegos', [GameStoreController::class, 'index'])->name('store.index');
 Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])->name('game.show');
@@ -71,6 +83,26 @@ Route::middleware('auth')->group(function () {
     // CRUD de Videojuegos (solo admins)
     Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
 
+
+    // ADMIN
+    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
+
+    // CRUD de Videojuegos (solo admins)
+    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
+
+    // Rutas de usuarios (solo admin)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        // Monté este recurso para listar, ver, editar y eliminar usuarios.
+        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
+    });
+
+    // Rutas de administración (solo admins)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        // CRUD de Videojuegos
+        Route::resource('videojuegos', VideoGameController::class);
+    });
+
+    /* dados de prueba para ver si se sube bien el cambio */
     // Rutas de administración (solo admins)
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         // Perfil del admin
@@ -105,12 +137,11 @@ Route::middleware('auth')->group(function () {
 
     // MARKETPLACE
     Route::get('/marketplace', [MarketplaceController::class, 'index'])
-        ->name('market.index');
+        ->name('marketplace.index');
 
     Route::get('/marketplace/item/{item}', [MarketplaceController::class, 'show'])
-        ->name('market.show');
+        ->name('marketplace.show');
 
-    // Streaming Codes
     // STREAMING STORE
     Route::get('/streaming', [StreamingStoreController::class, 'index'])
         ->name('streaming.index');
@@ -118,7 +149,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/streaming/{code}', [StreamingStoreController::class, 'show'])
         ->name('streaming.show');
 
-    // COMUNIDAD
+
+    // COMUNIDAD 
+
     Route::get('/comunidad', [CommunityController::class, 'index'])->name('community.index');
 
     // Crear post
@@ -130,34 +163,47 @@ Route::middleware('auth')->group(function () {
     Route::post('/comunidad/review', [PostController::class, 'storeReview'])
         ->name('community.review');
 
+
+
     // PERFIL
     Route::get('/perfil', [ProfileController::class, 'index'])->name('profile.index');
     Route::put('/perfil/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/perfil/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
 
-    // COMPRAS Y WISHLIST
     Route::get('/compras', [PurchaseController::class, 'index'])->name('purchases.index');
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
-    Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
+    Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove'])
+        ->name('wishlist.remove');
     Route::get('/configuracion', [SettingsController::class, 'index'])->name('settings.index');
 
+
+
+
     // =========================
-    // CARRITO DE COMPRAS
+    // CARRITO DE COMPRAS 
     // =========================
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/cart/add-item/{id}', [CartController::class, 'addItem'])->name('cart.add.item');
-    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index'); // Ver carrito
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add'); // Agregar al carrito
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove'); // Eliminar del carrito
 
     // =========================
     // CHECKOUT
     // =========================
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])
+        ->name('checkout.success');
+
+    // Carrito
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add-item/{id}', [CartController::class, 'addItem'])->name('cart.add.item');
+    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     // STORE ACTIONS
     Route::post('/carrito/{videojuego}', [GameStoreController::class, 'addToCart'])->name('store.cart.add');

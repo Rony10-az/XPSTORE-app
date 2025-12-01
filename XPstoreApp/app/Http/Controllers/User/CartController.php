@@ -4,37 +4,28 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\VideoGame;
-use Illuminate\Http\Request;
 use App\Models\MarketItem;
+use App\Models\StreamingCode;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-
 
 class CartController extends Controller
 {
-    // Mostrar carrito
+    /* ============================================================
+     *  MOSTRAR CARRITO
+     * ============================================================ */
     public function index()
     {
-        $cart = session()->get('cart', []);
-
-        if (empty($cart)) {
-            return view('cart.index', [
-                'cart' => [],
-                'subtotal' => 0,
-                'discount_total' => 0,
-                'total' => 0
-            ]);
-        }
+        $cart = session('cart', []);
 
         $subtotal = 0;
         $discount_total = 0;
 
         foreach ($cart as $item) {
-
             $subtotal += $item['price'] * $item['quantity'];
 
             if ($item['discount'] > 0) {
-                $discount_total +=
-                    ($item['price'] - $item['final_price']) * $item['quantity'];
+                $discount_total += ($item['price'] - $item['final_price']) * $item['quantity'];
             }
         }
 
@@ -44,112 +35,91 @@ class CartController extends Controller
     }
 
 
-    // Agregar al carrito
-    // Agregar al carrito
+    /* ============================================================
+     *  AGREGAR AL CARRITO
+     * ============================================================ */
     public function add(Request $request, $id)
     {
-        try {
-            // Recibir el tipo enviado por el formulario
-            $type = $request->input('type', 'video_game');
+        $type = $request->input('type', 'video_game');
+        $cart = session()->get('cart', []);
 
-            $cart = session()->get('cart', []);
+        /* ==== VIDEOJUEGO ==== */
+        if ($type === 'video_game') {
 
-            /* ==========================================
-         *   AGREGAR VIDEOJUEGO
-         * ========================================== */
-            if ($type === 'video_game') {
+            $game = VideoGame::findOrFail($id);
 
-                $game = VideoGame::findOrFail($id);
+            if (isset($cart["game_$id"])) {
+                $cart["game_$id"]['quantity']++;
+            } else {
+                $image = $this->getFirstImage($game->images);
 
-                if (isset($cart["game_$id"])) {
-                    $cart["game_$id"]['quantity']++;
-                } else {
-
-                    $image = $this->getFirstImage($game->images);
-                    $genres = $this->normalizeJson($game->genre);
-                    $final_price = $game->price_after_discount;
-
-                    $cart["game_$id"] = [
-                        'id'          => $game->id,
-                        'type'        => 'video_game',
-                        'title'       => $game->title,
-                        'price'       => $game->price,
-                        'final_price' => $final_price,
-                        'discount'    => $game->discount,
-                        'image'       => $image,
-                        'genre'       => $genres,
-                        'platform'    => $game->platform,
-                        'quantity'    => 1,
-                    ];
-                }
+                $cart["game_$id"] = [
+                    'id'          => $game->id,
+                    'type'        => 'video_game',
+                    'title'       => $game->title,
+                    'price'       => $game->price,
+                    'final_price' => $game->price_after_discount,
+                    'discount'    => $game->discount,
+                    'image'       => $image,
+                    'genre'       => $this->normalizeJson($game->genre),
+                    'platform'    => $game->platform,
+                    'quantity'    => 1,
+                ];
             }
-
-            /* ==========================================
-         *   AGREGAR ÍTEM DEL MARKETPLACE
-         * ========================================== */
-            if ($type === 'market_item') {
-
-                $item = MarketItem::findOrFail($id);
-
-                if (isset($cart["item_$id"])) {
-                    $cart["item_$id"]['quantity']++;
-                } else {
-
-                    $cart["item_$id"] = [
-                        'id'          => $item->id,
-                        'type'        => 'market_item',
-                        'title'       => $item->title,
-                        'price'       => $item->price,
-                        'final_price' => $item->price, // marketplace no maneja desconto
-                        'discount'    => 0,
-                        'image'       => $item->image,
-                        'genre'       => [],
-                        'platform'    => [],
-                        'quantity'    => 1,
-                    ];
-                }
-            }
-
-            /** =========================================
-             * 3. AGREGAR STREAMING CODE
-             * ========================================= */
-            if ($type === 'streaming_code') {
-                $code = \App\Models\StreamingCode::findOrFail($id);
-
-                if (isset($cart["stream_$id"])) {
-                    $cart["stream_$id"]['quantity']++;
-                } else {
-                    $cart["stream_$id"] = [
-                        'id'          => $code->id,
-                        'type'        => 'streaming_code',
-                        'title'       => "{$code->service} ({$code->duration})",
-                        'price'       => $code->price,
-                        'final_price' => $code->price,
-                        'discount'    => 0,
-                        'image'       => $code->image,
-                        'quantity'    => 1,
-                    ];
-                }
-            }
-
-            session()->put('cart', $cart);
-
-            return redirect()
-                ->route('cart.index')
-                ->with('success', 'Juego agregado al carrito');
-        } catch (\Exception $e) {
-            report($e);
-
-            return redirect()
-                ->route('cart.index')
-                ->with('error', 'Ocurrió un problema al agregar el producto al carrito.');
         }
+
+        /* ==== MARKET ITEM ==== */
+        if ($type === 'market_item') {
+
+            $item = MarketItem::findOrFail($id);
+
+            if (isset($cart["item_$id"])) {
+                $cart["item_$id"]['quantity']++;
+            } else {
+                $cart["item_$id"] = [
+                    'id'          => $item->id,
+                    'type'        => 'market_item',
+                    'title'       => $item->title,
+                    'price'       => $item->price,
+                    'final_price' => $item->price,
+                    'discount'    => 0,
+                    'image'       => $item->image,
+                    'quantity'    => 1,
+                ];
+            }
+        }
+
+        /* ==== STREAMING CODE ==== */
+        if ($type === 'streaming_code') {
+
+            $code = StreamingCode::findOrFail($id);
+
+            if (isset($cart["stream_$id"])) {
+                $cart["stream_$id"]['quantity']++;
+            } else {
+                $cart["stream_$id"] = [
+                    'id'          => $code->id,
+                    'type'        => 'streaming_code',
+                    'title'       => "{$code->service} ({$code->duration})",
+                    'price'       => $code->price,
+                    'final_price' => $code->price,
+                    'discount'    => 0,
+                    'image'       => $code->image,
+                    'quantity'    => 1,
+                ];
+            }
+        }
+
+        session()->put('cart', $cart);
+
+        return back()->with('success', 'Producto agregado al carrito.');
     }
 
 
-
-    // Eliminar
-    public function remove($id)
+    /* ============================================================
+     *  ELIMINAR PRODUCTO
+     * ============================================================ */
+    public function remove(Request $request, $id)
     {
         $cart = session()->get('cart', []);
 
@@ -158,29 +128,47 @@ class CartController extends Controller
             session()->put('cart', $cart);
         }
 
-        return back()->with('success', 'Juego eliminado del carrito');
+        return back()->with('success', 'Producto eliminado.');
     }
 
+
+    /* ============================================================
+     *  ACTUALIZAR CANTIDAD
+     * ============================================================ */
+    public function update(Request $request, $id)
+    {
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$id])) {
+            $action = $request->action;
+
+            if ($action === 'increase') {
+                $cart[$id]['quantity']++;
+            } elseif ($action === 'decrease' && $cart[$id]['quantity'] > 1) {
+                $cart[$id]['quantity']--;
+            }
+        }
+
+        session()->put('cart', $cart);
+        return back()->with('success', 'Cantidad actualizada');
+    }
+
+
+    /* ============================================================
+     *  HELPERS
+     * ============================================================ */
     private function normalizeJson($value)
     {
         if (is_array($value)) return $value;
-
         if (is_string($value) && str_contains($value, "'")) {
             $value = str_replace("'", '"', $value);
         }
-
-        $decoded = json_decode($value, true);
-        return $decoded ?? [];
+        return json_decode($value, true) ?? [];
     }
 
     private function getFirstImage($images)
     {
         $arr = $this->normalizeJson($images);
-
-        if (empty($arr)) {
-            return asset("images/no-image.png");
-        }
-
-        return $arr[0];
+        return $arr[0] ?? asset("images/no-image.png");
     }
 }

@@ -18,8 +18,26 @@
         @foreach ($codes as $code)
 
         <a href="{{ route('streaming.show', $code) }}" class="streaming-card">
-
-            <img src="{{ $code->image }}" alt="{{ $code->service }}">
+            @php
+                $img = $code->image;
+                $fallback = 'data:image/svg+xml;utf8,' . rawurlencode(
+                    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 225">'
+                    . '<defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">'
+                    . '<stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#111827"/></linearGradient></defs>'
+                    . '<rect width="400" height="225" rx="24" fill="url(#g)"/>'
+                    . '<text x="200" y="120" text-anchor="middle" fill="#fff" font-family="Arial, sans-serif" font-size="48" font-weight="700">HBO Max</text>'
+                    . '</svg>'
+                );
+                if ($img) {
+                    $imgSrc = \Illuminate\Support\Str::startsWith($img, ['http://', 'https://', 'data:image'])
+                        ? $img
+                        : asset('storage/' . ltrim($img, '/'));
+                } else {
+                    $imgSrc = $fallback;
+                }
+            @endphp
+            <img src="{{ $imgSrc }}" alt="{{ $code->service }}" loading="lazy"
+                onerror="this.onerror=null;this.src='{{ $fallback }}';">
 
             <p class="streaming-title">{{ $code->service }}</p>
 

@@ -135,8 +135,16 @@
                         @foreach($newUsers as $user)
                         <div class="user-item">
                             <div class="user-avatar">
-                                @if($user->avatar)
-                                    <img src="{{ $user->avatar }}" alt="{{ $user->name }}">
+                                @php
+                                    $avatar = $user->avatar ?? null;
+                                    if ($avatar) {
+                                        $avatarUrl = \Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://', 'data:image'])
+                                            ? $avatar
+                                            : asset('storage/' . ltrim($avatar, '/'));
+                                    }
+                                @endphp
+                                @if($avatar ?? false)
+                                    <img src="{{ $avatarUrl }}" alt="{{ $user->name }}">
                                 @else
                                     <i class="fas fa-user"></i>
                                 @endif

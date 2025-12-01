@@ -64,18 +64,19 @@
 
     </section>
 
+
     <!-- ====================== -->
     <!--   JUEGOS POPULARES     -->
     <!-- ====================== -->
     <section class="games-section">
         <div class="section-header">
             <div class="section-icon">
-                <i class="fas fa-fire"></i>
+                <i class="fas fa-gamepad"></i>
             </div>
 
             <div class="section-title-group">
-                <h2 class="section-title">Juegos Populares 🔥</h2>
-                <p class="section-subtitle">Los más vendidos esta semana</p>
+                <h2 class="section-title">Catálogo de Videojuegos 🎮</h2>
+                <p class="section-subtitle">Todos nuestros títulos disponibles</p>
             </div>
 
             <a href="#" class="section-link">

@@ -71,6 +71,8 @@
             @endif
         </div>
 
+        {{-- Botón agregar --}}
+
         <div class="bottom-row">
             <form action="{{ route('cart.add', $game->id) }}" method="POST">
                 @csrf

@@ -17,8 +17,8 @@ class VideoGameController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where('title', 'like', "%{$search}%")
-                  ->orWhere('developer', 'like', "%{$search}%")
-                  ->orWhere('publisher', 'like', "%{$search}%");
+                ->orWhere('developer', 'like', "%{$search}%")
+                ->orWhere('publisher', 'like', "%{$search}%");
         }
 
         // Filtrar por plataforma
@@ -84,16 +84,15 @@ class VideoGameController extends Controller
     {
         return view('admin.videojuegos.create');
     }
-
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0.99',
-            'discount' => 'nullable|integer|min:0|max:100',
+            'price' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'genre' => 'required|array',
             'platform' => 'required|array',
             'release_date' => 'required|date',
@@ -105,26 +104,23 @@ class VideoGameController extends Controller
             'requirements' => 'nullable|string',
         ]);
 
-        // Procesar imágenes
+        // ==========================
+        // CONVERTIR IMÁGENES A BASE64
+        // ==========================
         $imagePaths = [];
         if ($request->hasFile('images')) {
-            try {
-                foreach ($request->file('images') as $image) {
-                    if ($image->isValid()) {
-                        // Generar nombre único para evitar conflictos
-                        $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                        $path = $image->storeAs('videojuegos', $filename, 'public');
-                        $imagePaths[] = $path;
-                    }
-                }
-            } catch (\Exception $e) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors(['images' => 'Error al subir las imágenes: ' . $e->getMessage()]);
+            foreach ($request->file('images') as $img) {
+
+                // Leer los bytes del archivo
+                $data = file_get_contents($img);
+
+                // Convertir en URL BASE64
+                $base64 = 'data:' . $img->getMimeType() . ';base64,' . base64_encode($data);
+
+                // Guardamos esa "URL" en el array
+                $imagePaths[] = $base64;
             }
         }
-
-        // Procesar requisitos
         $requirements = [];
         if ($request->requirements) {
             $requirements = json_decode($request->requirements, true) ?? [];
@@ -151,6 +147,7 @@ class VideoGameController extends Controller
             ->with('success', 'Videojuego creado exitosamente.');
     }
 
+
     public function show(VideoGame $videojuego)
     {
         return view('admin.videojuegos.show', compact('videojuego'));
@@ -166,10 +163,10 @@ class VideoGameController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0.99',
-            'discount' => 'nullable|integer|min:0|max:100',
+            'price' => 'required|numeric|min:0',
+            'discount' => 'nullable|numeric|min:0|max:100',
             'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'genre' => 'required|array',
             'platform' => 'required|array',
             'release_date' => 'required|date',
@@ -181,39 +178,21 @@ class VideoGameController extends Controller
             'requirements' => 'nullable|string',
         ]);
 
-        // Procesar imágenes
         $imagePaths = $videojuego->images ?? [];
         if ($request->hasFile('images')) {
-            try {
-                // Eliminar imágenes antiguas solo si hay nuevas imágenes válidas
-                $newImagePaths = [];
-                foreach ($request->file('images') as $image) {
-                    if ($image->isValid()) {
-                        // Generar nombre único para evitar conflictos
-                        $filename = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                        $path = $image->storeAs('videojuegos', $filename, 'public');
-                        $newImagePaths[] = $path;
-                    }
+            // Eliminar imágenes antiguas solo si eran rutas locales
+            foreach ($videojuego->images ?? [] as $oldImage) {
+                if (!\Illuminate\Support\Str::startsWith($oldImage, ['http://', 'https://', 'data:image'])) {
+                    Storage::disk('public')->delete($oldImage);
                 }
-
-                // Solo eliminar las antiguas si se subieron nuevas correctamente
-                if (!empty($newImagePaths)) {
-                    foreach ($videojuego->images as $oldImage) {
-                        Storage::disk('public')->delete($oldImage);
-                    }
-                    $imagePaths = $newImagePaths;
-                }
-            } catch (\Exception $e) {
-                return redirect()->back()
-                    ->withInput()
-                    ->withErrors(['images' => 'Error al subir las imágenes: ' . $e->getMessage()]);
             }
-        }
 
-        // Procesar requisitos
-        $requirements = [];
-        if ($request->requirements) {
-            $requirements = json_decode($request->requirements, true) ?? [];
+            // Subir nuevas imágenes
+            $imagePaths = [];
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('videojuegos', 'public');
+                $imagePaths[] = $path;
+            }
         }
 
         $videojuego->update([
@@ -230,7 +209,7 @@ class VideoGameController extends Controller
             'stock' => $request->stock,
             'featured' => $request->has('featured'),
             'popularity' => $request->popularity ?? 3,
-            'requirements' => $requirements,
+            'requirements' => $request->requirements ?? [],
         ]);
 
         return redirect()->route('admin.videojuegos.index')

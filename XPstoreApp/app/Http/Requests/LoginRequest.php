@@ -6,14 +6,17 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+    /**----------------------------------------------------------------- 
+       Esta funcion es para autorizar el request
+    -------------------------------------------------------------------*/
+
     public function authorize(): bool
     {
         return true;
     }
-
+    /**----------------------------------------------------------------- 
+       Esta funcion es para obtener las reglas de validacion del request
+    -------------------------------------------------------------------*/
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,7 +29,9 @@ class LoginRequest extends FormRequest
             'password' => ['required', 'string', 'min:6'],
         ];
     }
-
+    /**----------------------------------------------------------------------- 
+     Esta funcion es para obtener los mensajes personalizados de error de validacion
+    ------------------------------------------------------------------------ */
     /**
      * Get custom messages for validator errors.
      *

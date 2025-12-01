@@ -43,7 +43,7 @@ class StreamingCodesSeeder extends Seeder
                 'code' => 'HBO-22KKCSS',
                 'price' => 7.99,
                 'stock' => 8,
-                'image' => 'https://static.wikia.nocookie.net/arrow/images/0/0a/HBO_Max_logo.png/revision/latest?cb=20210316222251&path-prefix=es',
+                'image' => 'https://logos-world.net/wp-content/uploads/2020/04/HBO-Max-Logo-700x394.png',
             ],
             [
                 'service' => 'Spotify Premium',
@@ -56,7 +56,10 @@ class StreamingCodesSeeder extends Seeder
         ];
 
         foreach ($items as $item) {
-            \App\Models\StreamingCode::create($item);
+            \App\Models\StreamingCode::updateOrCreate(
+                ['code' => $item['code']],
+                $item
+            );
         }
     }
 }

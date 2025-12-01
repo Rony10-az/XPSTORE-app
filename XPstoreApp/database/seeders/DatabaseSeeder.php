@@ -276,6 +276,15 @@ class DatabaseSeeder extends Seeder
         $this->call(StreamingCodesSeeder::class);
 
 
+        $this->call(
+            MarketItemSeeder::class
+        );
+
+
+
+
+
+
         $this->command->info('✅ Base de datos poblada exitosamente!');
         $this->command->info('🔐 Admin: admin@xpstore.com | Password: admin123');
     }

@@ -42,7 +42,7 @@
             <div class="footer-section">
                 <h4>Enlaces Rápidos</h4>
                 <a href="{{ route('dashboard.user') }}">Catálogo</a>
-                <a href="{{ route('market.index') }}">Marketplace</a>
+                <a href="{{ route('marketplace.index') }}">Marketplace</a>
                 <a href="{{ route('streaming.index') }}">Códigos</a>
                 <a href="{{ route('library.index') }}">Mis Pedidos</a>
             </div>

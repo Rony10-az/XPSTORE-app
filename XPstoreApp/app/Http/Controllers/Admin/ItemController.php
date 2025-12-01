@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Item;
+use App\Models\MarketItem;
+use App\Models\VideoGame;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,46 +12,46 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Item::query();
+        $query = MarketItem::query();
 
-        // Búsqueda por nombre
+        // Búsqueda por nombre o descripción
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('description', 'like', "%{$search}%");
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', "%{$request->search}%")
+                    ->orWhere('description', 'like', "%{$request->search}%");
+            });
         }
 
-        // Filtrar por tipo
+        // Filtro por tipo
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
-        // Filtrar por rareza
+        // Filtro por rareza
         if ($request->filled('rarity')) {
             $query->where('rarity', $request->rarity);
         }
 
-        // Filtrar por estado
+        // Filtro por estado
         if ($request->filled('status')) {
             switch ($request->status) {
                 case 'stock':
                     $query->where('stock', '>', 0);
                     break;
                 case 'out':
-                    $query->where('stock', '=', 0);
+                    $query->where('stock', 0);
                     break;
                 case 'active':
-                    $query->where('is_active', true);
+                    $query->where('is_active', 1);
                     break;
                 case 'inactive':
-                    $query->where('is_active', false);
+                    $query->where('is_active', 0);
                     break;
             }
         }
 
         // Ordenamiento
-        $sort = $request->get('sort', 'recent');
-        switch ($sort) {
+        switch ($request->get('sort', 'recent')) {
             case 'name':
                 $query->orderBy('name', 'asc');
                 break;
@@ -70,10 +71,11 @@ class ItemController extends Controller
                 $query->orderBy('created_at', 'desc');
         }
 
+        // Paginación
         $items = $query->paginate(10)->withQueryString();
 
-        // Obtener listas únicas para filtros
-        $types = Item::distinct()->pluck('type')->sort()->values();
+        // Filtros dinámicos
+        $types = MarketItem::distinct()->pluck('type')->sort()->values();
         $rarities = ['común', 'poco común', 'raro', 'épico', 'legendario'];
 
         return view('admin.items.index', compact('items', 'types', 'rarities'));
@@ -81,31 +83,40 @@ class ItemController extends Controller
 
     public function create()
     {
-        return view('admin.items.create');
+        $videoGames = VideoGame::select('id', 'title')->orderBy('title')->get();
+        return view('admin.items.create', compact('videoGames'));
     }
 
     public function store(Request $request)
     {
+        // Aceptar tanto "title" como "name" desde el formulario
+        $request->merge([
+            'title' => $request->input('title') ?? $request->input('name'),
+        ]);
+
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'video_game_id' => 'required|exists:video_games,id',
             'type' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'rarity' => 'required|in:común,poco común,raro,épico,legendario',
+            'rarity' => 'required|string',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|max:2048',
             'description' => 'nullable|string',
         ]);
 
         $imagePath = null;
+
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('items', 'public');
+            $imagePath = $request->file('image')->store('market_items', 'public');
         }
 
-        Item::create([
-            'name' => $request->name,
-            'type' => $request->type,
+        MarketItem::create([
+            'title' => $request->title,
+            'video_game_id' => $request->video_game_id,
+            'type' => $this->mapType($request->type),
             'price' => $request->price,
-            'rarity' => $request->rarity,
+            'rarity' => $this->mapRarity($request->rarity),
             'stock' => $request->stock,
             'image' => $imagePath,
             'description' => $request->description,
@@ -116,44 +127,51 @@ class ItemController extends Controller
             ->with('success', 'Ítem creado exitosamente.');
     }
 
-    public function show(Item $item)
+    public function show(MarketItem $item)
     {
         return view('admin.items.show', compact('item'));
     }
 
-    public function edit(Item $item)
+    public function edit(MarketItem $item)
     {
-        return view('admin.items.edit', compact('item'));
+        $videoGames = VideoGame::select('id', 'title')->orderBy('title')->get();
+        return view('admin.items.edit', compact('item', 'videoGames'));
     }
 
-    public function update(Request $request, Item $item)
+    public function update(Request $request, MarketItem $item)
     {
+        // Aceptar tanto "title" como "name" desde el formulario
+        $request->merge([
+            'title' => $request->input('title') ?? $request->input('name'),
+        ]);
+
         $request->validate([
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'video_game_id' => 'required|exists:video_games,id',
             'type' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
-            'rarity' => 'required|in:común,poco común,raro,épico,legendario',
+            'rarity' => 'required|string',
             'stock' => 'required|integer|min:0',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|max:2048',
             'description' => 'nullable|string',
         ]);
 
         $imagePath = $item->image;
+
         if ($request->hasFile('image')) {
-            // Eliminar imagen antigua
             if ($item->image) {
                 Storage::disk('public')->delete($item->image);
             }
 
-            // Subir nueva imagen
-            $imagePath = $request->file('image')->store('items', 'public');
+            $imagePath = $request->file('image')->store('market_items', 'public');
         }
 
         $item->update([
-            'name' => $request->name,
-            'type' => $request->type,
+            'title' => $request->title,
+            'video_game_id' => $request->video_game_id,
+            'type' => $this->mapType($request->type, $item->type),
             'price' => $request->price,
-            'rarity' => $request->rarity,
+            'rarity' => $this->mapRarity($request->rarity, $item->rarity),
             'stock' => $request->stock,
             'image' => $imagePath,
             'description' => $request->description,
@@ -164,9 +182,8 @@ class ItemController extends Controller
             ->with('success', 'Ítem actualizado exitosamente.');
     }
 
-    public function destroy(Item $item)
+    public function destroy(MarketItem $item)
     {
-        // Eliminar imagen
         if ($item->image) {
             Storage::disk('public')->delete($item->image);
         }
@@ -175,5 +192,47 @@ class ItemController extends Controller
 
         return redirect()->route('admin.items.index')
             ->with('success', 'Ítem eliminado exitosamente.');
+    }
+
+    /**
+     * Normaliza el tipo a los valores permitidos por la base de datos.
+     */
+    private function mapType(string $input, ?string $fallback = 'item'): string
+    {
+        $map = [
+            'skin' => 'skin',
+            'weapon' => 'weapon',
+            'arma' => 'weapon',
+            'item' => 'item',
+            'bundle' => 'bundle',
+            'paquete' => 'bundle',
+        ];
+
+        $key = strtolower(trim($input));
+        return $map[$key] ?? ($fallback ?? 'item');
+    }
+
+    /**
+     * Normaliza la rareza a los valores permitidos por la base de datos.
+     */
+    private function mapRarity(string $input, ?string $fallback = 'common'): string
+    {
+        $map = [
+            'common' => 'common',
+            'comun' => 'common',
+            'común' => 'common',
+            'poco comun' => 'rare',
+            'poco común' => 'rare',
+            'rare' => 'rare',
+            'raro' => 'rare',
+            'epic' => 'epic',
+            'epico' => 'epic',
+            'épico' => 'epic',
+            'legendary' => 'legendary',
+            'legendario' => 'legendary',
+        ];
+
+        $key = strtolower(trim($input));
+        return $map[$key] ?? ($fallback ?? 'common');
     }
 }

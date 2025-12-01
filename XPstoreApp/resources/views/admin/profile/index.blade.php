@@ -392,8 +392,16 @@
         <div class="profile-sidebar">
             <div class="profile-card">
                 <div class="profile-avatar-section">
-                    @if($admin->avatar)
-                        <img src="{{ asset('storage/' . $admin->avatar) }}" alt="{{ $admin->name }}" class="profile-avatar-img">
+                    @php
+                        $avatar = $admin->avatar;
+                        if ($avatar) {
+                            $avatarUrl = \Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://', 'data:image'])
+                                ? $avatar
+                                : asset('storage/' . ltrim($avatar, '/'));
+                        }
+                    @endphp
+                    @if($avatar ?? false)
+                        <img src="{{ $avatarUrl }}" alt="{{ $admin->name }}" class="profile-avatar-img">
                     @else
                         <div class="profile-avatar-placeholder">
                             <i class="fas fa-user"></i>
@@ -505,9 +513,9 @@
                             id="avatar"
                             name="avatar"
                             class="form-input-file @error('avatar') is-invalid @enderror"
-                            accept="image/jpeg,image/png,image/jpg,image/gif"
+                            accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
                         >
-                        <small class="form-hint">JPG, PNG o GIF. Máximo 2MB.</small>
+                        <small class="form-hint">JPG, PNG, GIF o WEBP. Máximo 2MB.</small>
                         @error('avatar')
                             <span class="form-error">{{ $message }}</span>
                         @enderror
