@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="hero-price">
-                        <span class="price">$249.99</span>
+                        <span class="price">S/.249.99</span>
                     </div>
 
                     <div class="hero-actions">
@@ -123,126 +123,7 @@
                 </div>
             </section>
 
-            <!-- Mejores Ofertas Section -->
-            <section class="offers-section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <i class="fas fa-percent"></i>
-                    </div>
-                    <div class="section-title-group">
-                        <h2 class="section-title">Mejores Ofertas 🔥</h2>
-                        <p class="section-subtitle">Aprovecha estos descuentos increíbles</p>
-                    </div>
-                </div>
-
-                <div class="games-grid">
-                    <!-- Game Card 1 -->
-                    <div class="game-card">
-                        <div class="game-image">
-                            <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&h=250&fit=crop" alt="Game 1">
-                            <div class="discount-badge">-10%</div>
-                            <button class="wishlist-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="game-overlay">
-                                <button class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <h3 class="game-title">Cyber Warriors 2077</h3>
-                            <p class="game-description">Adéntrate en una ciudad cyberpunk llena de acción</p>
-                            <div class="game-tags">
-                                <span class="tag-small">Acción</span>
-                                <span class="tag-small">RPG</span>
-                            </div>
-                            <div class="game-footer">
-                                <div class="price-group">
-                                    <span class="price-old">$59.99</span>
-                                    <span class="price-new">$53.99</span>
-                                </div>
-                                <button class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Game Card 2 -->
-                    <div class="game-card">
-                        <div class="game-image">
-                            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&h=250&fit=crop" alt="Game 2">
-                            <div class="discount-badge featured">-20%</div>
-                            <div class="featured-badge">Destacado</div>
-                            <button class="wishlist-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="game-overlay">
-                                <button class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <h3 class="game-title">Fantasy Legends Online</h3>
-                            <p class="game-description">MMORPG épico con mundos fantásticos por descubrir</p>
-                            <div class="game-tags">
-                                <span class="tag-small">MMORPG</span>
-                                <span class="tag-small">Fantasía</span>
-                            </div>
-                            <div class="game-footer">
-                                <div class="price-group">
-                                    <span class="price-old">$49.99</span>
-                                    <span class="price-new">$39.99</span>
-                                </div>
-                                <button class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Game Card 3 -->
-                    <div class="game-card">
-                        <div class="game-image">
-                            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&h=250&fit=crop" alt="Game 3">
-                            <div class="discount-badge">-15%</div>
-                            <button class="wishlist-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="game-overlay">
-                                <button class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <h3 class="game-title">Racing Xtreme</h3>
-                            <p class="game-description">Carreras de alta velocidad con gráficos realistas</p>
-                            <div class="game-tags">
-                                <span class="tag-small">Carreras</span>
-                                <span class="tag-small">Deportes</span>
-                            </div>
-                            <div class="game-footer">
-                                <div class="price-group">
-                                    <span class="price-old">$44.99</span>
-                                    <span class="price-new">$38.24</span>
-                                </div>
-                                <button class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Agregar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            
         </div>
     </main>
 

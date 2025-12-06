@@ -25,7 +25,7 @@
         <div class="market-card">
 
             {{-- LINK AL DETALLE --}}
-            <a href="{{ route('market.show', $item) }}" class="market-link">
+            <a href="{{ route('marketplace.show', $item) }}" class="market-link">
 
                 {{-- IMAGEN --}}
                 <img src="{{ $item->image }}" alt="{{ $item->title }}">
@@ -40,7 +40,7 @@
 
                 {{-- PRECIO --}}
                 <p class="market-price">
-                    ${{ number_format($item->price, 2) }}
+                    S/.{{ number_format($item->price, 2) }}
                 </p>
             </a>
 
@@ -49,7 +49,6 @@
                 data-type="{{ App\Models\MarketItem::class }}">
                 <i class="fas fa-heart"></i>
             </button>
-
 
 
 

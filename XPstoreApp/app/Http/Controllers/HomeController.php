@@ -5,12 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\VideoGame;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 
 
 class HomeController extends Controller
 {
     public function index()
     {
+        // Verificar si la tabla existe antes de consultar
+        if (!Schema::hasTable('video_games')) {
+            return view('layouts.principal', [
+                'featuredGames' => collect([]),
+                'newReleases' => collect([]),
+                'discountedGames' => collect([])
+            ])->with('error', 'La base de datos necesita ser configurada. Por favor, ejecuta las migraciones.');
+        }
+
         // Cargar juegos destacados
         $featuredGames = VideoGame::where('featured', true)->take(6)->get();
 

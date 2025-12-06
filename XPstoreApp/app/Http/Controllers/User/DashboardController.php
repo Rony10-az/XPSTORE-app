@@ -4,101 +4,104 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\VideoGame;
+use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // ======================================
-        // FEATURED GAME
-        // ======================================
+        Log::info("Total juegos: " . VideoGame::count());
+
+        /* ============================================================
+         * FEATURED GAMES (LISTA COMPLETA)
+         * ============================================================ */
+        $featuredGames = VideoGame::where('featured', true)
+            ->where('stock', '>', 0)
+            ->get();
+
+        $featuredGames->transform(function ($g) {
+            $g->image = $this->getFirstImage($g->images);
+            return $g;
+        });
+
+        /* ============================================================
+         * FEATURED GAME PRINCIPAL (UNO)
+         * ============================================================ */
         $featuredGame = VideoGame::where('featured', true)
             ->where('stock', '>', 0)
-            ->first(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+            ->first();
 
         if ($featuredGame) {
             $featuredGame->image = $this->getFirstImage($featuredGame->images);
-            unset($featuredGame->images);
         }
 
-
-        // ======================================
-        // POPULAR GAMES
-        // ======================================
+        /* ============================================================
+         * POPULAR GAMES
+         * ============================================================ */
         $popularGames = VideoGame::where('stock', '>', 0)
             ->orderBy('rating', 'desc')
             ->take(4)
-            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
-
+            ->get();
 
         $popularGames->transform(function ($game) {
             $game->image = $this->getFirstImage($game->images);
-            unset($game->images);
             return $game;
         });
 
-
-        // ======================================
-        // DISCOUNTED GAMES (MEJORES OFERTAS)
-        // ======================================
+        /* ============================================================
+         * BEST OFFERS (DESCUENTOS)
+         * ============================================================ */
         $bestOffers = VideoGame::where('discount', '>', 0)
             ->where('stock', '>', 0)
             ->orderBy('discount', 'desc')
             ->take(6)
-            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+            ->get();
 
         $bestOffers->transform(function ($game) {
             $game->image = $this->getFirstImage($game->images);
-            unset($game->images);
             return $game;
         });
 
-
-        // ======================================
-        // TOP RATED (MEJOR VALORADOS)
-        // ======================================
+        /* ============================================================
+         * TOP RATED (MEJOR VALORADOS)
+         * ============================================================ */
         $topRated = VideoGame::where('stock', '>', 0)
             ->orderBy('rating', 'desc')
             ->take(6)
-            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+            ->get();
 
         $topRated->transform(function ($game) {
             $game->image = $this->getFirstImage($game->images);
-            unset($game->images);
             return $game;
         });
 
-
-        // ======================================
-        // ALL GAMES (CATÁLOGO COMPLETO)
-        // ======================================
-        $allGames = VideoGame::where('stock', '>', 0)
-            ->orderBy('title', 'asc')
-            ->get(['id', 'title', 'price', 'discount', 'rating', 'platform', 'genre', 'developer', 'images']);
-
-        $allGames->transform(function ($game) {
-            $game->image = $this->getFirstImage($game->images);
-            unset($game->images);
-            return $game;
-        });
-
-
-        // ======================================
-        // NEW RELEASES
-        // ======================================
+        /* ============================================================
+         * NEW RELEASES
+         * ============================================================ */
         $newReleases = VideoGame::where('stock', '>', 0)
             ->orderBy('created_at', 'desc')
             ->take(4)
-            ->get(['id', 'title', 'price', 'discount', 'rating', 'genre', 'platform', 'developer', 'images']);
+            ->get();
 
         $newReleases->transform(function ($game) {
             $game->image = $this->getFirstImage($game->images);
-            unset($game->images);
+            return $game;
+        });
+        $allGames = VideoGame::where('stock', '>', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $allGames->transform(function ($game) {
+            $game->image = $this->getFirstImage($game->images);
             return $game;
         });
 
 
+        /* ============================================================
+         * RETORNAR VISTA
+         * ============================================================ */
         return view('dashboard.user', compact(
+            'featuredGames',
             'featuredGame',
             'popularGames',
             'newReleases',
@@ -109,18 +112,20 @@ class DashboardController extends Controller
     }
 
 
+    /* ============================================================
+     * HELPERS
+     * ============================================================ */
     private function normalizeJson($value)
     {
         if (is_array($value)) return $value;
 
-        // Si llega como ['img1','img2'] convertirlo a JSON válido
         if (is_string($value) && str_contains($value, "'")) {
             $value = str_replace("'", '"', $value);
         }
 
-        $decoded = json_decode($value, true);
-        return $decoded ?? [];
+        return json_decode($value, true) ?? [];
     }
+
     private function getFirstImage($images)
     {
         $arr = $this->normalizeJson($images);

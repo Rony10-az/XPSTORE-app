@@ -7,40 +7,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // ← FALTA ESTE IMPORT
 use Illuminate\Validation\Rules\Password;
-use App\Models\User;
 
 class AdminProfileController extends Controller
 {
+    /**
+     * Mostrar el perfil del administrador
+     */
     public function index()
     {
-        // MANEJO DE ERRORES AL CARGAR PERFIL
         try {
+
+            /** @var User $admin */
             $admin = Auth::user();
-            // Verificar si el usuario autenticado es un administrador
+
             if (!$admin) {
                 return redirect()->route('login')->with('error', 'Debes iniciar sesión');
             }
-            // Mostrar vista de perfil
+
             return view('admin.profile.index', compact('admin'));
-            // FIN MANEJO DE ERRORES
         } catch (\Exception $e) {
             return redirect()->route('dashboard.admin')
                 ->with('error', 'Error al cargar el perfil: ' . $e->getMessage());
         }
     }
 
+    /**
+     * Actualizar los datos básicos del administrador
+     */
     public function updateProfile(Request $request)
     {
-        // MANEJO DE ERRORES AL ACTUALIZAR PERFIL
+        /** @var User $admin */
+        $admin = Auth::user(); // ← MUEVO ESTO FUERA DEL TRY (IMPORTANTE)
+
         try {
-            $admin = Auth::user();
 
             $validated = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $admin->id],
-                'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+                'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
             ]);
 
             // Manejar la carga del avatar
@@ -59,6 +65,7 @@ class AdminProfileController extends Controller
             return redirect()->route('admin.profile.index')
                 ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
         }
+
         // ACTUALIZACIÓN DIRECTA POR QUERY BUILDER
         DB::table('users')->where('id', $admin->id)->update($validated);
 
@@ -66,35 +73,40 @@ class AdminProfileController extends Controller
             ->with('success', 'Perfil actualizado correctamente');
     }
 
+    /**
+     * Actualizar la contraseña del administrador
+     */
     public function updatePassword(Request $request)
     {
+        /** @var User $admin */
         $admin = Auth::user();
 
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password'         => ['required', 'confirmed', Password::defaults()],
         ]);
 
-        // Guardar nueva contraseña usando Query Builder
-        DB::table('users')
-            ->where('id', $admin->id)
-            ->update(['password' => Hash::make($validated['password'])]);
+        $admin->update([
+            'password' => Hash::make($validated['password']),
+        ]);
 
         return redirect()->route('admin.profile.index')
             ->with('success', 'Contraseña actualizada correctamente');
     }
 
+    /**
+     * Eliminar el avatar del administrador
+     */
     public function deleteAvatar()
     {
+        /** @var User $admin */
         $admin = Auth::user();
 
-        // Eliminar archivo si existe
         if ($admin->avatar && Storage::disk('public')->exists($admin->avatar)) {
             Storage::disk('public')->delete($admin->avatar);
         }
 
-        // Remover avatar de la BD
-        DB::table('users')->where('id', $admin->id)->update(['avatar' => null]);
+        $admin->update(['avatar' => null]);
 
         return redirect()->route('admin.profile.index')
             ->with('success', 'Avatar eliminado correctamente');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserPurchase;
+use App\Models\GameCode;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -48,22 +49,61 @@ class CheckoutController extends Controller
 
         foreach ($cart as $item) {
 
-            // Si por alguna razón no tiene ID, evitamos errores
-            if (!isset($item['id'])) {
+            // Si por alguna razón no tiene ID o tipo, evitamos errores
+            if (!isset($item['id']) || !isset($item['type'])) {
                 continue;
             }
 
-            // Generamos código de activación único
-            $activationCode = Str::upper(Str::random(16));
+            // Determinar el tipo de item y guardar la compra correspondiente
+            $type = $item['type'];
 
-            UserPurchase::create([
-                'user_id' => Auth::id(),
+            // Procesar según el tipo de item
+            for ($i = 0; $i < $item['quantity']; $i++) {
 
+                if ($type === 'video_game') {
+                    // ========== VIDEOJUEGO ==========
+                    // Buscar un código de activación disponible
+                    $gameCode = GameCode::where('video_game_id', $item['id'])
+                                        ->where('status', 'disponible')
+                                        ->whereNull('user_id')
+                                        ->first();
 
-                'video_game_id' => $item['id'],        // ← usamos el ID agregado al carrito
-                'price_paid'    => $item['final_price'],
-                'activation_code' => $activationCode,
-            ]);
+                    if ($gameCode) {
+                        $activationCode = $gameCode->code;
+                        $gameCode->markAsUsed(Auth::id());
+                    } else {
+                        $activationCode = Str::upper(Str::random(16));
+                    }
+
+                    UserPurchase::create([
+                        'user_id' => Auth::id(),
+                        'video_game_id' => $item['id'],
+                        'price_paid' => $item['final_price'],
+                        'activation_code' => $activationCode,
+                    ]);
+
+                } elseif ($type === 'market_item') {
+                    // ========== MARKETPLACE ITEM ==========
+                    UserPurchase::create([
+                        'user_id' => Auth::id(),
+                        'market_item_id' => $item['id'],
+                        'price_paid' => $item['final_price'],
+                        'activation_code' => null, // Los items del marketplace no tienen código
+                    ]);
+
+                } elseif ($type === 'streaming_code') {
+                    // ========== STREAMING CODE ==========
+                    // Obtener el código del streaming
+                    $streamingCode = \App\Models\StreamingCode::find($item['id']);
+
+                    UserPurchase::create([
+                        'user_id' => Auth::id(),
+                        'streaming_code_id' => $item['id'],
+                        'price_paid' => $item['final_price'],
+                        'activation_code' => $streamingCode ? $streamingCode->code : null,
+                    ]);
+                }
+            }
         }
     }
 
@@ -74,29 +114,32 @@ class CheckoutController extends Controller
     // ====================================
     public function confirm(Request $request)
     {
-        // Si viene de PayPal:
+        // Verificar si es un pago PayPal
         if ($request->has('paypal_order_id')) {
 
-            // Guardamos compras
+            // Guardar compras
             $this->saveUserPurchases();
 
-            // Vaciamos carrito
+            // Vaciar carrito
             session()->forget(['cart', 'cart_total']);
 
             return response()->json([
                 'success' => true,
+                'redirect' => route('dashboard.user'),
                 'message' => 'Pago completado con PayPal'
             ]);
         }
 
-        // Pago normal (tarjeta/banco)
-        $this->saveUserPurchases();
+        // Pago NORMAL ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
 
+        $this->saveUserPurchases();
         session()->forget(['cart', 'cart_total']);
 
-        return redirect()->route('dashboard.user')
+        return redirect()
+            ->route('dashboard.user')
             ->with('success', 'Pago realizado correctamente');
     }
+
 
 
 

@@ -45,11 +45,18 @@ class Review extends Model
         'title',
         'content',
         'helpful',
+        'is_blocked',
+        'warning_message',
+        'sentiment',
+        'moderated_at',
+        'moderated_by',
     ];
 
     protected $casts = [
         'rating' => 'integer',
         'helpful' => 'integer',
+        'is_blocked' => 'boolean',
+        'moderated_at' => 'datetime',
     ];
 
     /**
@@ -66,6 +73,14 @@ class Review extends Model
     public function videoGame()
     {
         return $this->belongsTo(VideoGame::class);
+    }
+
+    /**
+     * Relación: Una reseña puede ser moderada por un admin
+     */
+    public function moderator()
+    {
+        return $this->belongsTo(User::class, 'moderated_by');
     }
 
     /**

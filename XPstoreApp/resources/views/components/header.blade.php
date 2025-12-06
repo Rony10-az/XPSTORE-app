@@ -24,18 +24,24 @@
 
                 <a href="{{ route('cart.index') }}" class="cart-icon" id="cartIcon">
                     <i class="fas fa-shopping-cart"></i>
-
-                    <span class="cart-count" id="cartCount">
-                        {{ session('cart') ? collect(session('cart'))->sum('quantity') : 0 }}
-                    </span>
-
+                    @php
+                    $cart = session('cart', []);
+                    $cartItems = session('cart_items', []);
+                    $cartCount = collect($cart)->sum('quantity') + collect($cartItems)->sum('quantity');
+                    @endphp
+                    @if($cartCount > 0)
+                    <span class="cart-count" id="cartCount">{{ $cartCount }}</span>
+                    @endif
                 </a>
-
-
 
                 <div class="messages-icon" id="notificationsIcon">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-count" id="notificationCount">0</span>
+                    @php
+                    $notificationCount = 0; // Puedes cambiarlo cuando tengas notificaciones reales
+                    @endphp
+                    @if($notificationCount > 0)
+                    <span class="notification-count" id="notificationCount">{{ $notificationCount }}</span>
+                    @endif
                 </div>
 
                 <div class="user-profile">
@@ -45,12 +51,19 @@
                     @endphp
 
                     <div class="user-avatar">
+                        @if(auth()->user()->avatar)
+
                         @if($avatar)
                         <img src="{{ $isUrl ? $avatar : asset('storage/'.$avatar) }}" alt="Avatar" class="avatar-thumb">
+                        @else
+                        <img src="{{ asset('storage/' . auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                        @endif
+
                         @else
                         <i class="fas fa-user"></i>
                         @endif
                     </div>
+
 
                     <span class="user-name">
                         {{ auth()->user()->name }}
@@ -59,6 +72,14 @@
 
                     <!-- Dropdown Menu -->
                     <div class="user-dropdown">
+                        @if(auth()->user()->role === 'admin')
+                        <a href="{{ route('dashboard.admin') }}" class="dropdown-item admin-item">
+                            <i class="fas fa-crown"></i>
+                            Panel de Administrador
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        @endif
+
                         <a href="{{ route('profile.index') }}" class="dropdown-item">
                             <i class="fas fa-user"></i>
                             Mi Perfil
@@ -94,7 +115,7 @@
 <nav class="nav-bar">
     <div class="container">
         <a href="{{ route('dashboard.user') }}" class="nav-link {{ request()->routeIs('dashboard.user') ? 'active' : '' }}">Catálogo</a>
-        <a href="{{ route('market.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
+        <a href="{{ route('marketplace.index') }}" class="nav-link {{ request()->routeIs('marketplace.index') ? 'active' : '' }}">Marketplace</a>
         <a href="{{ route('streaming.index') }}" class="nav-link {{ request()->routeIs('streaming.index') ? 'active' : '' }}">Códigos</a>
         <a href="{{ route('library.index') }}" class="nav-link">Mis Pedidos</a>
 

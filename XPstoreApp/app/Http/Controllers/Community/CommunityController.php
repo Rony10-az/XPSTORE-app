@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CommunityPost;
 use App\Models\VideoGame;
+use App\Models\GameReview;
 
 class CommunityController extends Controller
 {
@@ -21,12 +22,19 @@ class CommunityController extends Controller
 
         $posts = $query->paginate(10);
 
+        // Obtener reseñas aprobadas de juegos
+        $gameReviews = GameReview::where('status', 'aprobada')
+            ->with(['user', 'videoGame'])
+            ->latest()
+            ->take(20)
+            ->get();
+
         // AGREGADO: juegos populares de la BD
         $popularGames = VideoGame::orderBy('sales_count', 'desc')
             ->take(4)
             ->get();
 
-        return view('community.index', compact('posts', 'filter', 'popularGames'));
+        return view('community.index', compact('posts', 'filter', 'popularGames', 'gameReviews'));
     }
 
     public function create(Request $request)

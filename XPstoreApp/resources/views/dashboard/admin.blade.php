@@ -137,12 +137,6 @@
     <main class="main-content">
         <div class="container">
 
-            <!-- boton de filtros vertical -->
-            <button class="filters-btn-vertical">
-                <i class="fas fa-sliders-h"></i>
-                <span class="filters-text">FILTROS</span>
-            </button>
-
             <!-- Hero Section -->
             <section class="hero-section">
                 <div class="hero-background">
@@ -192,97 +186,7 @@
                 </div>
             </section>
 
-            <!-- Mejores Ofertas Section -->
-            <section class="offers-section">
-
-                <div class="section-header">
-                    <div class="section-icon"><i class="fas fa-percent"></i></div>
-                    <div class="section-title-group">
-                        <h2 class="section-title">Mejores Ofertas 🔥</h2>
-                        <p class="section-subtitle">Aprovecha estos descuentos increíbles</p>
-                    </div>
-                </div>
-
-                <div class="games-grid">
-                    @forelse($videojuegos as $juego)
-                    <div class="game-card">
-
-                        <div class="game-image">
-                            <img src="{{ $juego->imagen ? asset('img/videojuegos/' . $juego->imagen) : 'https://via.placeholder.com/400x250' }}"
-                                alt="{{ $juego->titulo }}">
-
-                            @if($juego->descuento > 0)
-                            <div class="discount-badge">-{{ $juego->descuento }}%</div>
-                            @endif
-
-                            @if($juego->featured)
-                            <div class="featured-badge">Destacado</div>
-                            @endif
-
-                            <button class="wishlist-btn">
-                                <i class="far fa-heart"></i>
-                            </button>
-
-                            <div class="game-overlay">
-                                <button class="btn-view-details">
-                                    <i class="fas fa-eye"></i>
-                                    Ver Detalles
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="game-info">
-
-                            <h3 class="game-title">{{ $juego->titulo }}</h3>
-
-                            <p class="game-description">
-                                {{ $juego->descripcion ?? 'Descripción no disponible' }}
-                            </p>
-
-                            <div class="game-tags">
-                                @foreach($juego->generos_array ?? [] as $g)
-                                <span class="tag-small">{{ $g }}</span>
-                                @endforeach
-                            </div>
-
-                            <div class="game-footer">
-                                <div class="price-group">
-                                    @if($juego->descuento > 0)
-                                    <span class="price-old">${{ number_format($juego->precio, 2) }}</span>
-                                    <span class="price-new">${{ number_format($juego->precio_con_descuento, 2) }}</span>
-                                    @else
-                                    <span class="price-new">${{ number_format($juego->precio, 2) }}</span>
-                                    @endif
-                                </div>
-
-                                <button class="btn-add-cart">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Agregar
-                                </button>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    @empty
-
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <h3>No hay videojuegos registrados</h3>
-                        <p>Comienza agregando tu primer videojuego al catálogo</p>
-
-                        <!-- CORREGIDO -->
-                        <a href="{{ route('videojuegos.create') }}" class="btn-primary">
-                            <i class="fas fa-plus"></i>
-                            Crear Primer Juego
-                        </a>
-                    </div>
-
-                    @endforelse
-                </div>
-            </section>
+            
 
         </div>
     </main>

@@ -8,6 +8,11 @@
     </div>
     @endif
 
+    {{-- STOCK --}}
+    <div class="stock-badge {{ $game->stock > 0 ? 'in-stock' : 'out-of-stock' }}">
+        <i class="fas fa-box"></i> Stock: {{ $game->stock }}
+    </div>
+
     {{-- IMAGEN --}}
     <div class="card-image">
         <img src="{{ $game->image }}" alt="{{ $game->title }}">
@@ -62,14 +67,16 @@
         {{-- PRECIO --}}
         <div class="game-price">
             @if($game->discount > 0)
-            <span class="old-price">${{ number_format($game->price, 2) }}</span>
+            <span class="old-price">S/. {{ number_format($game->price, 2) }}</span>
             <span class="new-price">
-                ${{ number_format($game->price * (1 - $game->discount/100), 2) }}
+                S/. {{ number_format($game->price * (1 - $game->discount/100), 2) }}
             </span>
             @else
-            <span class="new-price">${{ number_format($game->price, 2) }}</span>
+            <span class="new-price">S/. {{ number_format($game->price, 2) }}</span>
             @endif
         </div>
+
+        {{-- Botón agregar --}}
 
         <div class="bottom-row">
             <form action="{{ route('cart.add', $game->id) }}" method="POST">
