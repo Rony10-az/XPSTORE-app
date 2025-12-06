@@ -43,7 +43,7 @@
 
             <p class="streaming-meta">{{ $code->duration }}</p>
 
-            <p class="streaming-price">${{ number_format($code->price, 2) }}</p>
+            <p class="streaming-price"> S/.{{ number_format($code->price, 2) }}</p>
 
             <form action="{{ route('cart.add', $code->id) }}" method="POST" class="streaming-add-form">
                 @csrf

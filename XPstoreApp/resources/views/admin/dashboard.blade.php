@@ -12,7 +12,7 @@
                 <i class="fas fa-calendar-day"></i>
             </div>
             <div class="stat-content">
-                <h3 class="stat-value">{{ $salesToday }}</h3>
+                <h3 class="stat-value counter" data-target="{{ $salesToday }}">0</h3>
                 <p class="stat-label">Ventas Hoy</p>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 <i class="fas fa-calendar-week"></i>
             </div>
             <div class="stat-content">
-                <h3 class="stat-value">{{ $salesWeek }}</h3>
+                <h3 class="stat-value counter" data-target="{{ $salesWeek }}">0</h3>
                 <p class="stat-label">Ventas esta Semana</p>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <i class="fas fa-calendar-alt"></i>
             </div>
             <div class="stat-content">
-                <h3 class="stat-value">{{ $salesMonth }}</h3>
+                <h3 class="stat-value counter" data-target="{{ $salesMonth }}">0</h3>
                 <p class="stat-label">Ventas este Mes</p>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 <i class="fas fa-ticket-alt"></i>
             </div>
             <div class="stat-content">
-                <h3 class="stat-value">{{ $totalCodesSold }}</h3>
+                <h3 class="stat-value counter" data-target="{{ $totalCodesSold }}">0</h3>
                 <p class="stat-label">Códigos Vendidos</p>
             </div>
         </div>
@@ -179,6 +179,26 @@
                     <a href="{{ route('admin.reviews.index') }}" class="view-all-link">Ver todas</a>
                 @endif
             </div>
+
+            <!-- Estadísticas de reseñas -->
+            <div class="reviews-stats">
+                <a href="{{ route('admin.reviews.index', ['status' => 'pendiente']) }}" class="stat-badge stat-pending">
+                    <i class="fas fa-clock"></i>
+                    <span class="stat-number counter" data-target="{{ $reviewsPending ?? 0 }}">0</span>
+                    <span class="stat-text">Pendientes</span>
+                </a>
+                <a href="{{ route('admin.reviews.index', ['status' => 'aprobada']) }}" class="stat-badge stat-approved">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="stat-number counter" data-target="{{ $reviewsApproved ?? 0 }}">0</span>
+                    <span class="stat-text">Aprobadas</span>
+                </a>
+                <a href="{{ route('admin.reviews.index', ['status' => 'rechazada']) }}" class="stat-badge stat-rejected">
+                    <i class="fas fa-times-circle"></i>
+                    <span class="stat-number counter" data-target="{{ $reviewsRejected ?? 0 }}">0</span>
+                    <span class="stat-text">Rechazadas</span>
+                </a>
+            </div>
+
             <div class="card-body">
                 @if($pendingReviews->count() > 0)
                     <div class="reviews-list">
@@ -659,5 +679,149 @@
     font-size: 0.95rem;
     color: #94a3b8;
 }
+
+/* Estadísticas de reseñas */
+.reviews-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stat-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.stat-badge:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.stat-badge i {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-badge .stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: #ffffff;
+}
+
+.stat-badge .stat-text {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+}
+
+.stat-badge.stat-pending {
+    border-left: 3px solid #f59e0b;
+}
+
+.stat-badge.stat-pending i {
+    color: #f59e0b;
+}
+
+.stat-badge.stat-pending:hover {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stat-badge.stat-approved {
+    border-left: 3px solid #10b981;
+}
+
+.stat-badge.stat-approved i {
+    color: #10b981;
+}
+
+.stat-badge.stat-approved:hover {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.stat-badge.stat-rejected {
+    border-left: 3px solid #ef4444;
+}
+
+.stat-badge.stat-rejected i {
+    color: #ef4444;
+}
+
+.stat-badge.stat-rejected:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 768px) {
+    .reviews-stats {
+        grid-template-columns: 1fr;
+    }
+}
 </style>
+
+<script>
+// ========================================
+// CONTADOR ANIMADO PARA ESTADÍSTICAS
+// ========================================
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; // Velocidad de la animación (más bajo = más rápido)
+
+    const animateCounter = (counter) => {
+        const target = +counter.getAttribute('data-target');
+        const increment = target / speed;
+        let count = 0;
+
+        const updateCount = () => {
+            count += increment;
+
+            if (count < target) {
+                // Formatear sin comas para números pequeños
+                counter.textContent = Math.ceil(count);
+                requestAnimationFrame(updateCount);
+            } else {
+                counter.textContent = target;
+            }
+        };
+
+        updateCount();
+    };
+
+    // Usar Intersection Observer para animar cuando sea visible
+    const observerOptions = {
+        threshold: 0.2,
+        rootMargin: '0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target); // Solo animar una vez
+            }
+        });
+    }, observerOptions);
+
+    counters.forEach(counter => {
+        observer.observe(counter);
+    });
+});
+</script>
+
 @endsection

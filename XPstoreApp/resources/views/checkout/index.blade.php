@@ -70,6 +70,18 @@
                 <h4>Pagar con PayPal</h4>
                 <p>Serás redirigido a PayPal para completar tu pago.</p>
 
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 15px; margin: 15px 0; border-radius: 4px;">
+                    <p style="margin: 0; color: #856404; font-weight: bold; font-size: 0.95em;">
+                        <i class="fas fa-exclamation-triangle"></i> Importante
+                    </p>
+                    <p style="margin: 8px 0 0 0; color: #856404; font-size: 0.9em; line-height: 1.4;">
+                        PayPal solo acepta pagos en dólares (USD). Tu pago de <strong>S/. {{ number_format($total, 2) }}</strong> será convertido a <strong>${{ number_format($total / 3.8, 2) }} USD</strong>
+                    </p>
+                    <p style="margin: 5px 0 0 0; color: #856404; font-size: 0.85em;">
+                        Tipo de cambio aplicado: S/. 3.80 por USD
+                    </p>
+                </div>
+
                 <div id="paypal-button-container"></div>
             </div>
 

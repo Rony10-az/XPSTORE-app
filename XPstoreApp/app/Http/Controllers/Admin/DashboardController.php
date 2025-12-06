@@ -74,6 +74,11 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get();
 
+            // Contadores de reseñas por estado
+            $reviewsApproved = \App\Models\GameReview::where('status', 'aprobada')->count();
+            $reviewsRejected = \App\Models\GameReview::where('status', 'rechazada')->count();
+            $reviewsPending = \App\Models\GameReview::where('status', 'pendiente')->count();
+
             return view('admin.dashboard', compact(
                 'salesToday',
                 'salesWeek',
@@ -82,7 +87,10 @@ class DashboardController extends Controller
                 'topProducts',
                 'lowStock',
                 'newUsers',
-                'pendingReviews'
+                'pendingReviews',
+                'reviewsApproved',
+                'reviewsRejected',
+                'reviewsPending'
             ));
         } catch (\Exception $e) {
             // Si hay algún error, redirigir con mensaje

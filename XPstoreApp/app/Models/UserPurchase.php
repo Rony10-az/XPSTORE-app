@@ -9,6 +9,8 @@ class UserPurchase extends Model
     protected $fillable = [
         'user_id',
         'video_game_id',
+        'market_item_id',
+        'streaming_code_id',
         'price_paid',
         'activation_code'
     ];

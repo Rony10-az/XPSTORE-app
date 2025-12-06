@@ -11,32 +11,53 @@ class LibraryController extends Controller
 {
     public function index()
     {
+        // Obtener todas las compras del usuario (videojuegos, marketplace, streaming)
         $purchases = UserPurchase::where('user_id', Auth::id())
-            ->whereNotNull('video_game_id')
-            ->with('videoGame')
+            ->with(['videoGame', 'marketItem', 'streamingCode'])
             ->latest()
-            ->get()
-            ->filter(function($purchase) {
-                // Solo mostrar compras donde el videojuego aún existe
-                return $purchase->videoGame !== null;
-            });
+            ->get();
 
-        // Agrupar compras por video_game_id
-        $libraryItems = $purchases->groupBy('video_game_id')->map(function($group) {
-            // Retornar el primer item del grupo con todos los códigos
+        // Obtener IDs de videojuegos que el usuario ha comentado
+        $reviewedGameIds = \App\Models\GameReview::where('user_id', Auth::id())
+            ->pluck('video_game_id')
+            ->toArray();
+
+        // Agrupar por tipo de item
+        $libraryItems = collect();
+
+        // Videojuegos: agrupar por video_game_id para mostrar múltiples códigos
+        $gamesPurchases = $purchases->filter(fn($p) => $p->video_game_id !== null);
+        $groupedGames = $gamesPurchases->groupBy('video_game_id')->map(function($group) {
             $firstPurchase = $group->first();
-            $firstPurchase->activation_codes = $group->pluck('activation_code')->toArray();
+            $firstPurchase->activation_codes = $group->pluck('activation_code')->filter()->toArray();
             $firstPurchase->purchase_count = $group->count();
             $firstPurchase->purchase_dates = $group->pluck('created_at')->toArray();
             return $firstPurchase;
-        })->values();
+        });
 
-        return view('library.index', compact('libraryItems'));
-    }
+        // Marketplace items: agrupar por market_item_id
+        $marketPurchases = $purchases->filter(fn($p) => $p->market_item_id !== null);
+        $groupedMarket = $marketPurchases->groupBy('market_item_id')->map(function($group) {
+            $firstPurchase = $group->first();
+            $firstPurchase->activation_codes = $group->pluck('activation_code')->filter()->toArray();
+            $firstPurchase->purchase_count = $group->count();
+            $firstPurchase->purchase_dates = $group->pluck('created_at')->toArray();
+            return $firstPurchase;
+        });
 
+        // Streaming codes: agrupar por streaming_code_id
+        $streamingPurchases = $purchases->filter(fn($p) => $p->streaming_code_id !== null);
+        $groupedStreaming = $streamingPurchases->groupBy('streaming_code_id')->map(function($group) {
+            $firstPurchase = $group->first();
+            $firstPurchase->activation_codes = $group->pluck('activation_code')->filter()->toArray();
+            $firstPurchase->purchase_count = $group->count();
+            $firstPurchase->purchase_dates = $group->pluck('created_at')->toArray();
+            return $firstPurchase;
+        });
 
-    public function videoGame()
-    {
-        return $this->belongsTo(VideoGame::class, 'video_game_id');
+        // Combinar todos los items en una sola colección
+        $libraryItems = $groupedGames->merge($groupedMarket)->merge($groupedStreaming)->values();
+
+        return view('library.index', compact('libraryItems', 'reviewedGameIds'));
     }
 }

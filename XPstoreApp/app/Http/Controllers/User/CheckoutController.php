@@ -49,34 +49,61 @@ class CheckoutController extends Controller
 
         foreach ($cart as $item) {
 
-            // Si por alguna razón no tiene ID, evitamos errores
-            if (!isset($item['id'])) {
+            // Si por alguna razón no tiene ID o tipo, evitamos errores
+            if (!isset($item['id']) || !isset($item['type'])) {
                 continue;
             }
 
-            // Buscar un código de activación disponible para este videojuego
-            $gameCode = GameCode::where('video_game_id', $item['id'])
-                                ->where('status', 'disponible')
-                                ->whereNull('user_id')
-                                ->first();
+            // Determinar el tipo de item y guardar la compra correspondiente
+            $type = $item['type'];
 
-            // Si encontramos un código disponible, lo usamos
-            if ($gameCode) {
-                $activationCode = $gameCode->code;
+            // Procesar según el tipo de item
+            for ($i = 0; $i < $item['quantity']; $i++) {
 
-                // Marcar el código como usado y asignarlo al usuario
-                $gameCode->markAsUsed(Auth::id());
-            } else {
-                // Si no hay códigos disponibles, generamos uno automático como fallback
-                $activationCode = Str::upper(Str::random(16));
+                if ($type === 'video_game') {
+                    // ========== VIDEOJUEGO ==========
+                    // Buscar un código de activación disponible
+                    $gameCode = GameCode::where('video_game_id', $item['id'])
+                                        ->where('status', 'disponible')
+                                        ->whereNull('user_id')
+                                        ->first();
+
+                    if ($gameCode) {
+                        $activationCode = $gameCode->code;
+                        $gameCode->markAsUsed(Auth::id());
+                    } else {
+                        $activationCode = Str::upper(Str::random(16));
+                    }
+
+                    UserPurchase::create([
+                        'user_id' => Auth::id(),
+                        'video_game_id' => $item['id'],
+                        'price_paid' => $item['final_price'],
+                        'activation_code' => $activationCode,
+                    ]);
+
+                } elseif ($type === 'market_item') {
+                    // ========== MARKETPLACE ITEM ==========
+                    UserPurchase::create([
+                        'user_id' => Auth::id(),
+                        'market_item_id' => $item['id'],
+                        'price_paid' => $item['final_price'],
+                        'activation_code' => null, // Los items del marketplace no tienen código
+                    ]);
+
+                } elseif ($type === 'streaming_code') {
+                    // ========== STREAMING CODE ==========
+                    // Obtener el código del streaming
+                    $streamingCode = \App\Models\StreamingCode::find($item['id']);
+
+                    UserPurchase::create([
+                        'user_id' => Auth::id(),
+                        'streaming_code_id' => $item['id'],
+                        'price_paid' => $item['final_price'],
+                        'activation_code' => $streamingCode ? $streamingCode->code : null,
+                    ]);
+                }
             }
-
-            UserPurchase::create([
-                'user_id' => Auth::id(),
-                'video_game_id' => $item['id'],        // ← usamos el ID agregado al carrito
-                'price_paid'    => $item['final_price'],
-                'activation_code' => $activationCode,
-            ]);
         }
     }
 

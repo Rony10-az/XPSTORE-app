@@ -206,12 +206,12 @@
             </div>
 
             <div class="hero-price">
-                <span class="price">$59.99</span>
+                <span class="price">S/.59.99</span>
             </div>
 
             <div class="hero-actions">
 
-                <!-- BOTÓN VER DETALLES (DINÁMICO) -->
+                <!-- BOTÓN VER DETALLES (DINÁMICO) -->  
                 <a id="hero-details-btn" href="#" class="btn-primary">
                     Ver Detalles
                 </a>
@@ -528,7 +528,7 @@
                 description: 'Embárcate en una aventura épica en un mundo lleno de mitología nórdica.',
                 image: 'https://wallpapers.com/images/high/kratos-in-cave-god-of-war-ragnarok-hmaawiodgr64ldzm.webp',
                 tags: ['Aventura', 'Acción', 'Exploración'],
-                price: '$59.99'
+                price: 'S/.59.99'
             },
             {
                 id: 5,
@@ -536,7 +536,7 @@
                 description: 'Explora Los Santos, una ciudad llena de acción y crimen.',
                 image: 'https://wallpapers.com/images/high/4k-gta-5-franklin-looking-at-city-at-night-bq6nlp808hn0xoi5.webp',
                 tags: ['Acción', 'Aventura', 'Mundo Abierto'],
-                price: '$19.99'
+                price: 'S/.19.99'
             },
             {
                 id: 3,
@@ -544,7 +544,7 @@
                 description: 'Balancea por Nueva York y enfréntate a nuevos villanos.',
                 image: 'https://wallpapers.com/images/high/spider-man-ps4-4k-i5ssgd6fq17lrz7i.webp',
                 tags: ['Acción', 'Aventura', 'Superhéroes'],
-                price: '$59.49'
+                price: 'S/.59.49'
             },
             {
                 id: 4,
@@ -552,7 +552,7 @@
                 description: 'Explora un mundo dominado por criaturas mecánicas.',
                 image: 'https://wallpapers.com/images/high/horizon-zero-dawn-nighttime-screenshot-yft9z5fm7kbaymmg.webp',
                 tags: ['Aventura', 'Acción', 'Mundo Abierto'],
-                price: '$39.99'
+                price: 'S/.39.99'
             }
         ];
 

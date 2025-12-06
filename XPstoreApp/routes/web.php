@@ -117,11 +117,16 @@ Route::middleware('auth')->group(function () {
         Route::post('gamecodes/{gamecode}/mark-used', [GameCodeController::class, 'markAsUsed'])->name('gamecodes.markUsed');
         Route::post('gamecodes/{gamecode}/mark-expired', [GameCodeController::class, 'markAsExpired'])->name('gamecodes.markExpired');
         Route::post('gamecodes/destroy-batch', [GameCodeController::class, 'destroyBatch'])->name('gamecodes.destroyBatch');
-        Route::resource('reviews', ReviewController::class)->only(['index', 'destroy']);
+        Route::resource('reviews', ReviewController::class)->only(['index', 'show', 'destroy']);
+        Route::get('reviews/user/{user}', [ReviewController::class, 'showUserReviews'])->name('reviews.user.show');
         Route::get('reviews/verified-buyers', [ReviewController::class, 'verifiedBuyers'])->name('reviews.verified');
         Route::post('reviews/{review}/sentiment', [ReviewController::class, 'updateSentiment'])->name('reviews.sentiment');
         Route::post('reviews/{review}/warning', [ReviewController::class, 'addWarning'])->name('reviews.warning');
         Route::post('reviews/{review}/toggle-block', [ReviewController::class, 'toggleBlock'])->name('reviews.toggleBlock');
+        Route::post('reviews/{review}/approve', [ReviewController::class, 'approve'])->name('reviews.approve');
+        Route::post('reviews/{review}/pending', [ReviewController::class, 'pending'])->name('reviews.pending');
+        Route::post('reviews/{review}/reject', [ReviewController::class, 'reject'])->name('reviews.reject');
+        Route::post('reviews/{review}/hide', [ReviewController::class, 'hide'])->name('reviews.hide');
         Route::resource('items', ItemController::class);
         Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings');
         Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
@@ -134,6 +139,16 @@ Route::middleware('auth')->group(function () {
     // BIBLIOTECA DE JUEGOS (MIS JUEGOS)
     Route::get('/mis-juegos', [LibraryController::class, 'index'])
         ->name('library.index');
+
+    // RESEÑAS DE JUEGOS COMPRADOS
+    Route::get('/mis-juegos/{game}/review', [\App\Http\Controllers\User\GameReviewController::class, 'show'])
+        ->name('library.game.review');
+    Route::post('/mis-juegos/{game}/review', [\App\Http\Controllers\User\GameReviewController::class, 'store'])
+        ->name('library.game.review.store');
+    Route::put('/review/{review}', [\App\Http\Controllers\User\GameReviewController::class, 'update'])
+        ->name('library.game.review.update');
+    Route::delete('/review/{review}', [\App\Http\Controllers\User\GameReviewController::class, 'destroy'])
+        ->name('library.game.review.destroy');
 
     // MARKETPLACE
     Route::get('/marketplace', [MarketplaceController::class, 'index'])

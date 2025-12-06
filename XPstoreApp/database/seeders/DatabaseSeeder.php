@@ -19,21 +19,25 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Crear usuarios
-        $admin = User::create([
-            'name' => 'Admin XP',
-            'email' => 'admin@xpstore.com',
-            'password' => bcrypt('admin123'),
-            'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
-            'role' => 'admin',
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@xpstore.com'],
+            [
+                'name' => 'Admin XP',
+                'password' => bcrypt('admin123'),
+                'avatar' => 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+                'role' => 'admin',
+            ]
+        );
 
-        $user = User::create([
-            'name' => 'Juan Pérez',
-            'email' => 'juan.perez@example.com',
-            'password' => bcrypt('usuario123'),
-            'avatar' => 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
-            'role' => 'user',
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'juan.perez@example.com'],
+            [
+                'name' => 'Juan Pérez',
+                'password' => bcrypt('usuario123'),
+                'avatar' => 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop',
+                'role' => 'user',
+            ]
+        );
 
         // ==========================
         //  VIDEOJUEGOS REALES

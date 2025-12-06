@@ -40,7 +40,7 @@
 
                 {{-- PRECIO --}}
                 <p class="market-price">
-                    ${{ number_format($item->price, 2) }}
+                    S/.{{ number_format($item->price, 2) }}
                 </p>
             </a>
 

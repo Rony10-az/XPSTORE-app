@@ -100,6 +100,12 @@ class VideoGame extends Model
     {
         return $this->hasMany(GameCode::class);
     }
+
+    // Relación con las reseñas
+    public function reviews()
+    {
+        return $this->hasMany(GameReview::class);
+    }
     // App\Models\VideoGame.php
 
     public function getPriceAfterDiscountAttribute()

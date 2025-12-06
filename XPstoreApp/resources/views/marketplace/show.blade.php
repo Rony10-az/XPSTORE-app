@@ -120,7 +120,7 @@
         </p>
 
         <p class="item-price">
-            ${{ number_format($item->price, 2) }}
+            S/.{{ number_format($item->price, 2) }}
         </p>
 
         <p class="item-description">{{ $item->description }}</p>

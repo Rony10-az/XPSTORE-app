@@ -92,4 +92,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Wishlist::class);
     }
+
+    // Relación con las reseñas de juegos
+    public function gameReviews()
+    {
+        return $this->hasMany(GameReview::class);
+    }
 }

@@ -15,22 +15,20 @@
 
     <div class="community-stats">
         <div class="stat">
-            <span class="num">1,234</span>
+            <span class="num counter" data-target="1234">0</span>
             <span>Usuarios activos</span>
         </div>
 
         <div class="stat">
-            <span class="num">5,678</span>
+            <span class="num counter" data-target="5678">0</span>
             <span>Reseñas</span>
         </div>
 
         <div class="stat">
-            <span class="num">820</span>
+            <span class="num counter" data-target="820">0</span>
             <span>Posts/mes</span>
         </div>
     </div>
-
-    <a href="{{ route('community.create') }}" class="post-btn">Crear Publicación</a>
 </div>
 
 
@@ -43,30 +41,59 @@
         {{-- TABS DE FILTROS --}}
         <div class="community-tabs">
             <a href="{{ route('community.index') }}"
-                class="tab {{ !$filter ? 'active' : '' }}">Todo</a>
-
-            <a href="{{ route('community.index', ['type' => 'review']) }}"
-                class="tab {{ $filter === 'review' ? 'active' : '' }}">Reseñas</a>
-
-            <a href="{{ route('community.index', ['type' => 'screenshot']) }}"
-                class="tab {{ $filter === 'screenshot' ? 'active' : '' }}">Capturas</a>
-
-            <a href="{{ route('community.index', ['type' => 'help']) }}"
-                class="tab {{ $filter === 'help' ? 'active' : '' }}">Ayuda</a>
+                class="tab active">Reseñas de la Comunidad</a>
         </div>
 
-        {{-- FEED --}}
+        {{-- RESEÑAS DE JUEGOS --}}
         <div class="feed-container">
-            @forelse($posts as $post)
-            @include('community._post-card', ['post' => $post])
-            @empty
-            <p class="empty-message">No hay publicaciones todavía.</p>
-            @endforelse
-        </div>
+            @forelse($gameReviews as $review)
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-user-info">
+                        <img src="{{ $review->user->avatar ? asset('storage/' . $review->user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($review->user->name) }}"
+                             alt="{{ $review->user->name }}"
+                             class="user-avatar">
+                        <div>
+                            <h4 class="user-name">{{ $review->user->name }}</h4>
+                            <p class="review-meta">
+                                <span class="game-title">{{ $review->videoGame->title ?? 'Juego no disponible' }}</span>
+                                <span class="review-date">• {{ $review->created_at->diffForHumans() }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    @if($review->is_verified_purchase)
+                    <span class="verified-badge">
+                        <i class="fas fa-check-circle"></i> Compra Verificada
+                    </span>
+                    @endif
+                </div>
 
-        {{-- PAGINACIÓN --}}
-        <div class="pagination-box">
-            {{ $posts->links() }}
+                <div class="review-rating-stars">
+                    @for($i = 1; $i <= 5; $i++)
+                        @if($i <= $review->rating)
+                            <i class="fas fa-star"></i>
+                        @else
+                            <i class="far fa-star"></i>
+                        @endif
+                    @endfor
+                    <span class="rating-text">{{ $review->rating }}/5</span>
+                </div>
+
+                <div class="review-comment">
+                    {{ $review->comment }}
+                </div>
+
+                @if($review->videoGame && $review->videoGame->images)
+                <div class="review-game-image">
+                    <img src="{{ is_array($review->videoGame->images) ? $review->videoGame->images[0] : json_decode($review->videoGame->images)[0] }}"
+                         alt="{{ $review->videoGame->title }}"
+                         style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-top: 15px;">
+                </div>
+                @endif
+            </div>
+            @empty
+            <p class="empty-message">No hay reseñas de juegos todavía.</p>
+            @endforelse
         </div>
 
     </div>
@@ -116,3 +143,54 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+// ========================================
+// CONTADOR ANIMADO PARA ESTADÍSTICAS
+// ========================================
+document.addEventListener('DOMContentLoaded', function() {
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200; // Velocidad de la animación (más bajo = más rápido)
+
+    const animateCounter = (counter) => {
+        const target = +counter.getAttribute('data-target');
+        const increment = target / speed;
+        let count = 0;
+
+        const updateCount = () => {
+            count += increment;
+
+            if (count < target) {
+                // Formatear con comas si es mayor a 999
+                counter.textContent = Math.ceil(count).toLocaleString('en-US');
+                requestAnimationFrame(updateCount);
+            } else {
+                counter.textContent = target.toLocaleString('en-US');
+            }
+        };
+
+        updateCount();
+    };
+
+    // Usar Intersection Observer para animar cuando sea visible
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target); // Solo animar una vez
+            }
+        });
+    }, observerOptions);
+
+    counters.forEach(counter => {
+        observer.observe(counter);
+    });
+});
+</script>
+@endpush
