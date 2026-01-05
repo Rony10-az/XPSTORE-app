@@ -150,6 +150,77 @@
      JAVASCRIPT
 =========================== --}}
 <script>
+    // Carga perezosa y robusta del SDK de PayPal
+    const paypalSdkUrl = "https://www.paypal.com/sdk/js?client-id=AYN_0PTYKWrmNbdDgJccslNOkRW0Nj3dYKpcIe6zFzhpGIjZUP-MehfJHLERsVWA2-tGWIWYggw-CE9t&currency=USD";
+    let paypalSdkLoading = null;
+
+    function ensurePaypalSdk() {
+        if (window.paypal) return Promise.resolve();
+        if (paypalSdkLoading) return paypalSdkLoading;
+
+        paypalSdkLoading = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = paypalSdkUrl;
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error('No se pudo cargar el SDK de PayPal (verifica la conexión).'));
+            document.head.appendChild(script);
+        });
+
+        return paypalSdkLoading;
+    }
+
+    function loadPayPalButton() {
+        ensurePaypalSdk()
+            .then(() => {
+                document.getElementById("paypal-button-container").innerHTML = "";
+
+                paypal.Buttons({
+                    style: {
+                        color: 'blue',
+                        shape: 'pill',
+                        label: 'pay'
+                    },
+
+                    createOrder: function(data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: "{{ number_format($total / 3.8, 2, '.', '') }}"
+                                }
+                            }]
+                        });
+                    },
+
+                    onApprove: function(data, actions) {
+                        return actions.order.capture().then(function(details) {
+
+                            fetch("{{ route('checkout.confirm') }}", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                                    },
+                                    body: JSON.stringify({
+                                        paypal_order_id: data.orderID,
+                                        payer: details.payer
+                                    })
+                                })
+                                .then(res => res.json())
+                                .then(() => {
+                                    window.location.href = "{{ route('checkout.success') }}";
+                                });
+                        });
+                    }
+
+                }).render("#paypal-button-container");
+            })
+            .catch((err) => {
+                console.error(err);
+                alert('No se pudo cargar PayPal. Verifica tu conexión e intenta de nuevo.');
+            });
+    }
+
+    // Listeners de selección de método de pago
     document.querySelectorAll('input[name="payment_method"]').forEach((elem) => {
         elem.addEventListener("change", function() {
 
@@ -169,59 +240,8 @@
         });
     });
 
+    // Mostrar por defecto tarjeta
     document.getElementById("credit_card-form").style.display = "block";
-</script>
-
-
-{{-- SDK PAYPAL --}}
-<script src="https://www.paypal.com/sdk/js?client-id=AYN_0PTYKWrmNbdDgJccslNOkRW0Nj3dYKpcIe6zFzhpGIjZUP-MehfJHLERsVWA2-tGWIWYggw-CE9t&currency=USD"></script>
-
-<script>
-    function loadPayPalButton() {
-
-        document.getElementById("paypal-button-container").innerHTML = "";
-
-        paypal.Buttons({
-            style: {
-                color: 'blue',
-                shape: 'pill',
-                label: 'pay'
-            },
-
-            createOrder: function(data, actions) {
-                return actions.order.create({
-                    purchase_units: [{
-                        amount: {
-                            value: "{{ number_format($total / 3.8, 2, '.', '') }}"
-                        }
-                    }]
-                });
-            },
-
-            onApprove: function(data, actions) {
-                return actions.order.capture().then(function(details) {
-
-                    fetch("{{ route('checkout.confirm') }}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                            },
-                            body: JSON.stringify({
-                                paypal_order_id: data.orderID,
-                                payer: details.payer
-                            })
-                        })
-                        .then(res => res.json())
-                        .then(() => {
-                            window.location.href = "{{ route('checkout.success') }}";
-
-                        });
-                });
-            }
-
-        }).render("#paypal-button-container");
-    }
 </script>
 
 

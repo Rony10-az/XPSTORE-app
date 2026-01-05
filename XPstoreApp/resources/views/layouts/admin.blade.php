@@ -43,7 +43,7 @@
 
                 <div class="nav-divider"></div>
 
-                <a href="{{ route('videojuegos.index') }}" class="nav-item {{ request()->routeIs('videojuegos.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.videojuegos.index') }}" class="nav-item {{ request()->routeIs('admin.videojuegos.*') ? 'active' : '' }}">
                     <div class="nav-item-content">
                         <i class="fas fa-gamepad"></i>
                         <div class="nav-text">
@@ -111,12 +111,12 @@
                     <div class="admin-profile-trigger">
                         <div class="admin-avatar">
                             @php
-                                $avatar = auth()->user()->avatar ?? null;
-                                if ($avatar) {
-                                    $avatarUrl = \Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://', 'data:image'])
-                                        ? $avatar
-                                        : asset('storage/' . ltrim($avatar, '/'));
-                                }
+                            $avatar = auth()->user()->avatar ?? null;
+                            if ($avatar) {
+                            $avatarUrl = \Illuminate\Support\Str::startsWith($avatar, ['http://', 'https://', 'data:image'])
+                            ? $avatar
+                            : asset('storage/' . ltrim($avatar, '/'));
+                            }
                             @endphp
                             @if($avatar ?? false)
                             <img src="{{ $avatarUrl }}" alt="{{ auth()->user()->name }}">

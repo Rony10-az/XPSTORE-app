@@ -74,7 +74,7 @@ class DashboardController extends Controller
                 ->limit(5)
                 ->get();
 
-            // Contadores de reseñas por estado
+            // Contadores de reseñas por estado (usando GameReview que tiene la columna status)
             $reviewsApproved = \App\Models\GameReview::where('status', 'aprobada')->count();
             $reviewsRejected = \App\Models\GameReview::where('status', 'rechazada')->count();
             $reviewsPending = \App\Models\GameReview::where('status', 'pendiente')->count();
@@ -93,8 +93,8 @@ class DashboardController extends Controller
                 'reviewsPending'
             ));
         } catch (\Exception $e) {
-            // Si hay algún error, redirigir con mensaje
-            return redirect()->back()->with('error', 'Error al cargar el dashboard: ' . $e->getMessage());
+            // Si hay algún error, redirigir al dashboard de usuario con mensaje de error
+            return redirect()->route('dashboard.user')->with('error', 'Error al cargar el dashboard de administrador: ' . $e->getMessage());
         }
     }
 }

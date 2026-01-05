@@ -46,12 +46,6 @@ Route::get('/', function () {
 // TIENDA (pública)
 // =========================
 
-Route::get('/juegos', [GameStoreController::class, 'index'])
-    ->name('store.index');
-
-Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])
-    ->name('game.show');
-
 Route::get('/juegos', [GameStoreController::class, 'index'])->name('store.index');
 Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])->name('game.show');
 
@@ -77,33 +71,12 @@ Route::middleware('auth')->group(function () {
             : redirect()->route('dashboard.user');
     })->name('dashboard');
 
-    // ADMIN
-    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
-
-    // CRUD de Videojuegos (solo admins)
-    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
-
-
-    // ADMIN
-    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
-
-    // CRUD de Videojuegos (solo admins)
-    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
-
-    // Rutas de usuarios (solo admin)
-    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        // Monté este recurso para listar, ver, editar y eliminar usuarios.
-        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
+    // Rutas de administración (solo admins)
+    Route::middleware('admin')->group(function () {
+        // ADMIN Dashboard
+        Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
     });
 
-    // Rutas de administración (solo admins)
-    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        // CRUD de Videojuegos
-        Route::resource('videojuegos', VideoGameController::class);
-    });
-
-    /* dados de prueba para ver si se sube bien el cambio */
-    // Rutas de administración (solo admins)
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         // Perfil del admin
         Route::get('profile', [AdminProfileController::class, 'index'])->name('profile.index');
@@ -200,25 +173,18 @@ Route::middleware('auth')->group(function () {
     // =========================
     // CARRITO DE COMPRAS 
     // =========================
-
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index'); // Ver carrito
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add'); // Agregar al carrito
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove'); // Eliminar del carrito
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/add-item/{id}', [CartController::class, 'addItem'])->name('cart.add.item');
+    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
 
     // =========================
     // CHECKOUT
     // =========================
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
-    Route::get('/checkout/success', [CheckoutController::class, 'success'])
-        ->name('checkout.success');
-
-    // Carrito
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/cart/add-item/{id}', [CartController::class, 'addItem'])->name('cart.add.item');
-    Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
 
     // STORE ACTIONS
     Route::post('/carrito/{videojuego}', [GameStoreController::class, 'addToCart'])->name('store.cart.add');

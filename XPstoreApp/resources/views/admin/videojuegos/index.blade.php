@@ -12,7 +12,7 @@
             <h1><i class="fas fa-gamepad"></i> Catálogo de Videojuegos</h1>
             <p class="admin-subtitle">Administra el catálogo completo de XP Store</p>
         </div>
-        <a href="{{ route('videojuegos.create') }}" class="btn-primary">
+        <a href="{{ route('admin.videojuegos.create') }}" class="btn-primary">
             <i class="fas fa-plus"></i> Nuevo Videojuego
         </a>
     </div>
@@ -69,7 +69,7 @@
     </div>
 
     {{-- Herramientas de Búsqueda y Filtros --}}
-    <form class="crud-toolbar" method="GET" action="{{ route('videojuegos.index') }}">
+    <form class="crud-toolbar" method="GET" action="{{ route('admin.videojuegos.index') }}">
         <div class="toolbar-left">
             <div class="search-box">
                 <i class="fas fa-search"></i>
@@ -117,7 +117,7 @@
             </button>
 
             @if(request()->hasAny(['search', 'platform', 'genre', 'status', 'sort']))
-            <a href="{{ route('videojuegos.index') }}" class="btn-secondary">
+            <a href="{{ route('admin.videojuegos.index') }}" class="btn-secondary">
                 <i class="fas fa-times"></i> Limpiar
             </a>
             @endif
@@ -149,9 +149,9 @@
                             @php
                             $img = $juego->images[0] ?? null;
                             if ($img) {
-                                $src = Str::startsWith($img, ['http://', 'https://', 'data:image'])
-                                    ? $img
-                                    : asset('storage/' . ltrim($img, '/'));
+                            $src = Str::startsWith($img, ['http://', 'https://', 'data:image'])
+                            ? $img
+                            : asset('storage/' . ltrim($img, '/'));
                             }
                             @endphp
 
@@ -234,13 +234,13 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('videojuegos.show', $juego->id) }}" class="btn-action btn-view" title="Ver">
+                            <a href="{{ route('admin.videojuegos.show', $juego->id) }}" class="btn-action btn-view" title="Ver">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('videojuegos.edit', $juego->id) }}" class="btn-action btn-edit" title="Editar">
+                            <a href="{{ route('admin.videojuegos.edit', $juego->id) }}" class="btn-action btn-edit" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('videojuegos.destroy', $juego->id) }}" method="POST" class="delete-form" onsubmit="return confirm('¿Estás seguro de eliminar este videojuego? Esta acción no se puede deshacer.');">
+                            <form action="{{ route('admin.videojuegos.destroy', $juego->id) }}" method="POST" class="delete-form" onsubmit="return confirm('¿Estás seguro de eliminar este videojuego? Esta acción no se puede deshacer.');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn-action btn-delete" title="Eliminar">
