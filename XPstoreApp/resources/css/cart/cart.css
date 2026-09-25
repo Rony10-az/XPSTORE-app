@@ -40,8 +40,11 @@ body {
 
 /* CONTENIDO */
 .cart-content {
-    display: flex;
-    gap: 40px;
+    display: grid;
+    grid-template-columns: 1.7fr 0.8fr;
+
+    gap: 30px;
+    align-items: start;
 }
 
 /* CARD PRODUCTO */
@@ -61,7 +64,8 @@ body {
 }
 
 .image-box img {
-    width: 180px;
+    width: 250px;
+    height: auto;
     border-radius: 14px;
 }
 
@@ -99,10 +103,68 @@ body {
     border-radius: 12px;
 }
 
-.price-box {
+/* QUANTITY CONTROLS */
+.quantity-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+.quantity-box label {
+    font-size: 14px;
+    color: #cbd5e1;
+    font-weight: 500;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(139, 92, 246, 0.1);
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.qty-btn {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: #a78bfa;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.qty-btn:hover:not(:disabled) {
+    background: rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.6);
+    color: #c4b5fd;
+}
+
+.qty-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.quantity-display {
+    font-size: 18px;
+    font-weight: 700;
+    color: #a78bfa;
+    min-width: 30px;
+    text-align: center;
+}
+
+.price-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
 }
 
 .old-price {
@@ -113,6 +175,12 @@ body {
 .new-price {
     font-size: 26px;
     color: #4dffae;
+}
+
+.price-subtotal {
+    font-size: 14px;
+    color: #8b92a7;
+    font-weight: 600;
 }
 
 /* BOTÓN ELIMINAR */
@@ -293,4 +361,242 @@ body {
         opacity: 0;
         transform: translateX(40px);
     }
+}
+
+.cart-page {
+    animation: cartFadeIn 0.6s ease forwards;
+    opacity: 0;
+}
+
+@keyframes cartFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cart-card {
+    animation: cartCardIn 0.5s ease both;
+}
+
+.cart-card:nth-child(1) {
+    animation-delay: 0.10s;
+}
+
+.cart-card:nth-child(2) {
+    animation-delay: 0.20s;
+}
+
+.cart-card:nth-child(3) {
+    animation-delay: 0.30s;
+}
+
+@keyframes cartCardIn {
+    from {
+        opacity: 0;
+        transform: translateX(-25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.cart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0 25px rgba(120, 60, 255, 0.28);
+    transition: all 0.25s ease;
+}
+
+.pay-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.pay-btn:hover {
+    transform: scale(1.04);
+}
+
+.pay-btn:active {
+    transform: scale(0.97);
+}
+
+.pay-btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 120%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.16);
+    transform: skewX(-20deg);
+}
+
+.pay-btn:hover::after {
+    animation: payShine 0.6s ease;
+}
+
+@keyframes payShine {
+    from {
+        left: -120%;
+    }
+
+    to {
+        left: 120%;
+    }
+}
+
+.cart-card.removing {
+    animation: removeCard 0.35s ease forwards;
+}
+
+@keyframes removeCard {
+    from {
+        opacity: 1;
+        height: auto;
+        transform: scale(1);
+    }
+
+    to {
+        opacity: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+        transform: scale(0.95);
+    }
+}
+
+.empty-cart {
+    width: 100%;
+    padding: 80px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.empty-message-box {
+    text-align: center;
+    max-width: 420px;
+}
+
+.empty-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.empty-sub {
+    opacity: 0.7;
+    margin-bottom: 25px;
+}
+
+.empty-cart .pay-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 22px;
+    background: linear-gradient(90deg, #673fff, #9d47ff);
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.empty-cart .pay-btn:hover {
+    transform: scale(1.05);
+}
+
+/* Cuando el carrito está vacío → una sola columna */
+.cart-content.empty {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+
+    /* CART SECTION HEADERS */
+    .cart-section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .cart-section-header i {
+        font-size: 1.5rem;
+        color: #8b5cf6;
+    }
+
+    .cart-section-header h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0;
+    }
+
+    /* RARITY TAGS */
+    .rarity-tag {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 12px;
+    }
+
+    .rarity-legendario {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.5);
+    }
+
+    .rarity-epico {
+        background: linear-gradient(135deg, #a855f7, #7c3aed);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(168, 85, 247, 0.5);
+    }
+
+    .rarity-raro {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.5);
+    }
+
+    .rarity-comun {
+        background: linear-gradient(135deg, #64748b, #475569);
+        color: #fff;
+    }
+
+    /* CATEGORY TAG VARIATIONS */
+    .category-item {
+        background: #f97316;
+    }
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
 }

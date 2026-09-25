@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="hero-price">
-                        <span class="price">$249.99</span>
+                        <span class="price">S/.249.99</span>
                     </div>
 
                     <div class="hero-actions">

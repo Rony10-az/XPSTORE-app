@@ -1,0 +1,140 @@
+/* ============================
+   CONTENEDOR GENERAL
+============================ */
+.wishlist-container {
+    padding-top: 30px;
+    padding-bottom: 40px;
+    color: #fff;
+}
+
+.wishlist-title {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #a78bfa, #6366f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.wishlist-subtitle {
+    color: #94a3b8;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+/* Mensaje vacío */
+.empty-message {
+    text-align: center;
+    color: #cbd5e1;
+    font-size: 18px;
+    padding-top: 30px;
+}
+
+/* ============================
+   GRID
+============================ */
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+/* ============================
+   CARD
+============================ */
+.wishlist-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    backdrop-filter: blur(10px);
+    padding: 18px;
+    border-radius: 16px;
+    text-align: center;
+    transition: 0.25s ease;
+    position: relative;
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.25);
+}
+
+.wishlist-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(148, 163, 184, 0.5);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+}
+
+/* IMAGEN */
+.wishlist-card img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    transition: 0.25s ease;
+}
+
+.wishlist-card:hover img {
+    transform: scale(1.03);
+}
+
+/* TÍTULO */
+.wishlist-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #f1f5f9;
+}
+
+/* TYPE */
+.item-type {
+    display: inline-block;
+    padding: 4px 10px;
+    background: rgba(99, 102, 241, 0.15);
+    color: #a5b4fc;
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    text-transform: capitalize;
+}
+
+/* ============================
+   BTN ELIMINAR
+============================ */
+.remove-form {
+    margin-top: 10px;
+}
+
+.remove-btn {
+    width: 100%;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fecaca;
+    padding: 8px 0;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.remove-btn:hover {
+    background: rgba(239, 68, 68, 0.35);
+    border-color: rgba(239, 68, 68, 0.75);
+    color: white;
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
+}
+
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 768px) {
+    .wishlist-title {
+        font-size: 26px;
+    }
+
+    .wishlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .wishlist-card {
+        padding: 14px;
+    }
+}

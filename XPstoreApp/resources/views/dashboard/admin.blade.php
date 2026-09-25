@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - XP Store</title>
 
-    @vite(['resources/css/User/dashboard.css', 'resources/js/dashboard.js'])
+    @vite(['resources/css/User/dashboard.css', 'resources/js/User/dashboard.js'])
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -123,8 +123,8 @@
 
             <!-- Admin -->
             @if(auth()->check() && auth()->user()->role === 'admin')
-            <a href="{{ route('videojuegos.index') }}"
-                class="nav-link admin-nav {{ request()->routeIs('videojuegos.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.videojuegos.index') }}"
+                class="nav-link admin-nav {{ request()->routeIs('admin.videojuegos.*') ? 'active' : '' }}">
                 <i class="fas fa-crown"></i>
                 Administrador
             </a>
@@ -136,12 +136,6 @@
     <!-- contenido principal -->
     <main class="main-content">
         <div class="container">
-
-            <!-- boton de filtros vertical -->
-            <button class="filters-btn-vertical">
-                <i class="fas fa-sliders-h"></i>
-                <span class="filters-text">FILTROS</span>
-            </button>
 
             <!-- Hero Section -->
             <section class="hero-section">

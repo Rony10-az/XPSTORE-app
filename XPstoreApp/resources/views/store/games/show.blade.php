@@ -5,6 +5,9 @@
 @push('styles')
 @vite('resources/css/store/show.css')
 @endpush
+@push('scripts')
+@vite(['resources/js/wishlist/toggle.js'])
+@endpush
 
 @section('content')
 
@@ -86,15 +89,33 @@
             </div>
 
 
-            <button class="btn-buy">
-                <i class="fas fa-shopping-cart"></i>
-                Agregar al carrito
+            <form action="{{ route('cart.add', $game->id) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn-buy">
+                    <i class="fas fa-shopping-cart"></i>
+                    Agregar al carrito
+                </button>
+            </form>
+
+
+            @php
+            $isWish = auth()->check()
+            ? auth()->user()->wishlist()
+            ->where('item_id', $game->id)
+            ->where('item_type', App\Models\VideoGame::class)
+            ->exists()
+            : false;
+            @endphp
+
+            <button class="btn-wishlist wishlist-btn {{ $isWish ? 'active' : '' }}"
+                data-id="{{ $game->id }}"
+                data-type="{{ App\Models\VideoGame::class }}">
+
+                <i class="{{ $isWish ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                <span>{{ $isWish ? 'En tu Wishlist' : 'Favoritos' }}</span>
+
             </button>
 
-            <button class="btn-wishlist">
-                <i class="far fa-heart"></i>
-                Favoritos
-            </button>
 
             <button class="btn-wishlist">
                 <i class="fas fa-share"></i>

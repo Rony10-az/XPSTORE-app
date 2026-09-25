@@ -21,7 +21,9 @@ class UserController extends Controller
         $status = $request->input('status');
         $sort = $request->input('sort', 'recent');
 
-        $usersQuery = User::query();
+        $usersQuery = User::with(['reviews' => function ($query) {
+            $query->with('videoGame')->orderBy('created_at', 'desc');
+        }]);
 
         if ($search) {
             $usersQuery->where(function ($q) use ($search) {

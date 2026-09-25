@@ -8,7 +8,7 @@ use App\Services\AuthService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -43,10 +43,10 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request): RedirectResponse
     {
-        $user = $this->auth->attempt(
-            $request->input('email'),
-            $request->input('password')
-        );
+        Log::info('Intento de login', ['email' => $request->email]);
+        Log::info('Intento de login', ['password' => $request->password]);
+
+        $user = $this->auth->attempt($request->get('email'), $request->get('password'));
 
         if (!$user) {
             // Agregué este mensaje para aclarar si la cuenta está bloqueada o pendiente.
@@ -55,21 +55,7 @@ class AuthController extends Controller
                 ->withInput($request->only('email'));
         }
 
-        // ⭐ INICIAR SESIÓN EN LARAVEL ⭐
-        Auth::login($user);
-
-        // Regenerar sesión (seguro)
-        $request->session()->regenerate();
-
-        // Mensaje según rol
-        $message = $user->role === 'admin'
-            ? '¡Bienvenido Admin!'
-            : '¡Bienvenido a XP Store, ' . $user->name . '!';
-
-        // Redirigir por rol
-        return $user->role === 'admin'
-            ? redirect()->route('dashboard.admin')->with('success', $message)
-            : redirect()->route('dashboard.user')->with('success', $message);
+        return redirect()->route('home')->with('success', 'Bienvenido');
     }
 
 
@@ -79,16 +65,8 @@ class AuthController extends Controller
     public function register(RegisterRequest $request): RedirectResponse
     {
         try {
-            $user = $this->auth->register(
-                $request->input('name'),
-                $request->input('email'),
-                $request->input('password')
-            );
-
-            // Un nuevo usuario siempre será "user"
-            return redirect()
-                ->route('dashboard.user')
-                ->with('success', '¡Cuenta creada exitosamente! Bienvenido ' . $user->name);
+            $this->auth->register($request->get('name'), $request->get('email'), $request->get('password'));
+            return redirect()->route('home')->with('success', 'Cuenta creada');
         } catch (\RuntimeException $e) {
             return back()
                 ->withErrors(['email' => $e->getMessage()])

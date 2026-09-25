@@ -1,0 +1,211 @@
+/* --- CONTENEDOR GENERAL --- */
+.create-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+/* --- TARJETA PRINCIPAL --- */
+.create-card {
+    background: #1e293b;
+    padding: 30px;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 650px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+
+/* --- BOTÓN VOLVER --- */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    padding: 8px 14px;
+    background: #334155;
+    color: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    text-decoration: none;
+    border: 1px solid #475569;
+    transition: .2s;
+}
+
+.back-button:hover {
+    background: #1e293b;
+}
+
+/* --- TABS --- */
+.create-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.create-tab {
+    padding: 10px 18px;
+    background: #334155;
+    border-radius: 10px;
+    color: #cbd5e1;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: .25s;
+    font-size: 15px;
+}
+
+.create-tab:hover {
+    background: #475569;
+    color: #fff;
+}
+
+.create-tab.active {
+    background: #3b82f6;
+    border-color: #2563eb;
+    color: white;
+    font-weight: 600;
+}
+
+/* --- TEXTAREA / INPUTS --- */
+.content-box {
+    width: 100%;
+    height: 150px;
+    border-radius: 12px;
+    padding: 14px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border: 1px solid #334155;
+    resize: none;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.content-box:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* --- INPUT FILE --- */
+.file-label {
+    background: #334155;
+    color: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    display: block;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid #475569;
+    transition: .25s;
+}
+
+.file-label:hover {
+    background: #3b82f6;
+    border-color: #1d4ed8;
+}
+
+.file-input {
+    display: none;
+}
+
+/* --- VISTA PREVIA DE IMAGEN --- */
+.image-preview {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: 2px solid #334155;
+}
+
+/* --- SELECT --- */
+.select-box {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    background: #0f172a;
+    color: white;
+    border: 1px solid #334155;
+    margin-bottom: 15px;
+}
+
+.select-box:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+
+/* --- ESTRELLAS RATING --- */
+.stars label {
+    display: block;
+    margin: 6px 0;
+    cursor: pointer;
+    color: #facc15;
+    font-size: 18px;
+}
+
+/* --- BOTÓN ENVIAR --- */
+.send-btn {
+    width: 100%;
+    padding: 13px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    transition: .25s;
+    margin-top: 10px;
+}
+
+.send-btn:hover {
+    background: #2563eb;
+}
+
+/* --- HELP CARD --- */
+.help-card {
+    background: #0f172a;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #334155;
+}
+
+.help-card h3 {
+    margin-bottom: 10px;
+}
+
+.help-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+.help-list li {
+    margin: 8px 0;
+    color: #cbd5e1;
+}
+
+.help-list a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.help-note {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+}

@@ -1,0 +1,16 @@
+/* Estilos para vistas de detalle */
+.show-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.show-header {
+    margin-bottom: 2rem;
+}
+
+.show-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #1f2937;
+}

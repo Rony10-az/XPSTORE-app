@@ -10,21 +10,21 @@ document.addEventListener('DOMContentLoaded', function () {
             description: 'Embárcate en una aventura épica en un mundo lleno de mitología nórdica y criaturas legendarias.',
             image: 'https://wallpapers.com/images/high/kratos-in-cave-god-of-war-ragnarok-hmaawiodgr64ldzm.webp',
             tags: ['Aventura', 'Acción', 'Exploración'],
-            price: '$249.99'
+            price: '$59.99'
         },
         {
             title: 'Grand Theft Auto V',
             description: 'Explora Los Santos, una ciudad llena de acción y crimen. Vive la historia de tres criminales en busca de poder y libertad en un mundo abierto lleno de aventuras.',
             image: 'https://wallpapers.com/images/high/4k-gta-5-franklin-looking-at-city-at-night-bq6nlp808hn0xoi5.webpv',
             tags: ['Acción', 'Aventura', 'Mundo Abierto', 'Crimen'],
-            price: '$59.99'
+            price: '$39.99'
         },
         {
             title: 'Marvel’s Spider-Man 2',
             description: 'Balancea por Nueva York y enfrenta a nuevos villanos mientras controlas a Peter Parker y Miles Morales en esta épica aventura.',
             image: 'https://wallpapers.com/images/high/spider-man-ps4-4k-i5ssgd6fq17lrz7i.webp',
             tags: ['Acción', 'Aventura', 'Superhéroes'],
-            price: '$199.99'
+            price: '$79.99'
         },
         {
             title: 'Horizon Zero Dawn',
