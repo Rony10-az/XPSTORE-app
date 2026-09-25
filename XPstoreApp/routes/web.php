@@ -46,13 +46,7 @@ Route::get('/', function () {
 // TIENDA (pública)
 // =========================
 
-Route::get('/juegos', [GameStoreController::class, 'index'])
-    ->name('store.index');
-
-Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])
-    ->name('game.show');
-
-Route::get('/juegos', [GameStoreController::class, 'index'])->name('store.index');
+Route::get('/juegos',[GameStoreController::class, 'index'])->name('store.index');
 Route::get('/juego/{videojuego}', [GameStoreController::class, 'show'])->name('game.show');
 
 // =========================
@@ -78,31 +72,10 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
 
     // ADMIN
-    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
+    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])
+        ->middleware('admin')
+        ->name('dashboard.admin');
 
-    // CRUD de Videojuegos (solo admins)
-    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
-
-
-    // ADMIN
-    Route::get('/dashboard/admin', [AdminDashboardController::class, 'index'])->name('dashboard.admin');
-
-    // CRUD de Videojuegos (solo admins)
-    Route::resource('videojuegos', VideoGameController::class)->names('videojuegos');
-
-    // Rutas de usuarios (solo admin)
-    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        // Monté este recurso para listar, ver, editar y eliminar usuarios.
-        Route::resource('users', AdminUserController::class)->except(['create', 'store']);
-    });
-
-    // Rutas de administración (solo admins)
-    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
-        // CRUD de Videojuegos
-        Route::resource('videojuegos', VideoGameController::class);
-    });
-
-    /* dados de prueba para ver si se sube bien el cambio */
     // Rutas de administración (solo admins)
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         // Perfil del admin
@@ -198,14 +171,6 @@ Route::middleware('auth')->group(function () {
 
 
     // =========================
-    // CARRITO DE COMPRAS 
-    // =========================
-
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index'); // Ver carrito
-    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add'); // Agregar al carrito
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove'); // Eliminar del carrito
-
-    // =========================
     // CHECKOUT
     // =========================
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
@@ -213,7 +178,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/success', [CheckoutController::class, 'success'])
         ->name('checkout.success');
 
-    // Carrito
+    // =========================
+    // CARRITO DE COMPRAS
+    // =========================
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
     Route::post('/cart/add-item/{id}', [CartController::class, 'addItem'])->name('cart.add.item');

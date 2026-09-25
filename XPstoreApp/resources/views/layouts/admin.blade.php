@@ -43,7 +43,7 @@
 
                 <div class="nav-divider"></div>
 
-                <a href="{{ route('videojuegos.index') }}" class="nav-item {{ request()->routeIs('videojuegos.*') ? 'active' : '' }}">
+                <a href="{{ route('admin.videojuegos.index') }}" class="nav-item {{ request()->routeIs('admin.videojuegos.*') ? 'active' : '' }}">
                     <div class="nav-item-content">
                         <i class="fas fa-gamepad"></i>
                         <div class="nav-text">

@@ -123,8 +123,8 @@
 
             <!-- Admin -->
             @if(auth()->check() && auth()->user()->role === 'admin')
-            <a href="{{ route('videojuegos.index') }}"
-                class="nav-link admin-nav {{ request()->routeIs('videojuegos.*') ? 'active' : '' }}">
+            <a href="{{ route('admin.videojuegos.index') }}"
+                class="nav-link admin-nav {{ request()->routeIs('admin.videojuegos.*') ? 'active' : '' }}">
                 <i class="fas fa-crown"></i>
                 Administrador
             </a>

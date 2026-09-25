@@ -12,7 +12,7 @@
             <h1><i class="fas fa-plus"></i> Crear Nuevo Videojuego</h1>
             <p class="admin-subtitle">Agrega un nuevo juego al catálogo de XP Store</p>
         </div>
-        <a href="{{ route('videojuegos.index') }}" class="btn-secondary">
+        <a href="{{ route('admin.videojuegos.index') }}" class="btn-secondary">
             <i class="fas fa-arrow-left"></i> Volver al Listado
         </a>
 
@@ -20,7 +20,7 @@
 
     {{-- Formulario --}}
     <div class="form-container">
-        <form action="{{ route('videojuegos.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.videojuegos.store') }}" method="POST" enctype="multipart/form-data">
 
             @csrf
 
