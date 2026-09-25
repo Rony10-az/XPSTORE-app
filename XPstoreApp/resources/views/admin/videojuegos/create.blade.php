@@ -2,7 +2,7 @@
 
 @section('title', 'Crear Videojuego - XP Store')
 
-@vite(['resources/css/create.css', 'resources/js/create.js'])
+@vite(['resources/css/create.css'])
 
 @section('content')
 <div class="admin-container">
