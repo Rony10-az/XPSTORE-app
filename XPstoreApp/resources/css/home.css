@@ -288,10 +288,11 @@ body {
 /* Hero Section */
 .hero-section {
     position: relative;
-    height: 700px;
+    height: 560px;
+    max-width: 1200px;
+    margin: 0 auto 4rem auto;
     border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 4rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
@@ -339,7 +340,7 @@ body {
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
     font-weight: 900;
     line-height: 1.1;
     margin-bottom: 1rem;
@@ -712,6 +713,11 @@ body {
         left: 1rem;
     }
 
+    .hero-section {
+        height: 460px;
+        max-width: 100%;
+    }
+
     .games-grid {
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1.5rem;
@@ -735,7 +741,7 @@ body {
     }
 
     .hero-section {
-        height: 400px;
+        height: 380px;
     }
 
     .hero-title {

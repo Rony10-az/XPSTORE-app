@@ -38,7 +38,7 @@ class VideoGameController extends Controller
             'rating' => 'nullable|numeric|min:0|max:5',
             'stock' => 'required|integer|min:0',
             'featured' => 'boolean',
-            'requirements' => 'nullable|array',
+            'requirements' => 'nullable|string',
         ]);
 
         $imagePaths = [];
@@ -48,13 +48,17 @@ class VideoGameController extends Controller
                 $imagePaths[] = $path;
             }
         }
+        $requirements = [];
+        if ($request->requirements) {
+        $requirements = json_decode($request->requirements, true) ?? [];
+       }
 
         VideoGame::create([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'discount' => $request->discount ?? 0,
-            'images' => $imagePaths,
+            'images' => !empty($imagePaths) ? $imagePaths : [],
             'genre' => $request->genre,
             'platform' => $request->platform,
             'release_date' => $request->release_date,
@@ -63,7 +67,7 @@ class VideoGameController extends Controller
             'rating' => $request->rating ?? 0,
             'stock' => $request->stock,
             'featured' => $request->has('featured'),
-            'requirements' => $request->requirements ?? [],
+            'requirements' => $requirements,
         ]);
 
         return redirect()->route('admin.videojuegos.index')
@@ -97,7 +101,7 @@ class VideoGameController extends Controller
             'rating' => 'nullable|numeric|min:0|max:5',
             'stock' => 'required|integer|min:0',
             'featured' => 'boolean',
-            'requirements' => 'nullable|array',
+            'requirements' => 'nullable|string',
         ]);
 
         $imagePaths = $videojuego->images ?? [];

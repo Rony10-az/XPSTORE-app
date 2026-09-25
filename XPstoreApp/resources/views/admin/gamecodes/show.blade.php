@@ -2,7 +2,7 @@
 
 @section('title', 'Detalle Game Code - XP Store')
 
-@vite(['resources/css/show.css'])
+@vite(['resources/css/admin/Game/show.css'])
 
 @section('content')
 <div class="show-container">

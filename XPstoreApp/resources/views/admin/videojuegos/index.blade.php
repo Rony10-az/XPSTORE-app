@@ -11,7 +11,7 @@
             <h1><i class="fas fa-gamepad"></i> Gestión de Videojuegos</h1>
             <p class="admin-subtitle">Administra el catálogo completo de XP Store</p>
         </div>
-        <a href="{{ route('admin.videojuegos.create') }}" class="btn-primary">
+        <a href="{{ route('videojuegos.create') }}" class="btn-primary">
             <i class="fas fa-plus"></i> Nuevo Videojuego
         </a>
     </div>
@@ -175,13 +175,13 @@
                     </td>
                     <td>
                         <div class="action-buttons">
-                            <a href="{{ route('admin.videojuegos.show', $juego->id) }}" class="btn-action btn-view" title="Ver">
+                            <a href="{{ route('videojuegos.show', $juego->id) }}" class="btn-action btn-view" title="Ver">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.videojuegos.edit', $juego->id) }}" class="btn-action btn-edit" title="Editar">
+                            <a href="{{ route('videojuegos.edit', $juego->id) }}" class="btn-action btn-edit" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('admin.videojuegos.destroy', $juego->id) }}" method="POST" class="delete-form">
+                            <form action="{{ route('videojuegos.destroy', $juego->id) }}" method="POST" class="delete-form">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn-action btn-delete" title="Eliminar">
@@ -198,7 +198,7 @@
                             <i class="fas fa-gamepad"></i>
                             <h4>No hay videojuegos registrados</h4>
                             <p>Comienza agregando tu primer videojuego al catálogo</p>
-                            <a href="{{ route('admin.videojuegos.create') }}" class="btn-primary">
+                            <a href="{{ route('videojuegos.create') }}" class="btn-primary">
                                 <i class="fas fa-plus"></i> Crear Primer Juego
                             </a>
                         </div>
