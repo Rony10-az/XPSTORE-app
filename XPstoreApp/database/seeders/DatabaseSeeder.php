@@ -280,11 +280,6 @@ class DatabaseSeeder extends Seeder
         $this->call(StreamingCodesSeeder::class);
 
 
-        $this->call(
-            MarketItemSeeder::class
-        );
-
-
 
 
 
