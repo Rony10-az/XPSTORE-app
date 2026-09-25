@@ -18,21 +18,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Close dropdown when clicking outside
-    document.addEventListener('click', function () {
-        e.preventDefault();
-        navDropdown.classList.toggle('show');
+    // Cerrar dropdowns al hacer click fuera; abrir/cerrar menú admin
+    if (navDropdown) {
+        document.addEventListener('click', function (e) {
+            // Si no se hace click dentro del dropdown ni en el trigger, se oculta
+            if (!navDropdown.contains(e.target) && !adminNav?.contains(e.target)) {
+                navDropdown.classList.remove('show');
+            }
+        });
 
-    });
-    navDropdown.addEventListener('click', function (e) {
-        e.stopPropagation();
-    });
-
-
-
+        navDropdown.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    }
 
     if (adminNav && navDropdown) {
         adminNav.addEventListener('click', function (e) {
             e.preventDefault();
+            e.stopPropagation();
             navDropdown.classList.toggle('show');
         });
     }
