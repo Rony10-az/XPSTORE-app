@@ -3,7 +3,7 @@
 @section('title', 'Mis Juegos')
 
 @push('styles')
-@vite(['resources/css/library/library.css', 'resources/js/library/library.js'])
+@vite(['resources/css/library/library.css'])
 @endpush
 
 @section('content')

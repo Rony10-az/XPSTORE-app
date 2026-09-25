@@ -3,7 +3,7 @@
 @section('title', 'Mi Perfil - XP Store')
 
 @push('styles')
-@vite(['resources/css/store/profile.css'])
+@vite(['resources/css/store/Profile.css'])
 @endpush
 
 @section('content')

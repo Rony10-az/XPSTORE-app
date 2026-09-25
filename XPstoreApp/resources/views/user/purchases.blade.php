@@ -2,10 +2,6 @@
 
 @section('title', 'Mis Compras')
 
-@push('styles')
-@vite(['resources/css/user/purchases.css'])
-@endpush
-
 @section('content')
 
 <div class="container">

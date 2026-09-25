@@ -2,10 +2,6 @@
 
 @section('title', 'Configuración')
 
-@push('styles')
-@vite(['resources/css/user/settings.css'])
-@endpush
-
 @section('content')
 
 <div class="container">
